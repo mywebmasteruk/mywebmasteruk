@@ -1,0 +1,39 @@
+---
+title: "What happens to my site if I cancel?"
+description: "You keep everything. Changes are commits in your own repository, so improvements stay after cancellation rather than disappearing with the subscription."
+heading: "What happens to my website if I cancel?"
+question: "What happens to my site if I cancel?"
+summary: "Every change Autopilot makes is a commit in your own git repository, deployed from your own pipeline. If you cancel, the site keeps working and every improvement made stays in place, because there is no external script or service holding the changes together."
+shortAnswer: "You keep everything. Because changes are commits in your own repository rather than a script injected at runtime, cancelling stops future work but removes nothing already done. This is the opposite of overlay-based SEO tools, where the optimisations are applied by a subscription script and vanish when it stops loading."
+topic: "safety"
+updated: 2026-09-05
+related: ["do-ai-crawlers-execute-javascript", "can-ai-safely-edit-a-live-website"]
+---
+
+## The question worth asking any provider
+
+Before buying any automated SEO service, ask one question: *if I cancel, which of these changes
+survive?*
+
+With tools that work by injecting changes through a script in your page, the honest answer is
+none of them. The title rewrites, the injected schema, the added content — all of it is applied
+in the browser by a script that stops loading when the invoice stops. You were renting the
+improvements to your own website.
+
+## How this works here
+
+Changes are ordinary commits in your git repository, deployed by your own pipeline. There is no
+runtime dependency on us. If you cancel:
+
+- The site keeps working, unchanged, because nothing was ever being injected.
+- Every improvement made stays exactly where it is, in your codebase.
+- The full history stays too, so any developer can see what was changed and why.
+- The changelog remains as a record of the reasoning behind each change.
+
+We stop making new changes. That is the entire effect of cancelling.
+
+## Why we build it this way
+
+Lock-in is a substitute for being worth keeping. A service that can only retain customers by
+holding their improvements hostage has told you what it thinks of its own results — and a
+provider confident in the work has no reason to build the trapdoor.

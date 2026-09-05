@@ -1,0 +1,20 @@
+---
+date: 2026-09-05
+title: "Published the autonomy boundary"
+hypothesis: "Clients hesitate to give an automated system write access because the limits are usually vague. Publishing the exact permitted change classes should convert more of that hesitation than any reassurance in a sales page."
+targets: ["/what-it-changes/"]
+changeType: "content"
+autonomy: "human"
+outcome: "pending"
+holdout: false
+---
+
+Fourteen change types, each labelled with the autonomy level it is allowed to reach, whether it
+is reversible instantly or by commit, and the signal that triggers it.
+
+Six ship unattended. Six require a human to approve a pull request. Two are permanently out of
+bounds: anything touching prices, guarantees, legal text or factual claims about the business,
+and anything touching indexing controls such as `robots.txt`, `noindex`, canonicals and hreflang.
+
+The second group is the point. A system that could change what a business charges, or could
+deindex it with a single directive, should not exist regardless of how well it performs.

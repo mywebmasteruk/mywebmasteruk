@@ -1,0 +1,82 @@
+---
+import Base from "~/layouts/Base.astro";
+import ChangeMeta from "~/components/ChangeMeta.astro";
+import CtaBand from "~/components/CtaBand.astro";
+import { getCollection, render } from "astro:content";
+import { site } from "~/data/site";
+import { articleNode } from "~/lib/schema";
+import { pageTitle } from "~/lib/seo";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("changelog");
+  return entries.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+const url = new URL(`/changelog/${entry.id}/`, site.url).href;
+
+const schema = [
+  articleNode({
+    headline: d.title,
+    description: d.hypothesis,
+    url,
+    published: d.date,
+    updated: d.date,
+  }),
+];
+---
+<Base
+  title={pageTitle(d.title)}
+  description={d.hypothesis.slice(0, 160)}
+  breadcrumbs={[{ name: "Changelog", href: "/changelog/" }, { name: d.title, href: `/changelog/${entry.id}/` }]}
+  schema={schema}
+  updated={d.date}
+  ogType="article"
+>
+  <article class="section">
+    <div class="wrap wrap--narrow">
+      <nav class="crumbs mono muted" aria-label="Breadcrumb"><a href="/changelog/">Changelog</a></nav>
+      <time class="mono muted" datetime={d.date.toISOString()}>
+        {d.date.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}
+      </time>
+      <h1>{d.title}</h1>
+      <ChangeMeta changeType={d.changeType} autonomy={d.autonomy} outcome={d.outcome} holdout={d.holdout} />
+
+      <div class="hyp">
+        <p class="label">Hypothesis, recorded before shipping</p>
+        <p>{d.hypothesis}</p>
+      </div>
+
+      <div class="prose"><Content /></div>
+
+      {d.result && (
+        <div class="result">
+          <p class="label">Result</p>
+          <p>{d.result}</p>
+        </div>
+      )}
+
+      <dl class="facts mono">
+        <div><dt>Pages affected</dt><dd>{d.targets.join(", ")}</dd></div>
+        {d.commit && <div><dt>Commit</dt><dd>{d.commit}</dd></div>}
+      </dl>
+    </div>
+  </article>
+  <CtaBand />
+</Base>
+
+<style>
+  .crumbs { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.5rem; }
+  .crumbs a { text-decoration: none; }
+  time { font-size: 0.75rem; }
+  h1 { margin-block: 0.7rem 1.2rem; }
+  .hyp { margin-block: 2.5rem; border-left: 3px solid var(--warn-text); background: var(--bg-soft); padding: 1.2rem 1.4rem; border-radius: 0 var(--radius-lg) var(--radius-lg) 0; }
+  .hyp p:last-child { margin-top: 0.7rem; font-size: var(--step-1); line-height: 1.5; }
+  .result { margin-top: 2.5rem; border-left: 3px solid var(--ok-text); background: var(--bg-soft); padding: 1.2rem 1.4rem; border-radius: 0 var(--radius-lg) var(--radius-lg) 0; }
+  .result p:last-child { margin-top: 0.7rem; }
+  .facts { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--line); font-size: 0.75rem; display: grid; gap: 0.8rem; }
+  .facts dt { color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.68rem; }
+  .facts dd { margin: 0.25rem 0 0; word-break: break-word; }
+</style>

@@ -1,0 +1,40 @@
+---
+title: "What are the Core Web Vitals thresholds?"
+description: "Google's Core Web Vitals thresholds are LCP at or under 2.5 seconds, INP at or under 200 milliseconds and CLS at or under 0.1, measured at the 75th percentile."
+heading: "What are the Core Web Vitals thresholds?"
+question: "What are the Core Web Vitals thresholds?"
+summary: "Google's Core Web Vitals thresholds are Largest Contentful Paint at or under 2.5 seconds, Interaction to Next Paint at or under 200 milliseconds, and Cumulative Layout Shift at or under 0.1. A page passes only when all three are met at the 75th percentile of real user visits."
+shortAnswer: "A page passes Core Web Vitals when Largest Contentful Paint is 2.5 seconds or less, Interaction to Next Paint is 200 milliseconds or less, and Cumulative Layout Shift is 0.1 or less, each measured at the 75th percentile of real-world visits over 28 days. INP replaced First Input Delay as the responsiveness metric in March 2024."
+topic: "seo"
+updated: 2026-09-05
+sources:
+  - label: "web.dev: Core Web Vitals"
+    url: "https://web.dev/articles/vitals"
+related: ["what-is-an-autonomous-website-optimiser", "how-do-you-measure-seo-improvement"]
+---
+
+## The three metrics
+
+| Metric | Measures | Good | Needs work | Poor |
+| --- | --- | --- | --- | --- |
+| LCP | Loading — when the main content appears | ≤ 2.5s | 2.5–4.0s | > 4.0s |
+| INP | Responsiveness — delay before the page reacts | ≤ 200ms | 200–500ms | > 500ms |
+| CLS | Visual stability — how much the layout jumps | ≤ 0.1 | 0.1–0.25 | > 0.25 |
+
+## Field data, not lab scores
+
+The thresholds apply to the 75th percentile of real visits, gathered from actual users over a
+rolling 28-day window. A perfect score in a local audit tool tells you the page *can* be fast;
+it does not tell you it *is* fast for the quarter of your audience on a poor connection and an
+older phone.
+
+This is why a site can hold a near-perfect Lighthouse score and still fail Core Web Vitals in
+Search Console. The two are measuring different things, and only one of them is what search
+engines use.
+
+## The cheapest wins
+
+Most failures come from a small set of causes: images without width and height attributes
+causing layout shift, render-blocking scripts delaying paint, fonts loading late and reflowing
+text, and third-party tags executing on the main thread. Fixing those four covers the majority
+of pages, and none of them require a redesign.

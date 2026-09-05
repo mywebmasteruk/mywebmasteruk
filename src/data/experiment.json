@@ -1,0 +1,62 @@
+{
+  "_comment": "Published proof figures. Updated by the loop when a measurement window closes.",
+  "property": "sc-domain:mywebmaster.co.uk",
+  "baseline": {
+    "window": {
+      "startDate": "2026-06-04",
+      "endDate": "2026-09-02",
+      "days": 90
+    },
+    "clicks": 26,
+    "impressions": 18001,
+    "ctr": 0.144,
+    "position": 39.9,
+    "capturedAt": "2026-09-05"
+  },
+  "latest": null,
+  "topOpportunities": [
+    {
+      "query": "web maintenance services",
+      "impressions": 1263,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 36.4
+    },
+    {
+      "query": "webmaster services",
+      "impressions": 1032,
+      "clicks": 1,
+      "ctr": 0.1,
+      "position": 41
+    },
+    {
+      "query": "web maintenance",
+      "impressions": 724,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 50.2
+    },
+    {
+      "query": "web maintenance and support",
+      "impressions": 590,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 55.1
+    },
+    {
+      "query": "website maintenance and support",
+      "impressions": 525,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 64.8
+    },
+    {
+      "query": "web maintenance service",
+      "impressions": 518,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 37.1
+    }
+  ],
+  "notes": "Baseline captured before any Autopilot change shipped. Source: Google Search Console, domain property, final data state."
+}

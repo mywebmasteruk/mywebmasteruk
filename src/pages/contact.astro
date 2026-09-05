@@ -1,0 +1,119 @@
+---
+import Base from "~/layouts/Base.astro";
+import { site } from "~/data/site";
+---
+<Base
+  title="Contact — book a free site scan | MyWebMaster"
+  description="Request a free Autopilot scan of your website: one full pass, a ranked list of what we would fix, and the reasoning. Sent whether or not you buy anything."
+  breadcrumbs={[{ name: "Contact", href: "/contact/" }]}
+>
+  <section class="section head">
+    <div class="wrap grid-2">
+      <div>
+        <p class="label">Contact</p>
+        <h1>Start with the scan.</h1>
+        <p class="lede">
+          We run one full pass over your site — crawl, Search Console, speed, structured data,
+          AI-crawler access — and send back a ranked list of what we would fix and why. It takes
+          us about a day. There is no charge and no call required.
+        </p>
+        <dl class="direct">
+          <div>
+            <dt class="label">Email</dt>
+            <dd><a href={`mailto:${site.email}`}>{site.email}</a></dd>
+          </div>
+          <div>
+            <dt class="label">Where we work</dt>
+            <dd>Remotely, with clients across the United Kingdom</dd>
+          </div>
+          <div>
+            <dt class="label">Response time</dt>
+            <dd>Same working day, in practice</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="card form-card">
+        <h2>Request a free scan</h2>
+        <!--
+          Netlify handles the submission; no client-side JavaScript is shipped for the form.
+          The honeypot field catches the bulk of automated spam without a CAPTCHA.
+        -->
+        <form
+          name="scan-request"
+          method="POST"
+          data-netlify="true"
+          netlify-honeypot="company-website"
+          action="/thank-you/"
+          class="stack"
+        >
+          <input type="hidden" name="form-name" value="scan-request" />
+          <p class="hp">
+            <label>Leave this field empty <input name="company-website" tabindex="-1" autocomplete="off" /></label>
+          </p>
+
+          <div class="field">
+            <label for="name">Your name</label>
+            <input id="name" name="name" type="text" required autocomplete="name" />
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required autocomplete="email" />
+          </div>
+          <div class="field">
+            <label for="url">Website address</label>
+            <input id="url" name="url" type="url" required placeholder="https://" autocomplete="url" />
+          </div>
+          <div class="field">
+            <label for="plan">Which tier are you considering?</label>
+            <select id="plan" name="plan">
+              <option value="unsure">Not sure yet</option>
+              <option value="watch">Watch — report only</option>
+              <option value="apply">Apply — safe fixes shipped for me</option>
+              <option value="compound">Compound — content and conversion experiments</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="message">Anything we should know? <span class="muted">(optional)</span></label>
+            <textarea id="message" name="message" rows="4"></textarea>
+          </div>
+          <button type="submit" class="btn btn--primary">Request the scan</button>
+          <p class="mono muted small">
+            We use your details to run the scan and reply. Nothing else. See the
+            <a href="/legal/privacy/">privacy notice</a>.
+          </p>
+        </form>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .grid-2 { display: grid; gap: 3rem; align-items: start; }
+  @media (min-width: 940px) { .grid-2 { grid-template-columns: 1fr 1fr; gap: 4rem; } }
+  h1 { margin-block: 1rem 1.2rem; }
+  .direct { margin-top: 2.5rem; display: grid; gap: 1.2rem; }
+  .direct dd { margin: 0.4rem 0 0; }
+  .direct a { color: var(--accent); }
+  .form-card h2 { font-size: var(--step-2); margin-bottom: 1.5rem; }
+  form { --flow: 1.1rem; }
+  .field { display: grid; gap: 0.4rem; }
+  label { font-size: var(--step--1); font-weight: 500; }
+  input, select, textarea {
+    font: inherit;
+    /* iOS Safari zooms the viewport when a focused field is under 16px. */
+    font-size: 16px;
+    padding: 0.7rem 0.8rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--bg);
+    color: var(--text);
+    width: 100%;
+  }
+  textarea { resize: vertical; }
+  input:focus-visible, select:focus-visible, textarea:focus-visible { border-color: var(--focus); }
+  button { width: 100%; justify-content: center; }
+  .small { font-size: 0.7rem; line-height: 1.5; }
+  .small a { color: var(--accent); }
+  .hp { position: absolute; left: -9999px; }
+</style>

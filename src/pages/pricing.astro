@@ -1,0 +1,175 @@
+---
+import Base from "~/layouts/Base.astro";
+import Faq from "~/components/Faq.astro";
+import CtaBand from "~/components/CtaBand.astro";
+import { getCollection } from "astro:content";
+import { site } from "~/data/site";
+import { faqNode, serviceNode } from "~/lib/schema";
+
+const plans = (await getCollection("plans")).sort((a, b) => a.data.order - b.data.order);
+
+const faqs = [
+  {
+    q: "Is there a contract?",
+    a: "Watch and Apply are month to month and can be cancelled any time. Compound has a three-month minimum, purely because a holdout comparison needs a full measurement window plus a readout to say anything meaningful — charging for a shorter period would be selling a number nobody can trust.",
+  },
+  {
+    q: "What happens to the work if we leave?",
+    a: "You keep all of it. The site, the repository, the full commit history and the changelog are yours and stay on your infrastructure throughout. Nothing is hosted in a proprietary system you would lose access to, because the output is ordinary code in your own git repository.",
+  },
+  {
+    q: "Do you work on sites you did not build?",
+    a: "Yes, provided the site is in version control and deploys from that repository. If it is a page builder with no repository, the first piece of work is usually moving it onto a pipeline that can be measured and reverted — which is worth doing regardless of who does the optimisation afterwards.",
+  },
+  {
+    q: "How does the guarantee work?",
+    a: "On Compound, if the control group outperforms the treatment group across two consecutive measurement windows, that month is refunded. It is offerable only because the holdout design produces a number that can settle the question, rather than a traffic graph that can be argued about.",
+  },
+  {
+    q: "What is not included?",
+    a: "Hosting, domains, paid advertising, and large redesign projects are outside the subscription. Autopilot improves an existing site continuously; it is not a replacement for a rebuild if the underlying site is fundamentally wrong for the business.",
+  },
+];
+
+const schema = [
+  serviceNode({
+    name: site.product,
+    description: site.description,
+    url: `${site.url}/pricing/`,
+    offers: plans.map((p) => ({
+      name: p.data.name,
+      price: p.data.priceMonthly,
+      currency: p.data.currency,
+      description: p.data.tagline,
+    })),
+  }),
+  faqNode(faqs),
+];
+---
+<Base
+  title="Pricing — three levels of autonomy | MyWebMaster"
+  description="Autopilot pricing: report-only from £149 a month, unattended safe fixes from £449, and holdout-proven content and conversion work from £1,200. No lock-in."
+  breadcrumbs={[{ name: "Pricing", href: "/pricing/" }]}
+  schema={schema}
+>
+  <section class="section head">
+    <div class="wrap">
+      <p class="label">Pricing</p>
+      <h1>You are buying autonomy, one level at a time.</h1>
+      <p class="lede">
+        The tiers differ by how much the system is allowed to do without asking — not by how many
+        features are unlocked. Everyone gets the same measurement.
+      </p>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="grid grid--3 plans">
+      {plans.map((p) => (
+        <article class:list={["card", "plan", p.data.featured && "plan--featured"]}>
+          {p.data.featured && <p class="mono flag">Most chosen</p>}
+          <h2>{p.data.name}</h2>
+          <p class="price">
+            {p.data.priceMonthly ? <>£{p.data.priceMonthly}<span class="per mono">/mo</span></> : "Talk to us"}
+          </p>
+          {p.data.priceNote && <p class="mono muted note">{p.data.priceNote}</p>}
+          <p class="tagline">{p.data.tagline}</p>
+
+          <dl class="spec mono">
+            <div><dt>Autonomy</dt><dd>{p.data.autonomy}</dd></div>
+            <div><dt>Cadence</dt><dd>{p.data.cadence}</dd></div>
+          </dl>
+
+          <p class="best"><span class="mono muted">Best for · </span>{p.data.bestFor}</p>
+
+          <ul class="includes">
+            {p.data.includes.map((i) => <li>{i}</li>)}
+          </ul>
+          {p.data.excludes.length > 0 && (
+            <ul class="excludes">
+              {p.data.excludes.map((i) => <li>{i}</li>)}
+            </ul>
+          )}
+
+          <a class:list={["btn", p.data.featured ? "btn--primary" : "btn--ghost"]} href="/contact/">
+            {p.data.cta}
+          </a>
+        </article>
+      ))}
+    </div>
+    <p class="vat mono muted">
+      Prices exclude VAT. One site per subscription. Multi-site pricing on request.
+    </p>
+  </section>
+
+  <section class="section compare">
+    <div class="wrap wrap--narrow prose">
+      <h2>Two kinds of proof, at two different speeds</h2>
+      <p>
+        Search results move slowly. A change takes weeks to settle and a control comparison needs
+        a full 28-day window before it says anything, which is an uncomfortably long time to pay
+        for something and see nothing.
+      </p>
+      <p>
+        So the work is deliberately ordered to produce both kinds of evidence. <strong>Fast
+        proof</strong> comes first: page speed, broken links, server errors, invalid markup and
+        crawler access — all measurable the same week, all verifiable by you without taking our
+        word for it. <strong>Slow proof</strong> matures underneath it: ranking and conversion
+        movement measured against the control group, reported when the window closes.
+      </p>
+      <p>
+        If a provider can only offer the slow kind, you are being asked to fund a month of faith.
+        If they only offer the fast kind, they are showing you activity and calling it results.
+      </p>
+
+      <h2>How to choose</h2>
+      <p>
+        <strong>Take Watch</strong> if you already have developers and the problem is knowing
+        what to fix first. You get the diagnosis and the exact diff; your team applies it.
+      </p>
+      <p>
+        <strong>Take Apply</strong> if the maintenance backlog never gets done. The mechanical
+        half disappears without you giving up any editorial control, because everything with an
+        opinion in it still arrives as a pull request.
+      </p>
+      <p>
+        <strong>Take Compound</strong> if search and conversion are a real revenue line. This is
+        the only tier that runs a holdout, which means it is the only tier where the answer to
+        "did this work" is a measured number rather than a considered opinion.
+      </p>
+    </div>
+  </section>
+
+  <Faq faqs={faqs} title="Before you buy" />
+  <CtaBand
+    heading="Not sure which tier fits?"
+    body="We run one free scan of your site and send the ranked fix list. It is the same output Watch produces, and it usually makes the choice obvious."
+  />
+</Base>
+
+<style>
+  .head h1 { margin-block: 1rem 1.2rem; max-width: 18ch; }
+  .plans { align-items: start; }
+  .plan { display: flex; flex-direction: column; height: 100%; }
+  .plan--featured { box-shadow: 0 0 0 1px var(--accent-graphic); }
+  .flag { color: var(--accent); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.5rem; }
+  .plan h2 { font-size: var(--step-1); }
+  .price { font-size: var(--step-4); font-weight: 600; letter-spacing: -0.035em; margin-top: 0.4rem; }
+  .per { font-size: 0.9rem; color: var(--text-muted); font-weight: 400; margin-left: 0.25rem; }
+  .note { font-size: 0.7rem; margin-top: 0.2rem; }
+  .tagline { margin-top: 1rem; font-size: var(--step--1); }
+  .spec { display: flex; gap: 1.5rem; margin-top: 1.2rem; padding-block: 0.9rem; border-block: 1px solid var(--line); font-size: 0.68rem; }
+  .spec dt { text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); }
+  .spec dd { margin: 0.25rem 0 0; }
+  .best { margin-top: 1rem; font-size: var(--step--1); color: var(--text-muted); }
+  .includes, .excludes { list-style: none; padding: 0; margin-top: 1.2rem; font-size: var(--step--1); flex: 1; }
+  .includes li, .excludes li { padding-left: 1.4rem; position: relative; }
+  .includes li + li, .excludes li + li { margin-top: 0.6rem; }
+  .includes li::before { content: "✓"; position: absolute; left: 0; color: var(--ok-text); font-weight: 700; }
+  .excludes { flex: 0; margin-top: 0.6rem; color: var(--text-muted); }
+  .excludes li::before { content: "—"; position: absolute; left: 0; }
+  .plan .btn { margin-top: 1.6rem; justify-content: center; }
+  .vat { margin-top: 1.5rem; font-size: 0.7rem; }
+  .compare h2 { font-size: var(--step-3); margin-bottom: 1.2rem; }
+  .compare p + p { margin-top: 1rem; }
+</style>

@@ -1,0 +1,155 @@
+---
+import Base from "~/layouts/Base.astro";
+import Readout from "~/components/Readout.astro";
+import CtaBand from "~/components/CtaBand.astro";
+import experiment from "~/data/experiment.json";
+import { getCollection } from "astro:content";
+import { site } from "~/data/site";
+
+const entries = (await getCollection("changelog")).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+const fmt = new Intl.NumberFormat("en-GB");
+const opps = experiment.topOpportunities;
+---
+<Base
+  title="Proof & method — the experiment running on this domain"
+  description="The measurement method behind Autopilot: the published baseline, the holdout design, the measurement window, and what gets reported including the losses."
+  breadcrumbs={[{ name: "Proof", href: "/proof/" }]}
+>
+  <section class="section head">
+    <div class="wrap">
+      <p class="label">Proof &amp; method</p>
+      <h1>The experiment is this website.</h1>
+      <p class="lede">
+        Selling an autonomous optimiser with a hand-built marketing site would be a
+        contradiction. So mywebmaster.co.uk is the test subject: same system, same constraints,
+        same published record — and the starting numbers were posted before any work began.
+      </p>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <Readout />
+  </section>
+
+  <section class="section">
+    <div class="wrap wrap--narrow prose">
+      <h2>What the baseline says</h2>
+      <p>
+        Over the 90 days to {experiment.baseline.window.endDate}, this domain was shown in
+        Google results {fmt.format(experiment.baseline.impressions)} times and received
+        {experiment.baseline.clicks} clicks — a click-through rate of
+        {experiment.baseline.ctr}% at an average position of {experiment.baseline.position}.
+      </p>
+      <p>
+        An average position near forty means the site is indexed and considered relevant, but
+        sits three or four pages beyond where anyone looks. The impressions are real demand
+        arriving and finding nothing. That is a more useful starting point than no traffic at
+        all, because the demand does not have to be created — only served.
+      </p>
+
+      <h2>The demand that is already arriving</h2>
+      <p>
+        These are the queries where this domain earns impressions but almost no clicks. Note
+        what they have in common: they describe the problem Autopilot exists to solve.
+      </p>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Query</th>
+            <th scope="col">Impressions</th>
+            <th scope="col">Clicks</th>
+            <th scope="col">CTR</th>
+            <th scope="col">Avg. position</th>
+          </tr>
+        </thead>
+        <tbody>
+          {opps.map((o) => (
+            <tr>
+              <th scope="row">{o.query}</th>
+              <td class="num">{fmt.format(o.impressions)}</td>
+              <td class="num">{o.clicks}</td>
+              <td class="num">{o.ctr}%</td>
+              <td class="num">{o.position}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <p class="mono muted src">
+      Source: Google Search Console, domain property, {experiment.baseline.window.startDate} to
+      {experiment.baseline.window.endDate}, final data state.
+    </p>
+  </section>
+
+  <section class="section method invert">
+    <div class="wrap">
+      <p class="label">Method</p>
+      <h2>How a result gets called a result</h2>
+      <div class="grid grid--2 steps">
+        <div class="card">
+          <p class="mono n">01</p>
+          <h3>Publish the baseline first</h3>
+          <p class="muted">Recorded before any change ships, from final-state data so it cannot drift. It removes the option of picking a flattering start date after the fact.</p>
+        </div>
+        <div class="card">
+          <p class="mono n">02</p>
+          <h3>Split into treatment and control</h3>
+          <p class="muted">Comparable pages are randomly assigned. The control group is deliberately left unoptimised, which costs real value and buys a trustworthy number.</p>
+        </div>
+        <div class="card">
+          <p class="mono n">03</p>
+          <h3>Fix the window before looking</h3>
+          <p class="muted">28 days, chosen in advance, with the page frozen throughout. Anything shorter measures noise; anything chosen afterwards measures wishful thinking.</p>
+        </div>
+        <div class="card">
+          <p class="mono n">04</p>
+          <h3>Report the difference, losses included</h3>
+          <p class="muted">Treatment movement minus control movement. Changes that lose are reverted and published with the same prominence as the ones that win.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap wrap--narrow prose">
+      <h2>What we cannot claim yet</h2>
+      <p>
+        This experiment started on {experiment.baseline.capturedAt}. Search results move slowly:
+        a change takes weeks to settle, and a control comparison needs a full measurement window
+        before it says anything. Any provider showing you dramatic results within days of
+        starting is showing you variance.
+      </p>
+      <p>
+        So there is currently one honest claim on this page: here is the starting line, here is
+        the method, and here is the log. The next readout publishes when the first window closes
+        — whether or not the numbers flatter us.
+      </p>
+      <p><a href="/changelog/">Read the {entries.length} changes made so far →</a></p>
+    </div>
+  </section>
+
+  <CtaBand
+    heading="Want the same experiment run on your site?"
+    body="It starts the same way: a published baseline, a control group, and a fixed window. No graph without a control group."
+  />
+</Base>
+
+<style>
+  .head h1 { margin-block: 1rem 1.2rem; max-width: 16ch; }
+  table { min-width: 640px; border-top: 1px solid var(--line-strong); }
+  .num { text-align: right; font-variant-numeric: tabular-nums; font-family: var(--font-mono); font-size: 0.82rem; }
+  th[scope="row"] { font-weight: 500; }
+  .src { margin-top: 1rem; font-size: 0.7rem; }
+  .method h2 { margin-block: 0.8rem 2rem; }
+  .steps h3 { font-size: var(--step-1); margin-block: 0.4rem 0.6rem; }
+  .steps p { font-size: var(--step--1); }
+  .steps .n { color: var(--accent); font-weight: 600; letter-spacing: 0.1em; }
+  .prose a { color: var(--accent); font-weight: 600; }
+</style>

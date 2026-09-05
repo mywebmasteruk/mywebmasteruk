@@ -1,0 +1,93 @@
+---
+import Logo from "./Logo.astro";
+import { nav, site } from "~/data/site";
+const path = Astro.url.pathname;
+const isCurrent = (href: string) => path === href || (href !== "/" && path.startsWith(href));
+---
+<header class="site-header">
+  <div class="wrap bar">
+    <a href="/" class="brand" aria-label={`${site.name} home`}>
+      <Logo size={30} />
+      <span class="brand-name">mywebmaster</span>
+    </a>
+
+    <nav class="desktop-nav" aria-label="Primary">
+      <ul>
+        {nav.map((item) => (
+          <li>
+            <a href={item.href} aria-current={isCurrent(item.href) ? "page" : undefined}>{item.label}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <a href="/contact/" class="btn btn--primary header-cta">Book a review</a>
+
+    <!-- CSS-only disclosure: no JavaScript ships for navigation. -->
+    <details class="mobile-nav">
+      <summary aria-label="Menu"><span></span><span></span></summary>
+      <div class="mobile-panel">
+        <ul>
+          {nav.map((item) => (
+            <li><a href={item.href} aria-current={isCurrent(item.href) ? "page" : undefined}>{item.label}</a></li>
+          ))}
+          <li><a href="/contact/" class="mobile-cta">Book a review</a></li>
+        </ul>
+      </div>
+    </details>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--bg) 86%, transparent);
+    backdrop-filter: saturate(150%) blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .bar { display: flex; align-items: center; gap: 1.25rem; height: 62px; }
+  .brand { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; font-weight: 600; }
+  .brand-name { font-size: 1.02rem; letter-spacing: -0.03em; }
+  .desktop-nav { margin-left: auto; display: none; }
+  .desktop-nav ul { display: flex; gap: 1.5rem; list-style: none; padding: 0; margin: 0; }
+  .desktop-nav a {
+    text-decoration: none;
+    font-size: var(--step--1);
+    color: var(--text-muted);
+    padding-block: 0.4rem;
+    border-bottom: 2px solid transparent;
+  }
+  .desktop-nav a:hover { color: var(--text); }
+  .desktop-nav a[aria-current="page"] { color: var(--text); border-bottom-color: var(--signal); }
+  .header-cta { display: none; padding: 0.55rem 1rem; }
+
+  .mobile-nav { margin-left: auto; }
+  .mobile-nav summary {
+    list-style: none;
+    cursor: pointer;
+    width: 44px; height: 40px;
+    display: grid; align-content: center; justify-items: center; gap: 5px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+  }
+  .mobile-nav summary::-webkit-details-marker { display: none; }
+  .mobile-nav summary span { width: 16px; height: 1.5px; background: var(--text); display: block; }
+  .mobile-panel {
+    position: absolute; left: 0; right: 0; top: 62px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+    padding: 0.5rem var(--gutter) 1.25rem;
+  }
+  .mobile-panel ul { list-style: none; padding: 0; margin: 0; }
+  .mobile-panel li { border-bottom: 1px solid var(--line); }
+  .mobile-panel a { display: block; padding: 0.85rem 0; text-decoration: none; font-weight: 500; }
+  .mobile-cta { color: var(--accent); font-weight: 600; }
+
+  @media (min-width: 900px) {
+    .desktop-nav, .header-cta { display: block; }
+    .mobile-nav { display: none; }
+    .header-cta { display: inline-flex; }
+  }
+</style>

@@ -1,0 +1,47 @@
+---
+title: "How do I get my site cited by ChatGPT and Perplexity?"
+description: "Let the AI crawlers in, publish self-contained answers to real questions, mark up entities consistently, and give engines a curated map with llms.txt."
+heading: "How do I get my site cited by ChatGPT and Perplexity?"
+question: "How do I get my site cited by ChatGPT and Perplexity?"
+summary: "Getting cited by AI answer engines requires four things: the AI crawlers must be allowed to fetch your pages, each page must contain a self-contained passage that answers a real question, your entity must be described consistently in structured data, and the site should expose a curated map of its best content."
+shortAnswer: "Allow the AI crawlers in robots.txt, publish self-contained passages that completely answer one question each, mark up your organisation and content consistently with schema.org, and add an llms.txt file that points engines at your best pages. Citation follows extractability and trust, not keyword density."
+topic: "ai-search"
+updated: 2026-09-05
+sources:
+  - label: "The llms.txt proposal"
+    url: "https://llmstxt.org/"
+  - label: "Schema.org organization type"
+    url: "https://schema.org/Organization"
+related: ["what-is-generative-engine-optimisation", "what-is-an-autonomous-website-optimiser"]
+---
+
+## 1. Check you are not blocking the crawlers
+
+The most common cause of zero AI visibility is a `robots.txt` rule written years ago. `GPTBot`,
+`ClaudeBot`, `PerplexityBot` and `Google-Extended` are separate user agents, and a blanket
+disallow silently removes you from every answer engine at once. Check this before anything else,
+because nothing else matters while it is wrong.
+
+## 2. Write the answer before the argument
+
+Put a complete, standalone answer in the first paragraph under the heading. Engines extract
+passages, not pages, and a passage that requires the previous three paragraphs for context is
+not extractable.
+
+## 3. Be one entity, not three
+
+If you are "MyWebMaster" on the site, "My Web Master" in your schema markup and "mywebmaster.co.uk"
+in your citations, engines build three weak entity nodes instead of one strong one. Pick the
+canonical name and use it identically in content, structured data and every profile you control.
+
+## 4. Publish an llms.txt
+
+An `llms.txt` file at the site root is a curated markdown map of your most useful pages, so an
+engine does not have to infer your site's structure by crawling. It is a navigation aid rather
+than a permission grant — it does not help if the pages it points at are blocked or unindexed.
+
+## 5. Measure it, because Search Console will not
+
+Search Console does not report AI answer citations. What you can measure is server-side: which
+AI user agents fetched which URLs and how often, plus referral traffic from `chatgpt.com` and
+`perplexity.ai` in analytics. Those two signals are the closest available proxy today.

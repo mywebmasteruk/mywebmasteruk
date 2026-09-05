@@ -1,0 +1,20 @@
+---
+date: 2026-09-05
+title: "Rebuilt static, with a performance budget"
+hypothesis: "The previous site shipped several hundred kilobytes of third-party JavaScript from a page builder. Removing the runtime entirely should put Core Web Vitals inside Google's thresholds by construction rather than by tuning."
+targets: ["/"]
+changeType: "performance"
+autonomy: "human"
+outcome: "pending"
+holdout: false
+---
+
+The site it replaces was a page-builder export: a 409KB HTML document pulling jQuery, Bootstrap,
+Popper, an iframe resizer and a marketing tag from four external origins before it could paint.
+
+The replacement is pre-rendered HTML with no client-side framework, one self-hosted variable
+font of roughly 30KB, and no third-party requests on the critical path. This is less an
+optimisation than a removal: there is no runtime left to be slow.
+
+The budget is enforced at build time rather than checked afterwards, so a future change that
+would breach it fails the build instead of quietly degrading the metric.

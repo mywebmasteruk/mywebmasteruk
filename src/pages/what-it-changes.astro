@@ -1,0 +1,134 @@
+---
+import Base from "~/layouts/Base.astro";
+import CtaBand from "~/components/CtaBand.astro";
+import { getCollection } from "astro:content";
+import { site } from "~/data/site";
+
+const caps = (await getCollection("capabilities")).sort((a, b) =>
+  a.data.category.localeCompare(b.data.category),
+);
+const categories = [...new Set(caps.map((c) => c.data.category))];
+const counts = {
+  auto: caps.filter((c) => c.data.autonomy === "auto").length,
+  propose: caps.filter((c) => c.data.autonomy === "propose").length,
+  never: caps.filter((c) => c.data.autonomy === "never").length,
+};
+const autonomyLabel: Record<string, string> = {
+  auto: "Unattended",
+  propose: "Needs approval",
+  never: "Never",
+};
+const reversibleLabel: Record<string, string> = {
+  instant: "Instant rollback",
+  commit: "Revert commit",
+  manual: "Not applicable",
+};
+---
+<Base
+  title="What Autopilot changes — and what it never touches"
+  description="The full change taxonomy: which changes ship unattended, which need human approval, and which are permanently out of bounds. Published so clients can hold us to it."
+  breadcrumbs={[{ name: "What it changes", href: "/what-it-changes/" }]}
+>
+  <section class="section head">
+    <div class="wrap">
+      <p class="label">The boundary</p>
+      <h1>The full list. Including the things it is forbidden to touch.</h1>
+      <p class="lede">
+        Giving an automated system write access to a live website is only reasonable if the limit
+        is specific, enforced in code, and public. This is ours. If a change type is not on this
+        list, Autopilot cannot make it.
+      </p>
+      <div class="summary">
+        <div class="sum sum--auto"><span class="n">{counts.auto}</span> ship unattended</div>
+        <div class="sum sum--propose"><span class="n">{counts.propose}</span> need approval</div>
+        <div class="sum sum--never"><span class="n">{counts.never}</span> never happen</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap">
+    {categories.map((cat) => (
+      <div class="cat">
+        <h2>{cat}</h2>
+        <div class="table-scroll">
+          <table>
+            <caption class="visually-hidden">{cat} changes and their autonomy levels</caption>
+            <thead>
+              <tr>
+                <th scope="col">Change</th>
+                <th scope="col">Autonomy</th>
+                <th scope="col">Reversal</th>
+                <th scope="col">What triggers it</th>
+              </tr>
+            </thead>
+            <tbody>
+              {caps.filter((c) => c.data.category === cat).map((c) => (
+                <tr>
+                  <th scope="row">
+                    {c.data.change}
+                    <span class="why">{c.data.why}</span>
+                  </th>
+                  <td><span class={`tag tag--${c.data.autonomy}`}>{autonomyLabel[c.data.autonomy]}</span></td>
+                  <td class="mono nowrap">{reversibleLabel[c.data.reversible]}</td>
+                  <td class="muted">{c.data.signal}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    ))}
+  </section>
+
+  <section class="section note">
+    <div class="wrap wrap--narrow">
+      <h2>Why the "never" list matters more than the rest</h2>
+      <p>
+        Two categories are locked permanently, and no plan unlocks them.
+      </p>
+      <p>
+        The first is anything that states what the business charges or promises. An automated
+        system that could edit a price or a guarantee is a system that can commit you to
+        something you did not agree to. Those fields live in code that the optimiser has no
+        write path to, and an attempted edit fails the build.
+      </p>
+      <p>
+        The second is indexing control: <code>robots.txt</code>, <code>noindex</code>, canonical
+        tags and hreflang. A single wrong directive can remove an entire site from search, and
+        the damage is discovered weeks later. The blast radius is too large to delegate at any
+        level of confidence, so these stay under human control permanently.
+      </p>
+    </div>
+  </section>
+
+  <CtaBand
+    heading="Disagree with where a line sits?"
+    body="The boundary is configurable per client. Some tighten it, some loosen the metadata tier. Nobody has yet asked to unlock the never list."
+  />
+</Base>
+
+<style>
+  .head h1 { margin-block: 1rem 1.2rem; max-width: 20ch; }
+  .summary { display: flex; flex-wrap: wrap; gap: 1.5rem 2.5rem; margin-top: 2.5rem; font-size: var(--step--1); }
+  .sum { display: flex; align-items: baseline; gap: 0.5rem; }
+  .sum .n { font-size: var(--step-2); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .sum--auto .n { color: var(--ok-text); }
+  .sum--propose .n { color: var(--warn-text); }
+  .sum--never .n { color: var(--bad-text); }
+
+  .cat { margin-top: var(--section); }
+  .cat h2 { font-size: var(--step-2); margin-bottom: 1.2rem; }
+  table { border-top: 1px solid var(--line-strong); min-width: 720px; }
+  th[scope="row"] { font-weight: 600; max-width: 30ch; }
+  .why { display: block; font-weight: 400; color: var(--text-muted); font-size: 0.82em; margin-top: 0.35rem; line-height: 1.45; }
+  .nowrap { white-space: nowrap; }
+  .tag { display: inline-block; font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.25rem 0.55rem; border-radius: 100px; border: 1px solid; white-space: nowrap; }
+  .tag--auto { color: var(--ok-text); border-color: var(--ok-text); }
+  .tag--propose { color: var(--warn-text); border-color: var(--warn-text); }
+  .tag--never { color: var(--bad-text); border-color: var(--bad-text); }
+  .note h2 { font-size: var(--step-3); margin-bottom: 1.2rem; }
+  .note p + p { margin-top: 1rem; }
+  .note p { max-width: 68ch; }
+  code { font-family: var(--font-mono); font-size: 0.88em; background: var(--bg-soft); padding: 0.1em 0.35em; border-radius: 3px; }
+  .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+</style>

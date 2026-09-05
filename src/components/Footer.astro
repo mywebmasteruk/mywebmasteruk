@@ -1,0 +1,56 @@
+---
+import Logo from "./Logo.astro";
+import { footerNav, site } from "~/data/site";
+const year = new Date().getFullYear();
+---
+<footer class="site-footer invert">
+  <div class="wrap">
+    <div class="top">
+      <div class="about">
+        <a href="/" class="brand" aria-label={`${site.name} home`}>
+          <Logo size={30} />
+          <span class="brand-name">mywebmaster</span>
+        </a>
+        <p class="muted">
+          {site.name} builds and runs Autopilot — a supervised AI system that measures a
+          website every day, ships small evidence-led improvements and proves the lift
+          against a control group.
+        </p>
+        <p class="mono muted">Registered in the United Kingdom · Serving clients remotely</p>
+      </div>
+      {footerNav.map((col) => (
+        <nav class="col" aria-label={col.title}>
+          <h2 class="label">{col.title}</h2>
+          <ul>
+            {col.links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+          </ul>
+        </nav>
+      ))}
+    </div>
+    <hr class="rule" />
+    <div class="bottom">
+      <p class="mono muted">© {year} {site.name}</p>
+      <p class="mono muted">
+        This site is operated by Autopilot. Every change is listed in the
+        <a href="/changelog/">changelog</a>.
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer { padding-block: var(--section) 2rem; margin-top: var(--section); }
+  .top { display: grid; gap: 2.5rem; }
+  @media (min-width: 800px) { .top { grid-template-columns: 1.6fr repeat(3, 1fr); gap: 2rem; } }
+  .brand { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; font-weight: 600; margin-bottom: 1rem; }
+  .brand-name { font-size: 1.02rem; letter-spacing: -0.03em; }
+  .about p { max-width: 42ch; font-size: var(--step--1); }
+  .about p + p { margin-top: 0.9rem; }
+  .col ul { list-style: none; padding: 0; margin: 1rem 0 0; }
+  .col li + li { margin-top: 0.6rem; }
+  .col a { font-size: var(--step--1); text-decoration: none; color: var(--text-muted); }
+  .col a:hover { color: var(--text); text-decoration: underline; text-decoration-color: var(--accent); }
+  .rule { margin-block: 2.5rem 1.5rem; }
+  .bottom { display: flex; flex-wrap: wrap; gap: 0.75rem 2rem; justify-content: space-between; }
+  .bottom a { color: var(--accent); }
+</style>

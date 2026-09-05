@@ -1,0 +1,43 @@
+---
+title: "What is an autonomous website optimiser?"
+description: "An autonomous website optimiser reads a site's own performance data, ships improvements as reversible changes, and measures the result against a control group."
+heading: "What is an autonomous website optimiser?"
+question: "What is an autonomous website optimiser?"
+summary: "An autonomous website optimiser is a supervised system that measures a website's performance, decides which improvements are worth making, applies them as reversible changes, and proves whether they worked. The important word is supervised: the boundary of what it may change is fixed in advance."
+shortAnswer: "An autonomous website optimiser is a supervised system that reads a website's own performance data, decides which improvements are worth making, applies them as version-controlled changes, and measures whether they worked. It differs from an SEO audit tool because it acts, and from an agency because the cycle runs continuously rather than in monthly batches."
+topic: "autopilot"
+updated: 2026-09-05
+sources:
+  - label: "Google Search Central: Core Web Vitals and page experience"
+    url: "https://developers.google.com/search/docs/appearance/page-experience"
+related: ["can-ai-safely-edit-a-live-website", "how-do-you-measure-seo-improvement"]
+---
+
+## The three things it must do
+
+A tool that only reports is an audit. A tool that only edits is a liability. An autonomous
+optimiser has to close all three sides of the loop:
+
+1. **Measure** — pull real performance data rather than a synthetic score. Search Console for
+   demand and rankings, analytics for behaviour, a crawl for structural health, field data for
+   Core Web Vitals.
+2. **Act** — apply the change to the actual site, in version control, as a single reversible
+   commit with a hypothesis attached.
+3. **Prove** — wait a fixed measurement window, then compare against pages that were
+   deliberately left alone.
+
+Skip the third step and you have a system that generates activity and calls it progress.
+
+## What separates it from an SEO tool
+
+Traditional SEO software produces a list of issues and hands it to a human. The bottleneck is
+never the list — it is the six weeks between the list and someone finding time to act on it.
+An autonomous optimiser removes that gap for the class of changes where human judgement adds
+nothing, and preserves it deliberately for the class where judgement is the whole point.
+
+## The supervision is the product
+
+Any language model can rewrite a title tag. The engineering that matters is everything around
+it: a published boundary of permitted changes, build-time validation that rejects an invalid
+edit, immutable deploys so rollback is instant, a stated hypothesis per change so the result
+can be judged honestly, and a control group so the lift is measured rather than asserted.

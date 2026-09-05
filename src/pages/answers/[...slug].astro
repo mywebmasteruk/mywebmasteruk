@@ -1,0 +1,111 @@
+---
+import Base from "~/layouts/Base.astro";
+import CtaBand from "~/components/CtaBand.astro";
+import { getCollection, render } from "astro:content";
+import { site } from "~/data/site";
+import { qaNode, articleNode } from "~/lib/schema";
+import { pageTitle } from "~/lib/seo";
+
+export async function getStaticPaths() {
+  const answers = await getCollection("answers");
+  return answers.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+const url = new URL(`/answers/${entry.id}/`, site.url).href;
+
+const all = await getCollection("answers");
+const related = d.related
+  .map((slug) => all.find((a) => a.id === slug))
+  .filter((a): a is NonNullable<typeof a> => Boolean(a));
+
+const schema = [
+  qaNode({ question: d.question, answer: d.shortAnswer, url, updated: d.updated }),
+  articleNode({
+    headline: d.heading,
+    description: d.description,
+    url,
+    published: d.updated,
+    updated: d.updated,
+  }),
+];
+---
+<Base
+  title={pageTitle(d.title)}
+  description={d.description}
+  breadcrumbs={[{ name: "Answers", href: "/answers/" }, { name: d.question, href: `/answers/${entry.id}/` }]}
+  schema={schema}
+  noindex={d.noindex}
+  updated={d.updated}
+  ogType="article"
+>
+  <article class="section">
+    <div class="wrap wrap--narrow">
+      <nav class="crumbs mono muted" aria-label="Breadcrumb">
+        <a href="/answers/">Answers</a> <span aria-hidden="true">/</span> {d.topic}
+      </nav>
+      <h1>{d.heading}</h1>
+
+      <!-- Answer-first block: self-contained, and the passage engines are most likely to lift. -->
+      <div class="answer-first">
+        <p class="label">Short answer</p>
+        <p>{d.shortAnswer}</p>
+      </div>
+
+      <div class="prose">
+        <Content />
+      </div>
+
+      {d.sources.length > 0 && (
+        <aside class="sources">
+          <h2 class="label">Sources</h2>
+          <ul>
+            {d.sources.map((s) => (
+              <li><a href={s.url} rel="noopener">{s.label}</a></li>
+            ))}
+          </ul>
+        </aside>
+      )}
+
+      <p class="mono muted updated">
+        Last reviewed {d.updated.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}
+      </p>
+
+      {related.length > 0 && (
+        <nav class="related" aria-label="Related answers">
+          <h2 class="label">Related</h2>
+          <ul>
+            {related.map((r) => <li><a href={`/answers/${r.id}/`}>{r.data.question}</a></li>)}
+          </ul>
+        </nav>
+      )}
+    </div>
+  </article>
+
+  <CtaBand />
+</Base>
+
+<style>
+  .crumbs { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; }
+  .crumbs a { color: inherit; text-decoration: none; }
+  .crumbs a:hover { color: var(--text); }
+  h1 { margin-block: 1rem 1.6rem; }
+  .answer-first {
+    border-left: 3px solid var(--ok-text);
+    background: var(--bg-soft);
+    padding: 1.2rem 1.4rem;
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+    margin-bottom: 2.5rem;
+  }
+  .answer-first p:last-child { font-size: var(--step-1); line-height: 1.5; margin-top: 0.7rem; }
+  .sources { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--line); }
+  .sources ul { list-style: none; padding: 0; margin-top: 0.9rem; }
+  .sources li + li { margin-top: 0.5rem; }
+  .sources a { font-size: var(--step--1); }
+  .updated { margin-top: 2rem; font-size: 0.72rem; }
+  .related { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--line); }
+  .related ul { list-style: none; padding: 0; margin-top: 0.9rem; display: grid; gap: 0.6rem; }
+  .related a { font-weight: 500; }
+</style>

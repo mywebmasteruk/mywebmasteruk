@@ -1,0 +1,43 @@
+---
+title: "Can AI safely make changes to a live website?"
+description: "Yes, within a published boundary. Safety comes from limiting the class of change, validating at build time, and making every edit reversible in one command."
+heading: "Can AI safely make changes to a live website?"
+question: "Can AI safely make changes to a live website?"
+summary: "AI can safely change a live website when three conditions hold: the class of permitted change is fixed and published in advance, every edit is validated at build time before it can ship, and any change can be reverted in one command. Unbounded write access to a production site is not safe, and no amount of model quality fixes that."
+shortAnswer: "Yes, but only within a boundary that is written down before the system is given access. Safety comes from three properties: the permitted class of change is published in advance, every edit is validated at build time so an invalid change cannot ship, and each change is a single commit on an immutable deploy so rollback takes seconds."
+topic: "safety"
+updated: 2026-09-05
+sources:
+  - label: "Google Search Essentials: spam policies"
+    url: "https://developers.google.com/search/docs/essentials/spam-policies"
+related: ["what-is-an-autonomous-website-optimiser", "how-do-you-measure-seo-improvement"]
+---
+
+## Safety is an architecture problem, not a model problem
+
+The instinct is to ask whether the AI is good enough to be trusted. That is the wrong question.
+A better one: what is the worst thing this system can do, and how quickly can it be undone?
+
+Design the answer to that question first and model quality becomes a performance concern rather
+than a safety one.
+
+## The three tiers
+
+**Ships unattended.** Mechanical and reversible, with no editorial content: repairing broken
+links, regenerating sitemaps, adding image dimensions, fixing invalid schema syntax, enforcing
+performance budgets. There is no version of these a human would do differently.
+
+**Waits for approval.** Anything that changes what the business says: titles, meta descriptions,
+body copy, new pages, conversion experiments. These arrive as a pull request with the reasoning
+attached.
+
+**Never touched.** Prices, guarantees, legal text, factual claims about the company, robots
+directives, canonical tags and hreflang. A single wrong `noindex` can remove an entire site from
+search. That blast radius does not belong to an automated system at any confidence level.
+
+## Reversibility beats caution
+
+A cautious system that cannot be undone is more dangerous than an aggressive one that can.
+Every change should be a single commit with a stated hypothesis, deployed as an immutable
+build, so reverting is a rollback rather than a rebuild — and a kill switch should stop all
+autonomous activity without needing the person who set it up.

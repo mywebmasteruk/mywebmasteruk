@@ -1,0 +1,128 @@
+[
+  {
+    "id": "broken-links",
+    "category": "Technical health",
+    "change": "Repair broken internal links and redirect chains",
+    "autonomy": "auto",
+    "reversible": "instant",
+    "signal": "Crawl returns 404/410, or a redirect hop count above one",
+    "why": "A dead internal link wastes crawl budget and strands the page it pointed at. The fix is mechanical and has no editorial content, so there is nothing for a human to have an opinion about."
+  },
+  {
+    "id": "sitemap",
+    "category": "Technical health",
+    "change": "Regenerate sitemaps and drop non-indexable URLs",
+    "autonomy": "auto",
+    "reversible": "instant",
+    "signal": "Sitemap contains a URL that is noindexed, redirected or missing",
+    "why": "Search Console reports sitemap URLs that cannot be indexed as errors, which suppresses trust in the whole file."
+  },
+  {
+    "id": "img-attrs",
+    "category": "Performance",
+    "change": "Add width, height, lazy-loading and modern formats to images",
+    "autonomy": "auto",
+    "reversible": "instant",
+    "signal": "Layout shift attributable to an image, or an oversized asset in the build output",
+    "why": "Missing intrinsic dimensions are one of the most common causes of Cumulative Layout Shift, and the fix cannot alter meaning."
+  },
+  {
+    "id": "perf-budget",
+    "category": "Performance",
+    "change": "Enforce page-weight and script budgets, defer non-critical assets",
+    "autonomy": "auto",
+    "reversible": "commit",
+    "signal": "A build exceeds its declared budget, or field LCP drifts above 2.5s",
+    "why": "Google's Core Web Vitals thresholds are published and fixed: LCP at or under 2.5s, INP at or under 200ms, CLS at or under 0.1. Budgets keep a site inside them by construction."
+  },
+  {
+    "id": "schema-syntax",
+    "category": "Structured data",
+    "change": "Fix invalid or incomplete schema.org markup",
+    "autonomy": "auto",
+    "reversible": "instant",
+    "signal": "Validation error, or a required property missing from a type already in use",
+    "why": "Invalid structured data is silently ignored by search engines, so the markup delivers nothing while appearing present."
+  },
+  {
+    "id": "schema-new",
+    "category": "Structured data",
+    "change": "Introduce a new schema type on a template",
+    "autonomy": "propose",
+    "reversible": "commit",
+    "signal": "Page content matches a type it does not yet declare",
+    "why": "Declaring a type is a claim about what the page is. A wrong claim is a trust problem, so a human confirms it once per template."
+  },
+  {
+    "id": "internal-links",
+    "category": "Internal linking",
+    "change": "Add contextual internal links between related pages",
+    "autonomy": "auto",
+    "reversible": "commit",
+    "signal": "Two pages are topically close but unlinked, or a page sits more than three clicks from home",
+    "why": "Internal links distribute authority and help engines understand topic clusters. Additions are capped per page so the text stays readable."
+  },
+  {
+    "id": "titles",
+    "category": "Metadata",
+    "change": "Rewrite title tags and meta descriptions",
+    "autonomy": "propose",
+    "reversible": "commit",
+    "signal": "High impressions with click-through below the expected rate for that position",
+    "why": "Titles are brand voice as much as they are search copy. The system drafts and measures; a person decides how the business sounds."
+  },
+  {
+    "id": "answer-blocks",
+    "category": "Content",
+    "change": "Add or rewrite answer-first summary blocks",
+    "autonomy": "propose",
+    "reversible": "commit",
+    "signal": "A query with impressions has no passage on the page that answers it directly",
+    "why": "Answer engines extract self-contained passages. A block that fully answers one question without surrounding context is the unit they quote."
+  },
+  {
+    "id": "faq-expand",
+    "category": "Content",
+    "change": "Expand FAQ sets from real queries in Search Console",
+    "autonomy": "propose",
+    "reversible": "commit",
+    "signal": "Recurring question-shaped queries with no matching on-page answer",
+    "why": "The questions people actually type are better source material than keyword tools, and each one is a citable passage."
+  },
+  {
+    "id": "new-pages",
+    "category": "Content",
+    "change": "Publish an entirely new page",
+    "autonomy": "propose",
+    "reversible": "commit",
+    "signal": "Demonstrated query demand the site ranks for but does not serve",
+    "why": "Publishing pages to chase keywords is what Google's spam policies call scaled content abuse. Every new page needs a human to confirm it earns its place."
+  },
+  {
+    "id": "cro",
+    "category": "Conversion",
+    "change": "Test calls to action, layout and form friction",
+    "autonomy": "propose",
+    "reversible": "commit",
+    "signal": "GA4 shows engaged sessions that do not reach the conversion event",
+    "why": "Ranking better is worthless if the page does not convert. These run as experiments against a holdout so the result is measured, not asserted."
+  },
+  {
+    "id": "pricing-claims",
+    "category": "Content",
+    "change": "Prices, guarantees, legal text and factual claims about the business",
+    "autonomy": "never",
+    "reversible": "manual",
+    "signal": "Not applicable — permanently out of bounds",
+    "why": "No autonomous system should be able to change what a business charges or promises. These fields are locked in code and rejected at build time if edited by the loop."
+  },
+  {
+    "id": "index-controls",
+    "category": "Technical health",
+    "change": "robots.txt, noindex, canonical targets and hreflang",
+    "autonomy": "never",
+    "reversible": "manual",
+    "signal": "Not applicable — permanently out of bounds",
+    "why": "A single wrong directive can deindex an entire site. The blast radius is too large to automate, so these stay under human control."
+  }
+]

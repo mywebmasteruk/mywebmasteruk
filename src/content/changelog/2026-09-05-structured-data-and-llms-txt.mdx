@@ -1,0 +1,21 @@
+---
+date: 2026-09-05
+title: "Shipped one entity graph and an llms.txt"
+hypothesis: "Consistent entity markup and a curated site map for answer engines should increase the chance of being cited in AI answers for maintenance and optimisation questions, where the domain already earns impressions."
+targets: ["/", "/llms.txt", "/answers/"]
+changeType: "schema"
+autonomy: "human"
+outcome: "pending"
+holdout: false
+---
+
+All structured data is emitted as one `@graph` per page with a single `Organization` node
+referenced by `@id`, rather than as disconnected blocks per template. Engines resolving the
+graph see one entity instead of several similar ones.
+
+Alongside it, an `llms.txt` at the site root gives answer engines a curated map of the pages
+worth reading, and every answer page carries `QAPage` markup with the question and its accepted
+answer.
+
+None of this creates authority on its own. It removes the ambiguity that stops existing content
+from being attributed correctly, which is a smaller claim and a more defensible one.

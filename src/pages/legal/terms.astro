@@ -1,0 +1,90 @@
+---
+import Base from "~/layouts/Base.astro";
+import { site } from "~/data/site";
+const updated = "5 September 2026";
+---
+<Base
+  title="Terms of service | MyWebMaster"
+  description="The terms on which MyWebMaster provides Autopilot: what we do, what we do not change, ownership of work, the guarantee, cancellation and limits of liability."
+  breadcrumbs={[{ name: "Terms", href: "/legal/terms/" }]}
+>
+  <section class="section">
+    <div class="wrap wrap--narrow prose">
+      <p class="label">Legal</p>
+      <h1>Terms of service</h1>
+      <p class="mono muted">Last updated {updated}</p>
+
+      <h2>1. What we provide</h2>
+      <p>
+        {site.name} provides {site.product}, a subscription service that monitors a website,
+        makes defined categories of change to it, and reports on the result. The categories of
+        change permitted at each tier are published at
+        <a href="/what-it-changes/">what it changes</a> and form part of these terms.
+      </p>
+
+      <h2>2. What we will never change</h2>
+      <p>
+        We will not make automated changes to prices, guarantees, legal text, factual claims
+        about your business, or indexing directives including <code>robots.txt</code>,
+        <code>noindex</code>, canonical tags and hreflang. This limit applies at every tier and
+        cannot be waived by agreement, because it exists to protect both parties.
+      </p>
+
+      <h2>3. Access and control</h2>
+      <p>
+        You grant us access to the repository and deployment pipeline for your site, and to your
+        Search Console and analytics properties in a read-only capacity where possible. You may
+        revoke that access at any time. A kill switch is available to you that halts all
+        autonomous activity immediately.
+      </p>
+
+      <h2>4. Ownership</h2>
+      <p>
+        All work product — code, content, configuration and change history — belongs to you from
+        the moment it is created. Nothing we produce is licensed back to you, and nothing is held
+        in a system you cannot access after cancellation.
+      </p>
+
+      <h2>5. Measurement and the guarantee</h2>
+      <p>
+        On the Compound tier, results are measured by comparing optimised pages against a control
+        group over a fixed window. If the control group outperforms the treatment group across
+        two consecutive measurement windows, the fee for the second of those months is refunded.
+        The guarantee applies to the measured comparison only and does not extend to absolute
+        traffic or revenue outcomes.
+      </p>
+
+      <h2>6. What we cannot promise</h2>
+      <p>
+        Search rankings are determined by third parties whose systems we do not control. We do
+        not promise specific positions, traffic volumes or revenue, and any provider who does is
+        promising something they cannot deliver. We promise method, transparency and measurement.
+      </p>
+
+      <h2>7. Cancellation</h2>
+      <p>
+        Watch and Apply may be cancelled at any time, effective at the end of the current billing
+        month. Compound has a three-month minimum term because a holdout comparison requires a
+        full measurement window plus a readout to produce a meaningful result.
+      </p>
+
+      <h2>8. Liability</h2>
+      <p>
+        Our total liability in connection with the service is limited to the fees paid in the
+        three months preceding the event giving rise to the claim. Nothing in these terms limits
+        liability for death, personal injury, or fraud. Because every change is version
+        controlled and reversible, our first remedy for any error is to revert it.
+      </p>
+
+      <h2>9. Governing law</h2>
+      <p>These terms are governed by the law of England and Wales.</p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  h1 { margin-block: 1rem 0.5rem; }
+  .prose h2 { margin-top: 2.2em; font-size: var(--step-1); }
+  .prose a { color: var(--accent); }
+  code { font-family: var(--font-mono); font-size: 0.88em; background: var(--bg-soft); padding: 0.1em 0.35em; border-radius: 3px; }
+</style>

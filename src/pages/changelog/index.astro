@@ -1,0 +1,87 @@
+---
+import Base from "~/layouts/Base.astro";
+import ChangeMeta from "~/components/ChangeMeta.astro";
+import CtaBand from "~/components/CtaBand.astro";
+import { getCollection } from "astro:content";
+import { site } from "~/data/site";
+
+const entries = (await getCollection("changelog")).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+const counts = {
+  total: entries.length,
+  auto: entries.filter((e) => e.data.autonomy === "auto").length,
+  reverted: entries.filter((e) => e.data.outcome === "reverted").length,
+};
+const fmt = (d: Date) => d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+---
+<Base
+  title="Changelog — every change Autopilot made, published"
+  description="A public record of every change made to this website: what changed, the hypothesis behind it, whether a human approved it, and whether it worked or was reverted."
+  breadcrumbs={[{ name: "Changelog", href: "/changelog/" }]}
+>
+  <section class="section head">
+    <div class="wrap">
+      <p class="label">Changelog · updated continuously</p>
+      <h1>Everything it changed, including the mistakes.</h1>
+      <p class="lede">
+        Each entry records the hypothesis before the change shipped, so the result can be judged
+        against what was actually predicted. Reverts are published with the same prominence as
+        wins, because a log that only contains successes is marketing.
+      </p>
+      <dl class="tally mono">
+        <div><dt>Entries</dt><dd>{counts.total}</dd></div>
+        <div><dt>Unattended</dt><dd>{counts.auto}</dd></div>
+        <div><dt>Reverted</dt><dd>{counts.reverted}</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <ol class="log">
+      {entries.map((e) => (
+        <li>
+          <div class="date mono muted"><time datetime={e.data.date.toISOString()}>{fmt(e.data.date)}</time></div>
+          <div class="body">
+            <h2><a href={`/changelog/${e.id}/`}>{e.data.title}</a></h2>
+            <ChangeMeta
+              changeType={e.data.changeType}
+              autonomy={e.data.autonomy}
+              outcome={e.data.outcome}
+              holdout={e.data.holdout}
+            />
+            <p class="hyp"><span class="mono muted">Hypothesis · </span>{e.data.hypothesis}</p>
+            {e.data.result && <p class="result">{e.data.result}</p>}
+          </div>
+        </li>
+      ))}
+    </ol>
+    <p class="feed mono muted">
+      Machine-readable: <a href="/rss.xml">RSS feed</a>
+    </p>
+  </section>
+
+  <CtaBand
+    heading="Want this log for your own site?"
+    body="Every plan produces one. It can be public like this, or private to your team."
+  />
+</Base>
+
+<style>
+  .head { padding-bottom: 2rem; }
+  .head h1 { margin-block: 1rem 1.2rem; max-width: 18ch; }
+  .tally { display: flex; gap: 2.5rem; margin-top: 2rem; }
+  .tally dt { font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+  .tally dd { margin: 0.2rem 0 0; font-size: var(--step-2); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+  .log { list-style: none; padding: 0; border-top: 1px solid var(--line); }
+  .log > li { display: grid; gap: 0.6rem; padding-block: 2rem; border-bottom: 1px solid var(--line); }
+  @media (min-width: 820px) { .log > li { grid-template-columns: 150px 1fr; gap: 2rem; } }
+  .date { font-size: 0.75rem; padding-top: 0.35rem; }
+  .body h2 { font-size: var(--step-2); margin-bottom: 0.8rem; }
+  .body h2 a { text-decoration: none; }
+  .body h2 a:hover { text-decoration: underline; text-decoration-color: var(--accent); }
+  .hyp { margin-top: 1rem; max-width: 70ch; color: var(--text-muted); font-size: var(--step--1); }
+  .result { margin-top: 0.7rem; max-width: 70ch; font-size: var(--step--1); border-left: 2px solid var(--ok-text); padding-left: 0.9rem; }
+  .feed { margin-top: 2rem; font-size: 0.75rem; }
+</style>

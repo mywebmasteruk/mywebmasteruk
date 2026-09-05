@@ -1,0 +1,83 @@
+[
+  {
+    "id": "watch",
+    "name": "Autopilot Watch",
+    "order": 1,
+    "tagline": "The system watches, measures and tells you exactly what to fix. It changes nothing.",
+    "priceMonthly": 149,
+    "currency": "GBP",
+    "priceNote": "per site, per month. No contract.",
+    "autonomy": "report-only",
+    "cadence": "Daily scan, weekly report",
+    "bestFor": "Teams with their own developers who want the diagnosis and the priority order, not the hands.",
+    "includes": [
+      "First full report within five working days of starting",
+      "Daily crawl: broken links, redirects, indexability, canonical and robots errors",
+      "Core Web Vitals tracked against Google's LCP, INP and CLS thresholds",
+      "Structured-data validation on every template",
+      "AI-crawler visibility: which answer engines fetched your pages, and which pages",
+      "Search Console and GA4 pulled into one weekly report with a ranked fix list",
+      "Every finding includes the exact diff needed to fix it"
+    ],
+    "excludes": [
+      "No changes are made to your site",
+      "No holdout testing"
+    ],
+    "featured": false,
+    "cta": "Start watching"
+  },
+  {
+    "id": "apply",
+    "name": "Autopilot Apply",
+    "order": 2,
+    "tagline": "The safe class of fixes ships unattended. Everything with an opinion in it comes to you as a pull request.",
+    "priceMonthly": 449,
+    "currency": "GBP",
+    "priceNote": "per site, per month. Cancel any time; the site stays yours.",
+    "autonomy": "safe-auto",
+    "cadence": "Daily scan, weekly release",
+    "bestFor": "Owners who want the maintenance burden gone without handing over editorial control.",
+    "includes": [
+      "Everything in Watch",
+      "Week one is deliberately visible: speed, broken links and errors fixed first",
+      "Unattended fixes for the reversible class: links, sitemaps, image attributes, schema syntax, internal links, performance budgets",
+      "Titles, descriptions and content edits proposed as pull requests you approve",
+      "Every change is one commit with a stated hypothesis and a one-command rollback",
+      "Immutable deploys with instant rollback to any previous build",
+      "Public or private changelog of every change made",
+      "Kill switch: one command halts all autonomous activity",
+      "You keep every change if you cancel \u2014 commits in your repo, not an injected script"
+    ],
+    "excludes": [
+      "No content experiments against a holdout group"
+    ],
+    "featured": true,
+    "cta": "Put it on Apply"
+  },
+  {
+    "id": "compound",
+    "name": "Autopilot Compound",
+    "order": 3,
+    "tagline": "Content and conversion experiments, run against a holdout, so the lift is measured rather than claimed.",
+    "priceMonthly": 1200,
+    "currency": "GBP",
+    "priceNote": "per site, per month. Minimum three months, because the measurement window needs it.",
+    "autonomy": "full-auto",
+    "cadence": "Daily scan, weekly release, monthly readout",
+    "bestFor": "Sites where search and conversion are a material revenue line and the gains compound.",
+    "includes": [
+      "Everything in Apply",
+      "Page-level holdout: comparable pages are deliberately left alone as a control group",
+      "Content rewrites, answer blocks and FAQ expansion aimed at answer-engine citation",
+      "Conversion experiments on layout, calls to action and form friction",
+      "Monthly readout reporting lift against the control group, including the losses",
+      "Query-gap analysis: pages built for demand you rank for but do not serve",
+      "Guarantee: if the holdout beats the treatment group two cycles running, that month is free"
+    ],
+    "excludes": [
+      "Not sold to sites under ~30 comparable pages \u2014 a control group needs volume to mean anything"
+    ],
+    "featured": false,
+    "cta": "Talk to us"
+  }
+]

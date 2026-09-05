@@ -1,0 +1,82 @@
+---
+import Base from "~/layouts/Base.astro";
+import { site } from "~/data/site";
+const updated = "5 September 2026";
+---
+<Base
+  title="Privacy notice | MyWebMaster"
+  description="How MyWebMaster collects and uses personal data: what we hold, why we hold it, how long we keep it, and the rights you have under UK GDPR."
+  breadcrumbs={[{ name: "Privacy", href: "/legal/privacy/" }]}
+>
+  <section class="section">
+    <div class="wrap wrap--narrow prose">
+      <p class="label">Legal</p>
+      <h1>Privacy notice</h1>
+      <p class="mono muted">Last updated {updated}</p>
+
+      <h2>Who we are</h2>
+      <p>
+        {site.name} ("we") operates {site.domain}. For the purposes of UK data protection law we
+        are the data controller for personal data collected through this website. You can reach
+        us at <a href={`mailto:${site.email}`}>{site.email}</a>.
+      </p>
+
+      <h2>What we collect</h2>
+      <ul>
+        <li>
+          <strong>Information you send us.</strong> If you request a scan, we collect the name,
+          email address, website address and any message you provide.
+        </li>
+        <li>
+          <strong>Aggregate usage data.</strong> We use privacy-respecting analytics to count
+          page views and referrers. We do not use advertising cookies, and we do not build
+          profiles of individual visitors.
+        </li>
+        <li>
+          <strong>Server logs.</strong> Our host records requests, including IP address and user
+          agent, for security and to identify which crawlers fetch our pages.
+        </li>
+      </ul>
+
+      <h2>Why we use it</h2>
+      <p>
+        We use the details you send to run the scan you asked for and to reply to you. Our lawful
+        basis is legitimate interests — responding to an enquiry you initiated. We use aggregate
+        usage data to understand which pages are useful, on the same basis.
+      </p>
+
+      <h2>What we do not do</h2>
+      <p>
+        We do not sell personal data, we do not share it with advertising networks, and we do not
+        send marketing email to people who have not asked for it.
+      </p>
+
+      <h2>How long we keep it</h2>
+      <p>
+        Enquiry correspondence is kept for two years from the last contact, then deleted. Server
+        logs are retained for a shorter period by our hosting provider.
+      </p>
+
+      <h2>Client data</h2>
+      <p>
+        Where we operate Autopilot on a client's website, we access that client's Google Search
+        Console and analytics data under their instruction. In that arrangement the client is the
+        controller and we are the processor, governed by the contract between us.
+      </p>
+
+      <h2>Your rights</h2>
+      <p>
+        Under UK GDPR you can ask for a copy of the personal data we hold about you, ask us to
+        correct or delete it, or object to our processing. Email us and we will respond within
+        one month. If you are unhappy with our response you can complain to the Information
+        Commissioner's Office at <a href="https://ico.org.uk/" rel="noopener">ico.org.uk</a>.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  h1 { margin-block: 1rem 0.5rem; }
+  .prose h2 { margin-top: 2.2em; }
+  .prose a { color: var(--accent); }
+</style>

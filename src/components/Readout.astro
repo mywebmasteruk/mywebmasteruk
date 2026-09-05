@@ -1,0 +1,43 @@
+---
+import experiment from "~/data/experiment.json";
+const b = experiment.baseline;
+const fmt = new Intl.NumberFormat("en-GB");
+const stats = [
+  { k: "Impressions", v: fmt.format(b.impressions), note: "demand already reaching the domain" },
+  { k: "Clicks", v: fmt.format(b.clicks), note: "demand actually captured" },
+  { k: "Click-through", v: `${b.ctr}%`, note: "the gap, in one number" },
+  { k: "Avg. position", v: String(b.position), note: "page four of the results" },
+];
+---
+<div class="readout">
+  <div class="head">
+    <p class="label">Baseline · {b.window.startDate} → {b.window.endDate}</p>
+    <p class="mono muted">Google Search Console · domain property · final data</p>
+  </div>
+  <dl>
+    {stats.map((s) => (
+      <div class="stat">
+        <dt>{s.k}</dt>
+        <dd>{s.v}</dd>
+        <p class="mono muted">{s.note}</p>
+      </div>
+    ))}
+  </dl>
+</div>
+
+<style>
+  .readout { border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--surface); overflow: hidden; }
+  .head { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; justify-content: space-between; align-items: center; padding: 0.9rem 1.2rem; border-bottom: 1px solid var(--line); }
+  .head .mono { font-size: 0.7rem; }
+  dl { display: grid; margin: 0; }
+  @media (min-width: 640px) { dl { grid-template-columns: repeat(4, 1fr); } }
+  .stat { padding: 1.2rem; border-bottom: 1px solid var(--line); }
+  @media (min-width: 640px) {
+    .stat { border-bottom: 0; border-right: 1px solid var(--line); }
+    .stat:last-child { border-right: 0; }
+  }
+  @media (max-width: 639px) { .stat:last-child { border-bottom: 0; } }
+  dt { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.11em; text-transform: uppercase; color: var(--text-muted); }
+  dd { margin: 0.35rem 0 0.2rem; font-size: var(--step-3); font-weight: 600; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+  .stat .mono { font-size: 0.7rem; line-height: 1.35; }
+</style>

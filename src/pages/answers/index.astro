@@ -1,0 +1,86 @@
+---
+import Base from "~/layouts/Base.astro";
+import CtaBand from "~/components/CtaBand.astro";
+import { getCollection } from "astro:content";
+import { site } from "~/data/site";
+import { faqNode } from "~/lib/schema";
+
+const answers = (await getCollection("answers"))
+  .filter((a) => !a.data.noindex)
+  .sort((a, b) => a.data.question.localeCompare(b.data.question));
+
+const topics = [...new Set(answers.map((a) => a.data.topic))];
+const topicLabels: Record<string, string> = {
+  autopilot: "Autopilot",
+  safety: "Safety & control",
+  measurement: "Measurement",
+  "ai-search": "AI search",
+  seo: "SEO",
+  pricing: "Pricing",
+};
+
+const schema = [faqNode(answers.map((a) => ({ q: a.data.question, a: a.data.shortAnswer })))];
+---
+<Base
+  title="Answers — plain answers on AI search, SEO and site care"
+  description="Direct answers on autonomous website optimisation, AI search citation, how results are measured, and what website maintenance actually covers."
+  breadcrumbs={[{ name: "Answers", href: "/answers/" }]}
+  schema={schema}
+>
+  <section class="section head">
+    <div class="wrap">
+      <p class="label">Answers</p>
+      <h1>One question. One complete answer.</h1>
+      <p class="lede">
+        Each page answers a single question completely in its first paragraph, then explains the
+        reasoning underneath. Written that way because it is how people read and how answer
+        engines quote.
+      </p>
+    </div>
+  </section>
+
+  <section class="wrap">
+    {topics.map((topic) => (
+      <div class="group">
+        <h2 class="label">{topicLabels[topic] ?? topic}</h2>
+        <ul class="list">
+          {answers.filter((a) => a.data.topic === topic).map((a) => (
+            <li>
+              <a href={`/answers/${a.id}/`}>
+                <h3>{a.data.question}</h3>
+                <p class="muted">{a.data.shortAnswer}</p>
+                <span class="mono more">Read the full answer →</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </section>
+
+  <CtaBand
+    heading="Or just ask us the question directly"
+    body="If the answer you need is not here, send it over. We reply with a straight answer, not a discovery call."
+    primary={{ href: "/contact/", label: "Ask a question" }}
+    secondary={{ href: "/how-it-works/", label: "How Autopilot works" }}
+  />
+</Base>
+
+<style>
+  .head { padding-bottom: 0; }
+  .head h1 { margin-block: 1rem 1.2rem; max-width: 16ch; }
+  .group { margin-top: var(--section); }
+  .group .label { margin-bottom: 1.25rem; }
+  .list { list-style: none; padding: 0; display: grid; gap: 1rem; }
+  @media (min-width: 860px) { .list { grid-template-columns: repeat(2, 1fr); } }
+  .list a {
+    display: block; height: 100%; text-decoration: none;
+    border: 1px solid var(--line); border-radius: var(--radius-lg);
+    padding: 1.4rem; background: var(--surface);
+    transition: border-color 0.15s ease;
+  }
+  .list a:hover { border-color: var(--line-strong); }
+  .list h3 { font-size: var(--step-1); margin-bottom: 0.6rem; }
+  .list p { font-size: var(--step--1); }
+  .more { display: inline-block; margin-top: 0.9rem; color: var(--accent); font-weight: 600; font-size: 0.75rem; }
+</style>

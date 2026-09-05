@@ -1,0 +1,174 @@
+---
+import Base from "~/layouts/Base.astro";
+import Faq from "~/components/Faq.astro";
+import CtaBand from "~/components/CtaBand.astro";
+import { faqNode } from "~/lib/schema";
+import { site } from "~/data/site";
+
+const faqs = [
+  {
+    q: "Why weekly releases instead of daily?",
+    a: "Because a page needs to sit still to be measured. Search Console finalises data about three days after the fact and ranking changes take weeks to settle, so a system editing pages daily would be reacting to noise and could never attribute a result to a cause. Daily observation feeds a weekly release, and each changed page is then frozen for its measurement window.",
+  },
+  {
+    q: "What data does Autopilot read?",
+    a: "Google Search Console for queries, impressions, clicks and position; GA4 for behaviour and conversion events; a full crawl of the site for structural health; Core Web Vitals field data for real-user performance; and server logs for which AI crawlers fetched which pages. It reads more than it writes, by a wide margin.",
+  },
+  {
+    q: "Do you need access to our hosting?",
+    a: "No. Autopilot works through your git repository and your deployment pipeline. It opens pull requests and triggers builds the same way a developer on your team would, which means your existing review, permissions and audit trail all still apply.",
+  },
+  {
+    q: "What if we want to stop it?",
+    a: "One command halts all autonomous activity immediately, and it does not require the person who set it up to be available. Everything Autopilot has built stays yours: the site, the repository, the history and the changelog. There is no lock-in mechanism because there is nothing proprietary in the output.",
+  },
+];
+---
+<Base
+  title="How Autopilot works — measure, decide, ship, prove"
+  description="Autopilot observes daily, releases weekly, and freezes each changed page for a fixed measurement window so results can be attributed. Here is the full cycle."
+  breadcrumbs={[{ name: "How it works", href: "/how-it-works/" }]}
+  schema={[faqNode(faqs)]}
+>
+  <section class="section head">
+    <div class="wrap">
+      <p class="label">The cycle</p>
+      <h1>Slow enough to be measurable. Fast enough to compound.</h1>
+      <p class="lede">
+        The hard part of automating website optimisation is not making changes. It is knowing
+        which change caused which result — and that requires deliberately going slower than the
+        technology allows.
+      </p>
+    </div>
+  </section>
+
+  <section class="wrap phases">
+    <ol>
+      <li>
+        <p class="phase-n mono">Phase 01 · every day</p>
+        <h2>Measure</h2>
+        <p class="lede">Read everything, change nothing.</p>
+        <div class="cols">
+          <div>
+            <h3>Search</h3>
+            <p class="muted">Queries, impressions, clicks and average position from Search Console, restricted to final-state data so numbers cannot shift under the analysis.</p>
+          </div>
+          <div>
+            <h3>Behaviour</h3>
+            <p class="muted">Sessions, engagement and conversion events from GA4, joined to the landing page so search demand and on-page outcome sit in one table.</p>
+          </div>
+          <div>
+            <h3>Structure</h3>
+            <p class="muted">A full crawl: status codes, redirect chains, canonical conflicts, orphaned pages, duplicate titles, invalid structured data.</p>
+          </div>
+          <div>
+            <h3>Speed</h3>
+            <p class="muted">Core Web Vitals field data at the 75th percentile, against Google's published thresholds of 2.5s LCP, 200ms INP and 0.1 CLS.</p>
+          </div>
+          <div>
+            <h3>AI visibility</h3>
+            <p class="muted">Which answer-engine crawlers fetched which URLs, and referral traffic arriving from AI assistants — the closest available proxy for citation.</p>
+          </div>
+          <div>
+            <h3>Competitors</h3>
+            <p class="muted">Where rivals are answering questions you are shown for but do not serve, so gaps surface as demand rather than as opinion.</p>
+          </div>
+        </div>
+      </li>
+
+      <li>
+        <p class="phase-n mono">Phase 02 · weekly</p>
+        <h2>Decide</h2>
+        <p class="lede">Rank by expected value, not by ease.</p>
+        <p>
+          Every candidate change is scored on the size of the demand behind it, the distance
+          between current and achievable performance, and the risk if it is wrong. The output is
+          an ordered queue, and only the top of that queue is allowed to ship in a given week.
+        </p>
+        <p>
+          Each candidate carries a written hypothesis before it is permitted to proceed. If a
+          change cannot be expressed as "we expect X to move because Y", it does not ship —
+          not because the rule is elegant, but because an unfalsifiable change can never be
+          judged afterwards.
+        </p>
+      </li>
+
+      <li>
+        <p class="phase-n mono">Phase 03 · weekly</p>
+        <h2>Ship</h2>
+        <p class="lede">One change, one commit, one immutable build.</p>
+        <p>
+          Changes in the safe class are committed and deployed unattended. Everything else opens
+          a pull request describing the hypothesis, the diff and the expected effect, and waits.
+        </p>
+        <p>
+          Content is stored as structured data with a validated schema, so the system edits
+          fields rather than rewriting page code. An edit that violates the schema — a title too
+          long for a search result, a missing description, a malformed date — fails the build and
+          never reaches production.
+        </p>
+      </li>
+
+      <li>
+        <p class="phase-n mono">Phase 04 · 28 days</p>
+        <h2>Prove</h2>
+        <p class="lede">Compare against pages that were left alone.</p>
+        <p>
+          A changed page is frozen for its measurement window. At the end, its movement is
+          compared with the control group — comparable pages that were deliberately excluded from
+          optimisation and therefore absorbed the same algorithm updates and seasonal swings.
+        </p>
+        <p>
+          Changes that beat the control are kept and the pattern is reused. Changes that lose are
+          reverted, and the revert is published in the changelog with the same prominence as
+          anything that worked.
+        </p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="section guard invert">
+    <div class="wrap">
+      <p class="label">Guard rails</p>
+      <h2>What stops it running away</h2>
+      <div class="grid grid--2 rails">
+        <div class="card">
+          <h3>A capped blast radius</h3>
+          <p class="muted">A fixed maximum number of pages may change per cycle. Exceeding it requires a human, regardless of how confident the system is.</p>
+        </div>
+        <div class="card">
+          <h3>An automatic circuit breaker</h3>
+          <p class="muted">If overall clicks or conversions fall beyond a set threshold, autonomous releases stop and the last change is rolled back without waiting for anyone.</p>
+        </div>
+        <div class="card">
+          <h3>A change freeze per page</h3>
+          <p class="muted">A page that has just changed cannot change again until its measurement window closes, so results stay attributable to a single cause.</p>
+        </div>
+        <div class="card">
+          <h3>A kill switch</h3>
+          <p class="muted">One command halts everything. It works whether or not the person who configured the system is available.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Faq faqs={faqs} title="How it works in practice" />
+  <CtaBand />
+</Base>
+
+<style>
+  .head h1 { margin-block: 1rem 1.2rem; max-width: 20ch; }
+  .phases ol { list-style: none; padding: 0; counter-reset: phase; }
+  .phases > ol > li { padding-block: var(--section); border-top: 1px solid var(--line); }
+  .phases h2 { font-size: var(--step-3); margin-block: 0.6rem 0.8rem; }
+  .phases > ol > li > p { max-width: 68ch; }
+  .phases > ol > li > p + p { margin-top: 1rem; }
+  .phase-n { color: var(--accent); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; }
+  .cols { display: grid; gap: 1.5rem 2rem; margin-top: 2rem; }
+  @media (min-width: 700px) { .cols { grid-template-columns: repeat(3, 1fr); } }
+  .cols h3 { font-size: var(--step-0); margin-bottom: 0.4rem; }
+  .cols p { font-size: var(--step--1); }
+  .guard h2 { margin-block: 0.8rem 2rem; }
+  .rails h3 { font-size: var(--step-1); margin-bottom: 0.5rem; }
+  .rails p { font-size: var(--step--1); }
+</style>

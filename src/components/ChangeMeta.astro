@@ -1,0 +1,27 @@
+---
+interface Props { changeType: string; autonomy: string; outcome: string; holdout?: boolean }
+const { changeType, autonomy, outcome, holdout = false } = Astro.props;
+const autonomyLabel: Record<string, string> = {
+  auto: "Shipped unattended",
+  proposed: "Human approved",
+  human: "Human authored",
+};
+---
+<ul class="meta mono">
+  <li class={`pill pill--${outcome}`}>{outcome}</li>
+  <li class="pill">{changeType}</li>
+  <li class="pill">{autonomyLabel[autonomy] ?? autonomy}</li>
+  {holdout && <li class="pill">holdout tested</li>}
+</ul>
+
+<style>
+  .meta { display: flex; flex-wrap: wrap; gap: 0.4rem; list-style: none; padding: 0; margin: 0; }
+  .pill {
+    font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
+    border: 1px solid var(--line-strong); border-radius: 100px;
+    padding: 0.22rem 0.6rem; color: var(--text-muted);
+  }
+  .pill--improved { border-color: var(--ok-text); color: var(--ok-text); }
+  .pill--regressed, .pill--reverted { border-color: var(--bad-text); color: var(--bad-text); }
+  .pill--pending { border-color: var(--warn-text); color: var(--warn-text); }
+</style>

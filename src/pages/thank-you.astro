@@ -1,0 +1,31 @@
+---
+import Base from "~/layouts/Base.astro";
+---
+<Base
+  title="Request received — your scan is queued | MyWebMaster"
+  description="Your free Autopilot scan request has been received. We run the full pass and reply with a ranked fix list, usually within one working day."
+  noindex={true}
+>
+  <section class="section">
+    <div class="wrap wrap--narrow">
+      <p class="label">Received</p>
+      <h1>That's queued.</h1>
+      <p class="lede">
+        We run the full pass — crawl, Search Console, speed, structured data, AI-crawler access —
+        and reply with a ranked list of what we would fix and why. Usually within one working day.
+      </p>
+      <p class="next">
+        While you wait, the most useful thing to read is
+        <a href="/what-it-changes/">what Autopilot is and isn't allowed to change</a>, because
+        that is the question most people have second.
+      </p>
+      <a class="btn btn--ghost" href="/">Back to the homepage</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  h1 { margin-block: 1rem 1.2rem; }
+  .next { margin-block: 1.5rem 2rem; max-width: 60ch; }
+  .next a { color: var(--accent); }
+</style>

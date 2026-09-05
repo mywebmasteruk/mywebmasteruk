@@ -1,0 +1,315 @@
+---
+import Base from "~/layouts/Base.astro";
+import Readout from "~/components/Readout.astro";
+import Faq from "~/components/Faq.astro";
+import CtaBand from "~/components/CtaBand.astro";
+import { getCollection } from "astro:content";
+import { site } from "~/data/site";
+import { faqNode, serviceNode } from "~/lib/schema";
+import experiment from "~/data/experiment.json";
+
+const plans = (await getCollection("plans")).sort((a, b) => a.data.order - b.data.order);
+const caps = await getCollection("capabilities");
+const counts = {
+  auto: caps.filter((c) => c.data.autonomy === "auto").length,
+  propose: caps.filter((c) => c.data.autonomy === "propose").length,
+  never: caps.filter((c) => c.data.autonomy === "never").length,
+};
+
+const faqs = [
+  {
+    q: "What is an autonomous website optimiser?",
+    a: "An autonomous website optimiser is a supervised system that reads a site's own performance data, decides which improvements are worth making, applies them as version-controlled changes, and measures whether they worked. Autopilot runs that cycle continuously: it scans daily, releases weekly, and reports the result of every change against a control group of pages it deliberately left alone.",
+  },
+  {
+    q: "Does an AI make changes to my live site without asking?",
+    a: `Only within a class of changes that is published in advance and reversible in one command. ${counts.auto} kinds of change ship unattended — broken links, sitemaps, image attributes, schema syntax, internal links and performance budgets. ${counts.propose} kinds arrive as a pull request you approve, including anything that changes wording. ${counts.never} kinds are permanently out of bounds: prices, guarantees, legal text, robots directives and canonical tags.`,
+  },
+  {
+    q: "How do you prove the changes actually worked?",
+    a: "By holding pages back. Comparable pages are split into a treatment group that Autopilot works on and a control group it is forbidden to touch. Both groups face the same algorithm updates, the same seasonality and the same market. The difference between them is the part attributable to the work, and it is reported monthly including the changes that lost.",
+  },
+  {
+    q: "Why does it release weekly if it scans every day?",
+    a: "Because the feedback is slower than the data. Search Console finalises data about three days after the fact, and a change to a page takes weeks to settle in rankings. A system that edited pages daily would be reacting to noise and would never learn whether its last change helped. Daily observation, weekly action and a fixed measurement window is what makes the result readable.",
+  },
+  {
+    q: "What happens if a change makes things worse?",
+    a: "It is reverted and the revert is published. Every change is a single commit with a stated hypothesis, deployed as an immutable build, so rolling back is one command and takes seconds rather than a rebuild. If the control group outperforms the treatment group for two consecutive cycles on the Compound plan, that month is refunded.",
+  },
+  {
+    q: "Will this get my site penalised by Google?",
+    a: "It is designed not to. Google's spam policies target scaled content abuse — mass-producing pages to capture search traffic without serving the reader. Autopilot works on a fixed set of pages and improves their accuracy, speed, structure and usefulness. Publishing an entirely new page always requires human approval, precisely because that is where the line sits.",
+  },
+];
+
+const schema = [
+  serviceNode({
+    name: site.product,
+    description: site.description,
+    url: `${site.url}/`,
+    offers: plans.map((p) => ({
+      name: p.data.name,
+      price: p.data.priceMonthly,
+      currency: p.data.currency,
+      description: p.data.tagline,
+    })),
+  }),
+  faqNode(faqs),
+];
+---
+<Base
+  title="Autopilot — the website that optimises itself | MyWebMaster"
+  description="A supervised AI system that measures your website daily, ships small evidence-led improvements, and proves the lift against a control group. Live on this domain."
+  schema={schema}
+>
+  <section class="hero invert">
+    <div class="wrap">
+      <p class="label">Autopilot · running live on this domain</p>
+      <h1>Most websites are finished on the day they launch. This one isn't.</h1>
+      <p class="lede">
+        Autopilot is a supervised AI system that reads a website's own performance data every
+        day, ships small evidence-led improvements every week, and proves the lift against a
+        control group of pages it was forbidden to touch. It is running on
+        mywebmaster.co.uk right now, and every change it makes is published.
+      </p>
+      <div class="actions">
+        <a class="btn btn--primary" href="/how-it-works/">See how the loop works</a>
+        <a class="btn btn--ghost" href="/changelog/">Read what it changed today</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section proof-strip">
+    <div class="wrap">
+      <div class="proof-head">
+        <div>
+          <p class="label">The experiment</p>
+          <h2>We started by publishing how bad it was.</h2>
+        </div>
+        <p class="lede">
+          Before Autopilot changed anything, this domain earned
+          {new Intl.NumberFormat("en-GB").format(experiment.baseline.impressions)} search
+          impressions in 90 days and converted {experiment.baseline.clicks} of them into
+          clicks. That is the honest starting line. Everything after it is measured from here.
+        </p>
+      </div>
+      <Readout />
+      <p class="footnote mono muted">
+        Anyone selling SEO can show you a graph that goes up. Far fewer will show you the
+        number they started from, in public, before the work. <a href="/proof/">See the method →</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="section loop-section">
+    <div class="wrap">
+      <p class="label">The loop</p>
+      <h2>Measure. Decide. Ship. Prove. Repeat.</h2>
+      <ol class="grid grid--4 steps">
+        <li class="card">
+          <p class="mono step-n">01</p>
+          <h3>Measure</h3>
+          <p class="muted">
+            Every day: Search Console, GA4, a full crawl, Core Web Vitals field data, structured
+            data validation, and which AI crawlers fetched which pages.
+          </p>
+        </li>
+        <li class="card">
+          <p class="mono step-n">02</p>
+          <h3>Decide</h3>
+          <p class="muted">
+            Findings are ranked by expected value, not by how easy they are. Each candidate change
+            carries a written hypothesis before it is allowed to ship.
+          </p>
+        </li>
+        <li class="card">
+          <p class="mono step-n">03</p>
+          <h3>Ship</h3>
+          <p class="muted">
+            One change, one commit, one immutable deploy. The safe class goes out unattended;
+            anything with an opinion in it waits for a human to approve the pull request.
+          </p>
+        </li>
+        <li class="card">
+          <p class="mono step-n">04</p>
+          <h3>Prove</h3>
+          <p class="muted">
+            The page is frozen for a fixed measurement window, then compared with the control
+            group. Winners stay, losers are reverted, and both are published.
+          </p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section bounds">
+    <div class="wrap">
+      <div class="bounds-head">
+        <div>
+          <p class="label">Autonomy, bounded</p>
+          <h2>The interesting question is not what it can change. It's what it can't.</h2>
+        </div>
+        <p class="lede">
+          Handing an AI write access to a live website is only reasonable if the boundary is
+          written down, enforced in code, and published where clients can hold you to it.
+          Ours is a table on a public page.
+        </p>
+      </div>
+      <div class="grid grid--3 tiers">
+        <div class="card tier tier--auto">
+          <p class="mono count">{counts.auto}</p>
+          <h3>Ships unattended</h3>
+          <p class="muted">
+            Mechanical, reversible, no editorial judgement: broken links, sitemaps, image
+            attributes, schema syntax, internal links, performance budgets.
+          </p>
+        </div>
+        <div class="card tier tier--propose">
+          <p class="mono count">{counts.propose}</p>
+          <h3>Waits for approval</h3>
+          <p class="muted">
+            Anything that changes what the business says: titles, descriptions, answer blocks,
+            FAQ sets, new pages, conversion experiments. Delivered as a pull request.
+          </p>
+        </div>
+        <div class="card tier tier--never">
+          <p class="mono count">{counts.never}</p>
+          <h3>Never touched</h3>
+          <p class="muted">
+            Prices, guarantees, legal text, factual claims about the business, robots
+            directives, canonical tags. Locked in code and rejected at build time.
+          </p>
+        </div>
+      </div>
+      <p class="footnote"><a href="/what-it-changes/">Read the full change taxonomy →</a></p>
+    </div>
+  </section>
+
+  <section class="section diff">
+    <div class="wrap">
+      <p class="label">Structurally different</p>
+      <h2>Three things that are true here and not elsewhere.</h2>
+      <div class="grid grid--3 diffs">
+        <article class="card">
+          <p class="mono diff-n">01</p>
+          <h3>It changes your code, not your browser</h3>
+          <p class="muted">
+            Most automated SEO tools work by injecting changes with a script in your page. An
+            analysis of over 500 million AI crawler requests found that GPTBot, ClaudeBot and
+            PerplexityBot download JavaScript but never execute it — so script-injected
+            improvements are invisible to the exact engines they are sold to impress.
+          </p>
+          <p class="muted">
+            Autopilot commits to your repository. The improvement is in the HTML your server
+            sends, to every visitor and every crawler, identically.
+          </p>
+          <a class="mono more" href="/answers/do-ai-crawlers-execute-javascript/">The evidence →</a>
+        </article>
+        <article class="card">
+          <p class="mono diff-n">02</p>
+          <h3>You keep the work if you leave</h3>
+          <p class="muted">
+            When an overlay tool is cancelled, its optimisations stop loading and your pages
+            revert. You were renting improvements to your own website.
+          </p>
+          <p class="muted">
+            Here, every change is a commit in your repository, deployed by your pipeline.
+            Cancelling stops future work and removes nothing already done. There is no runtime
+            dependency on us to switch off.
+          </p>
+          <a class="mono more" href="/answers/what-happens-if-i-cancel/">What cancelling does →</a>
+        </article>
+        <article class="card">
+          <p class="mono diff-n">03</p>
+          <h3>The failures are published too</h3>
+          <p class="muted">
+            Every change is logged with the hypothesis recorded before it shipped, so it can be
+            judged against what was actually predicted rather than what sounds good afterwards.
+          </p>
+          <p class="muted">
+            Reverts appear with the same prominence as wins. A log containing only successes
+            tells you it is curated, not that the system works.
+          </p>
+          <a class="mono more" href="/changelog/">Read the log →</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section plans-section">
+    <div class="wrap">
+      <p class="label">Plans</p>
+      <h2>Three levels of trust.</h2>
+      <p class="lede">
+        Start where you are comfortable. Most clients begin on Watch, see a month of findings
+        they agree with, and move up.
+      </p>
+      <div class="grid grid--3 plan-grid">
+        {plans.map((p) => (
+          <article class:list={["card", "plan", p.data.featured && "plan--featured"]}>
+            {p.data.featured && <p class="mono flag">Most chosen</p>}
+            <h3>{p.data.name}</h3>
+            <p class="price">
+              {p.data.priceMonthly ? <>£{p.data.priceMonthly}<span class="mono per">/mo</span></> : "Talk to us"}
+            </p>
+            <p class="muted plan-tag">{p.data.tagline}</p>
+            <a class:list={["btn", p.data.featured ? "btn--primary" : "btn--ghost"]} href="/pricing/">
+              {p.data.cta}
+            </a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Faq faqs={faqs} title="What people ask before they hand over write access" />
+  <CtaBand />
+</Base>
+
+<style>
+  .hero { padding-block: clamp(4rem, 2.5rem + 7vw, 9rem) clamp(3.5rem, 2rem + 6vw, 7rem); }
+  .hero h1 { margin-block: 1.2rem 1.5rem; max-width: 17ch; }
+  .hero .lede { max-width: 62ch; }
+  .actions { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 2.2rem; }
+
+  .proof-head, .bounds-head { display: grid; gap: 1.25rem; align-items: end; margin-bottom: 2.5rem; }
+  @media (min-width: 900px) { .proof-head, .bounds-head { grid-template-columns: 1fr 1fr; gap: 3rem; } }
+  .proof-head h2, .bounds-head h2 { max-width: 18ch; margin-top: 0.8rem; }
+  .footnote { margin-top: 1.5rem; font-size: var(--step--1); }
+  .footnote a { color: var(--accent); font-weight: 600; text-decoration: none; }
+  .footnote a:hover { text-decoration: underline; }
+
+  .loop-section h2 { margin-block: 0.8rem 2.5rem; max-width: 22ch; }
+  .steps { list-style: none; padding: 0; }
+  .steps h3 { margin-block: 0.5rem 0.6rem; font-size: var(--step-1); }
+  .steps p { font-size: var(--step--1); }
+  .step-n { color: var(--accent); font-weight: 600; letter-spacing: 0.1em; }
+
+  .tiers .tier { border-top: 3px solid var(--line-strong); }
+  .tier--auto { border-top-color: var(--ok-text); }
+  .tier--propose { border-top-color: var(--warn-text); }
+  .tier--never { border-top-color: var(--bad-text); }
+  .tier .count { font-size: var(--step-3); font-weight: 600; letter-spacing: -0.02em; }
+  .tier h3 { margin-block: 0.2rem 0.6rem; font-size: var(--step-1); }
+  .tier p.muted { font-size: var(--step--1); }
+
+  .diff h2 { margin-block: 0.8rem 2.5rem; max-width: 20ch; }
+  .diffs h3 { font-size: var(--step-1); margin-block: 0.5rem 0.7rem; }
+  .diffs p { font-size: var(--step--1); }
+  .diffs p + p { margin-top: 0.8rem; }
+  .diff-n { color: var(--accent); font-weight: 600; letter-spacing: 0.1em; }
+  .diffs .more { display: inline-block; margin-top: 1rem; color: var(--accent); font-weight: 600; font-size: 0.72rem; text-decoration: none; }
+  .diffs .more:hover { text-decoration: underline; }
+
+  .plans-section h2 { margin-block: 0.8rem 0.8rem; }
+  .plan-grid { margin-top: 2.5rem; align-items: start; }
+  .plan { display: flex; flex-direction: column; gap: 0.6rem; height: 100%; }
+  .plan--featured { border-color: var(--line-strong); box-shadow: 0 0 0 1px var(--accent-graphic); }
+  .flag { color: var(--accent); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; }
+  .plan h3 { font-size: var(--step-1); }
+  .price { font-size: var(--step-3); font-weight: 600; letter-spacing: -0.03em; }
+  .per { font-size: 0.85rem; color: var(--text-muted); font-weight: 400; margin-left: 0.2rem; }
+  .plan-tag { font-size: var(--step--1); flex: 1; }
+  .plan .btn { align-self: flex-start; margin-top: 0.5rem; }
+</style>

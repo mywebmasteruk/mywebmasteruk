@@ -1,0 +1,265 @@
+/* =========================================================================
+   MyWebMaster — "Instrument" design system
+   Light-first, one self-hosted variable font, zero runtime CSS deps.
+   ========================================================================= */
+
+@font-face {
+  font-family: "Instrument Sans";
+  src: url("/fonts/instrument-sans-var.woff2") format("woff2-variations");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  /* — Ink ————————————————————————————————————————————— */
+  --ink-900: #0b0e13;
+  --ink-800: #12161d;
+  --ink-700: #1b212b;
+  --ink-600: #2a323f;
+  --slate-500: #5a6472;
+  --slate-400: #838d9c;
+
+  /* — Paper ——————————————————————————————————————————— */
+  --paper-50: #fcfbf8;
+  --paper-100: #f4f2ec;
+  --paper-200: #e7e4da;
+
+  /* — Signal ——————————————————————————————————————————— */
+  --signal: #c8f04a;
+  --signal-deep: #9ec421;
+  --amber: #f0a93b;
+  --rust: #dd5c39;
+
+  /* — Semantic ————————————————————————————————————————— */
+  --bg: var(--paper-50);
+  --bg-soft: var(--paper-100);
+  --surface: #ffffff;
+  --text: var(--ink-900);
+  --text-muted: var(--slate-500);
+  --line: color-mix(in srgb, var(--ink-900) 12%, transparent);
+  --line-strong: color-mix(in srgb, var(--ink-900) 22%, transparent);
+  --accent: #4f6d08;          /* link/status text on paper — 5.8:1 */
+  --accent-graphic: var(--signal-deep); /* fills, rules, borders */
+  --ok-text: #4f6d08;         /* 5.8:1 on paper */
+  --warn-text: #8a5a00;       /* 5.7:1 on paper */
+  --bad-text: #b03a1a;        /* 5.9:1 on paper */
+  --focus: #1f6feb;
+
+  /* — Type ————————————————————————————————————————————— */
+  --font-sans: "Instrument Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  --step--1: clamp(0.82rem, 0.79rem + 0.15vw, 0.9rem);
+  --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.09rem);
+  --step-1: clamp(1.2rem, 1.13rem + 0.35vw, 1.42rem);
+  --step-2: clamp(1.44rem, 1.31rem + 0.65vw, 1.85rem);
+  --step-3: clamp(1.73rem, 1.5rem + 1.15vw, 2.4rem);
+  --step-4: clamp(2.07rem, 1.68rem + 1.95vw, 3.12rem);
+  --step-5: clamp(2.49rem, 1.85rem + 3.2vw, 4.06rem);
+
+  /* — Space ———————————————————————————————————————————— */
+  --gutter: clamp(1.15rem, 0.8rem + 1.7vw, 2.5rem);
+  --section: clamp(3.5rem, 2.4rem + 5.2vw, 7rem);
+  --measure: 68ch;
+  --radius: 4px;
+  --radius-lg: 10px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: var(--ink-900);
+    --bg-soft: var(--ink-800);
+    --surface: var(--ink-800);
+    --text: var(--paper-50);
+    --text-muted: var(--slate-400);
+    --line: color-mix(in srgb, var(--paper-50) 14%, transparent);
+    --line-strong: color-mix(in srgb, var(--paper-50) 26%, transparent);
+    --accent: var(--signal);
+    --accent-graphic: var(--signal);
+    --ok-text: var(--signal);
+    --warn-text: var(--amber);
+    --bad-text: var(--rust);
+    --focus: #7aa7ff;
+  }
+}
+
+/* — Reset ————————————————————————————————————————————— */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+* { margin: 0; }
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  color-scheme: light dark;
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  font-synthesis-weight: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+img, svg, video { display: block; max-width: 100%; height: auto; }
+
+h1, h2, h3, h4 {
+  line-height: 1.08;
+  letter-spacing: -0.023em;
+  font-weight: 600;
+  text-wrap: balance;
+}
+h1 { font-size: var(--step-5); letter-spacing: -0.032em; }
+h2 { font-size: var(--step-4); letter-spacing: -0.028em; }
+h3 { font-size: var(--step-2); }
+h4 { font-size: var(--step-1); }
+p, li { text-wrap: pretty; }
+
+a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
+a:hover { text-decoration-color: var(--accent); }
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* — Layout primitives ————————————————————————————————— */
+.wrap {
+  width: min(100% - (var(--gutter) * 2), 1180px);
+  margin-inline: auto;
+}
+.wrap--narrow { width: min(100% - (var(--gutter) * 2), 780px); }
+.section { padding-block: var(--section); }
+.stack > * + * { margin-top: var(--flow, 1rem); }
+.prose { max-width: var(--measure); }
+.prose > * + * { margin-top: 1.1em; }
+.prose h2 { margin-top: 2.2em; font-size: var(--step-3); }
+.prose h3 { margin-top: 1.8em; font-size: var(--step-1); }
+.prose ul, .prose ol { padding-left: 1.15rem; }
+.prose li + li { margin-top: 0.5rem; }
+.prose a { text-decoration-color: var(--accent); }
+
+/* — Inverted (ink) sections ——————————————————————————— */
+.invert {
+  background: var(--ink-900);
+  color: var(--paper-50);
+  --text: var(--paper-50);
+  --text-muted: var(--slate-400);
+  --line: color-mix(in srgb, #fff 15%, transparent);
+  --line-strong: color-mix(in srgb, #fff 30%, transparent);
+  --surface: var(--ink-800);
+  --accent: var(--signal);
+  --accent-graphic: var(--signal);
+  --ok-text: var(--signal);
+  --warn-text: var(--amber);
+  --bad-text: var(--rust);
+  --focus: #7aa7ff;
+}
+
+/* — Micro-label: the "instrument readout" motif ———————— */
+.label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.label::before {
+  content: "";
+  width: 1.6rem;
+  height: 1px;
+  background: var(--line-strong);
+  flex: none;
+}
+
+/* — Buttons ———————————————————————————————————————————— */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.78rem 1.35rem;
+  font-size: var(--step--1);
+  font-weight: 600;
+  letter-spacing: 0.005em;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.12s ease, background-color 0.16s ease, border-color 0.16s ease;
+}
+.btn:active { transform: translateY(1px); }
+.btn--primary { background: var(--signal); color: var(--ink-900); }
+.btn--primary:hover { background: #d5f866; }
+.btn--ghost { border-color: var(--line-strong); color: var(--text); }
+.btn--ghost:hover { border-color: var(--text); background: color-mix(in srgb, var(--text) 5%, transparent); }
+
+/* — Cards & rules —————————————————————————————————————— */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: clamp(1.25rem, 0.9rem + 1.3vw, 1.9rem);
+}
+.rule { height: 1px; background: var(--line); border: 0; }
+.grid { display: grid; gap: clamp(1rem, 0.7rem + 1.2vw, 1.6rem); }
+@media (min-width: 700px) {
+  .grid--2 { grid-template-columns: repeat(2, 1fr); }
+  .grid--3 { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 700px) { .grid--4 { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1000px) { .grid--4 { grid-template-columns: repeat(4, 1fr); } }
+
+.muted { color: var(--text-muted); }
+.mono { font-family: var(--font-mono); font-size: 0.8em; }
+.lede { font-size: var(--step-1); line-height: 1.45; color: var(--text-muted); max-width: 58ch; }
+
+.skip {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--signal);
+  color: var(--ink-900);
+  padding: 0.7rem 1.1rem;
+  z-index: 100;
+  font-weight: 600;
+}
+.skip:focus { left: 0.5rem; top: 0.5rem; }
+
+table { border-collapse: collapse; width: 100%; font-size: var(--step--1); }
+th, td { text-align: left; padding: 0.72rem 0.9rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-weight: 600; }
+.table-scroll { overflow-x: auto; }
+
+/* — Target size ————————————————————————————————————————
+   WCAG 2.2 AA (2.5.8) sets a 24x24 CSS px minimum for pointer targets.
+   Standalone links in lists and nav need padding to clear it; links inside
+   running prose are exempt under the "inline" exception. */
+.site-footer .col a,
+.related a,
+.sources a,
+.footnote a,
+.more,
+.feed a {
+  display: inline-block;
+  min-height: 24px;
+  padding-block: 0.28rem;
+}

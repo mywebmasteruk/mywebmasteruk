@@ -1,0 +1,1546 @@
+{
+  "property": "sc-domain:mywebmaster.co.uk",
+  "window": {
+    "startDate": "2026-06-04",
+    "endDate": "2026-09-02",
+    "days": 90
+  },
+  "collectedAt": "2026-09-05T19:24:27.825Z",
+  "totals": {
+    "clicks": 26,
+    "impressions": 18001,
+    "ctr": 0.144,
+    "position": 39.9
+  },
+  "topQueries": [
+    {
+      "query": "webmaster",
+      "clicks": 9,
+      "impressions": 408,
+      "ctr": 2.21,
+      "position": 21.2
+    },
+    {
+      "query": "web design companies in portsmouth",
+      "clicks": 1,
+      "impressions": 1,
+      "ctr": 100,
+      "position": 41
+    },
+    {
+      "query": "webmaster services",
+      "clicks": 1,
+      "impressions": 1032,
+      "ctr": 0.1,
+      "position": 41
+    },
+    {
+      "query": "webmaster website",
+      "clicks": 1,
+      "impressions": 9,
+      "ctr": 11.11,
+      "position": 20.3
+    },
+    {
+      "query": "1 reseller hosting",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0,
+      "position": 68.5
+    },
+    {
+      "query": "4mail webmasters",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 9
+    },
+    {
+      "query": "advertising webmaster",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0,
+      "position": 13.3
+    },
+    {
+      "query": "app development ma",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 70
+    },
+    {
+      "query": "app development on mobile renfrew",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 29
+    },
+    {
+      "query": "average price of a website",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 95
+    },
+    {
+      "query": "become a professional blogger",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0,
+      "position": 69
+    },
+    {
+      "query": "become a successful blogger",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0,
+      "position": 61.5
+    },
+    {
+      "query": "becoming a successful blogger",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0,
+      "position": 47.7
+    },
+    {
+      "query": "benefits of website maintenance",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 73
+    },
+    {
+      "query": "best computer repair shop software",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0,
+      "position": 46
+    },
+    {
+      "query": "best host reseller",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0,
+      "position": 27
+    },
+    {
+      "query": "best hosting for reseller",
+      "clicks": 0,
+      "impressions": 10,
+      "ctr": 0,
+      "position": 25.1
+    },
+    {
+      "query": "best hosting for resellers",
+      "clicks": 0,
+      "impressions": 13,
+      "ctr": 0,
+      "position": 23.5
+    },
+    {
+      "query": "best hosting reseller",
+      "clicks": 0,
+      "impressions": 34,
+      "ctr": 0,
+      "position": 24.5
+    },
+    {
+      "query": "best hosting reseller program",
+      "clicks": 0,
+      "impressions": 7,
+      "ctr": 0,
+      "position": 33.7
+    },
+    {
+      "query": "best hosting reseller programs",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0,
+      "position": 30
+    },
+    {
+      "query": "best master reseller hosting",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0,
+      "position": 20.3
+    },
+    {
+      "query": "best reseller host",
+      "clicks": 0,
+      "impressions": 11,
+      "ctr": 0,
+      "position": 21.9
+    },
+    {
+      "query": "best reseller hosting",
+      "clicks": 0,
+      "impressions": 421,
+      "ctr": 0,
+      "position": 19.1
+    },
+    {
+      "query": "best reseller hosting 2020",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0,
+      "position": 20
+    },
+    {
+      "query": "best reseller hosting companies",
+      "clicks": 0,
+      "impressions": 23,
+      "ctr": 0,
+      "position": 22.2
+    },
+    {
+      "query": "best reseller hosting company",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0,
+      "position": 19.5
+    },
+    {
+      "query": "best reseller hosting for web designers",
+      "clicks": 0,
+      "impressions": 8,
+      "ctr": 0,
+      "position": 25.8
+    },
+    {
+      "query": "best reseller hosting for wordpress",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 23
+    },
+    {
+      "query": "best reseller hosting plans",
+      "clicks": 0,
+      "impressions": 32,
+      "ctr": 0,
+      "position": 22.6
+    },
+    {
+      "query": "best reseller hosting provider",
+      "clicks": 0,
+      "impressions": 33,
+      "ctr": 0,
+      "position": 20.6
+    },
+    {
+      "query": "best reseller hosting review",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 19
+    },
+    {
+      "query": "best reseller hosting uk",
+      "clicks": 0,
+      "impressions": 77,
+      "ctr": 0,
+      "position": 28.9
+    },
+    {
+      "query": "best reseller web hosting",
+      "clicks": 0,
+      "impressions": 63,
+      "ctr": 0,
+      "position": 39.1
+    },
+    {
+      "query": "best reseller web hosting provider",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 25
+    },
+    {
+      "query": "best reseller web hosting uk",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0,
+      "position": 30.7
+    },
+    {
+      "query": "best reselling hosting",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0,
+      "position": 24
+    },
+    {
+      "query": "best uk hosting reseller",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 23
+    },
+    {
+      "query": "best uk reseller hosting",
+      "clicks": 0,
+      "impressions": 20,
+      "ctr": 0,
+      "position": 25.9
+    },
+    {
+      "query": "best web host reseller",
+      "clicks": 0,
+      "impressions": 11,
+      "ctr": 0,
+      "position": 33.2
+    },
+    {
+      "query": "best web host reseller program",
+      "clicks": 0,
+      "impressions": 43,
+      "ctr": 0,
+      "position": 42.4
+    },
+    {
+      "query": "best web hosting for resellers",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0,
+      "position": 30.5
+    },
+    {
+      "query": "best web hosting reseller",
+      "clicks": 0,
+      "impressions": 67,
+      "ctr": 0,
+      "position": 39.4
+    },
+    {
+      "query": "best web hosting reseller plan",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0,
+      "position": 34.5
+    },
+    {
+      "query": "best web hosting reseller program",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0,
+      "position": 44.6
+    },
+    {
+      "query": "best web hosting reseller programs",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0,
+      "position": 50
+    },
+    {
+      "query": "best web hosting resellers",
+      "clicks": 0,
+      "impressions": 10,
+      "ctr": 0,
+      "position": 34.2
+    },
+    {
+      "query": "best web reseller hosting",
+      "clicks": 0,
+      "impressions": 34,
+      "ctr": 0,
+      "position": 22
+    },
+    {
+      "query": "british society of dermatopathology",
+      "clicks": 0,
+      "impressions": 35,
+      "ctr": 0,
+      "position": 5.5
+    },
+    {
+      "query": "bsd course",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 22
+    },
+    {
+      "query": "bsd login",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0,
+      "position": 7.4
+    },
+    {
+      "query": "bsd online payment",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 4
+    },
+    {
+      "query": "business computer home repair software",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 56
+    },
+    {
+      "query": "business website cost calculator",
+      "clicks": 0,
+      "impressions": 7,
+      "ctr": 0,
+      "position": 25.4
+    },
+    {
+      "query": "calculate cost of website",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 47
+    },
+    {
+      "query": "calculate website cost",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 44
+    },
+    {
+      "query": "calculate website price",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 31
+    },
+    {
+      "query": "church webmaster service",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 62
+    },
+    {
+      "query": "computer application services",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0,
+      "position": 33.7
+    },
+    {
+      "query": "computer maintenance company software",
+      "clicks": 0,
+      "impressions": 8,
+      "ctr": 0,
+      "position": 52.6
+    },
+    {
+      "query": "computer online services",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 61
+    },
+    {
+      "query": "computer repair business software",
+      "clicks": 0,
+      "impressions": 8,
+      "ctr": 0,
+      "position": 46.1
+    },
+    {
+      "query": "computer repair management software",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 38
+    },
+    {
+      "query": "computer repair pos",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 39
+    },
+    {
+      "query": "computer repair service software",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0,
+      "position": 47.7
+    },
+    {
+      "query": "computer repair shop software",
+      "clicks": 0,
+      "impressions": 9,
+      "ctr": 0,
+      "position": 45.1
+    },
+    {
+      "query": "computer repair shop software free download",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0,
+      "position": 39.5
+    },
+    {
+      "query": "computer repair store software",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 45
+    },
+    {
+      "query": "computer repair system",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 54
+    },
+    {
+      "query": "computer repair tracking software",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 36
+    },
+    {
+      "query": "computer repair work order software",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 38
+    },
+    {
+      "query": "computer repairs software",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0,
+      "position": 61
+    },
+    {
+      "query": "computer service center management software",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0,
+      "position": 59
+    },
+    {
+      "query": "computer service management software",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0,
+      "position": 48.5
+    },
+    {
+      "query": "computer service repair software",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0,
+      "position": 56
+    },
+    {
+      "query": "computer service shopusdn/a10100medium1.927.99 n",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 30
+    },
+    {
+      "query": "computer service software",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0,
+      "position": 47
+    },
+    {
+      "query": "computer service website",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 66
+    },
+    {
+      "query": "computer service work order software",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0,
+      "position": 42
+    },
+    {
+      "query": "computer services software",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0,
+      "position": 69.5
+    },
+    {
+      "query": "computer shop management",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0,
+      "position": 39.8
+    },
+    {
+      "query": "computer shop management software",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0,
+      "position": 39
+    },
+    {
+      "query": "computer shop management system",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0,
+      "position": 33.5
+    },
+    {
+      "query": "computer shop repair software",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0,
+      "position": 55.5
+    },
+    {
+      "query": "computer shop software",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0,
+      "position": 49.7
+    },
+    {
+      "query": "computer shop system",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0,
+      "position": 30
+    },
+    {
+      "query": "computer store software",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0,
+      "position": 48.5
+    },
+    {
+      "query": "contact webmaster",
+      "clicks": 0,
+      "impressions": 7,
+      "ctr": 0,
+      "position": 28.6
+    },
+    {
+      "query": "cost site",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 59
+    },
+    {
+      "query": "custom mobile app",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0,
+      "position": 76.7
+    },
+    {
+      "query": "custom mobile app development",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0,
+      "position": 77.3
+    },
+    {
+      "query": "custom mobile application",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0,
+      "position": 80.5
+    },
+    {
+      "query": "custom mobile application development",
+      "clicks": 0,
+      "impressions": 102,
+      "ctr": 0,
+      "position": 85.7
+    },
+    {
+      "query": "custom mobile application development services",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 98
+    },
+    {
+      "query": "custom mobile applications",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0,
+      "position": 75.3
+    },
+    {
+      "query": "custom mobile applications development",
+      "clicks": 0,
+      "impressions": 36,
+      "ctr": 0,
+      "position": 86.6
+    },
+    {
+      "query": "custom mobile apps",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 76
+    },
+    {
+      "query": "custom web and mobile app development",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 80
+    },
+    {
+      "query": "custom web and mobile applications",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 68
+    },
+    {
+      "query": "dedicated webmasters",
+      "clicks": 0,
+      "impressions": 7,
+      "ctr": 0,
+      "position": 63.9
+    }
+  ],
+  "topPages": [
+    {
+      "page": "https://www.mywebmaster.co.uk/webmaster-services",
+      "clicks": 18,
+      "impressions": 3600,
+      "ctr": 0.5,
+      "position": 29.1
+    },
+    {
+      "page": "https://mywebmaster.co.uk/",
+      "clicks": 4,
+      "impressions": 82,
+      "ctr": 4.88,
+      "position": 19
+    },
+    {
+      "page": "https://wordpress-kcg8gkowcgg44cks04gsc0c0.cloud.mywebmaster.co.uk/bsd-conferences/",
+      "clicks": 1,
+      "impressions": 8,
+      "ctr": 12.5,
+      "position": 16.6
+    },
+    {
+      "page": "https://wordpress-kcg8gkowcgg44cks04gsc0c0.cloud.mywebmaster.co.uk/login",
+      "clicks": 1,
+      "impressions": 4,
+      "ctr": 25,
+      "position": 6
+    },
+    {
+      "page": "https://wordpress-kcg8gkowcgg44cks04gsc0c0.cloud.mywebmaster.co.uk/new-educational-resource-for-dermatology-and-histopathology-registrars/",
+      "clicks": 1,
+      "impressions": 7,
+      "ctr": 14.29,
+      "position": 9.3
+    },
+    {
+      "page": "https://www.mywebmaster.co.uk/contact-mywebmaster",
+      "clicks": 1,
+      "impressions": 60,
+      "ctr": 1.67,
+      "position": 25.6
+    },
+    {
+      "page": "https://blog.mywebmaster.co.uk/",
+      "clicks": 0,
+      "impressions": 22,
+      "ctr": 0,
+      "position": 13
+    },
+    {
+      "page": "https://blog.mywebmaster.co.uk/coronavirus-every-business-needs-a-website/",
+      "clicks": 0,
+      "impressions": 14,
+      "ctr": 0,
+      "position": 14.5
+    },
+    {
+      "page": "https://blog.mywebmaster.co.uk/cost-prespective-a-website-is-similar-to-a-car/",
+      "clicks": 0,
+      "impressions": 16,
+      "ctr": 0,
+      "position": 20
+    },
+    {
+      "page": "https://blog.mywebmaster.co.uk/do-website-maintenance-myself-or-get-professional-support/",
+      "clicks": 0,
+      "impressions": 186,
+      "ctr": 0,
+      "position": 72.1
+    },
+    {
+      "page": "https://blog.mywebmaster.co.uk/how-can-i-become-a-successful-blogger/",
+      "clicks": 0,
+      "impressions": 136,
+      "ctr": 0,
+      "position": 51.7
+    },
+    {
+      "page": "https://blog.mywebmaster.co.uk/how-do-domain-name-system-work/",
+      "clicks": 0,
+      "impressions": 3582,
+      "ctr": 0,
+      "position": 35.8
+    },
+    {
+      "page": "https://blog.mywebmaster.co.uk/how-do-i-get-mixed-ssl-content/",
+      "clicks": 0,
+      "impressions": 31,
+      "ctr": 0,
+      "position": 52.9
+    },
+    {
+      "page": "https://blog.mywebmaster.co.uk/how-much-does-a-website-cost-website-cost-calculator/",
+      "clicks": 0,
+      "impressions": 863,
+      "ctr": 0,
+      "position": 39.9
+    },
+    {
+      "page": "https://blog.mywebmaster.co.uk/how-will-a-i-impact-on-our-everyday-lives/",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0,
+      "position": 11.2
+    },
+    {
+      "page": "https://blog.mywebmaster.co.uk/joomla-or-wordpress-tough-choices-for-your-website/",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0,
+      "position": 13
+    },
+    {
+      "page": "https://blog.mywebmaster.co.uk/webmaster-left-and-got-locked-out/",
+      "clicks": 0,
+      "impressions": 39,
+      "ctr": 0,
+      "position": 27.4
+    },
+    {
+      "page": "https://blog.mywebmaster.co.uk/what-is-my-ip-address/",
+      "clicks": 0,
+      "impressions": 190,
+      "ctr": 0,
+      "position": 32.2
+    },
+    {
+      "page": "https://blog.mywebmaster.co.uk/what-is-nocode-lowcode-web-development/",
+      "clicks": 0,
+      "impressions": 44,
+      "ctr": 0,
+      "position": 54.4
+    },
+    {
+      "page": "https://blog.mywebmaster.co.uk/what-is-the-best-reseller-hosting/",
+      "clicks": 0,
+      "impressions": 1498,
+      "ctr": 0,
+      "position": 34
+    },
+    {
+      "page": "https://blog.mywebmaster.co.uk/whats-the-best-application-for-a-website/",
+      "clicks": 0,
+      "impressions": 8,
+      "ctr": 0,
+      "position": 7.4
+    },
+    {
+      "page": "https://blog.mywebmaster.co.uk/whats-the-difference-between-traditional-vs-managed-wordpress-hosting/",
+      "clicks": 0,
+      "impressions": 154,
+      "ctr": 0,
+      "position": 64.1
+    },
+    {
+      "page": "https://blog.mywebmaster.co.uk/why-good-website-maintenance-service-is-important/",
+      "clicks": 0,
+      "impressions": 5605,
+      "ctr": 0,
+      "position": 46.6
+    },
+    {
+      "page": "https://blog.mywebmaster.co.uk/why-should-i-update-my-website-design/",
+      "clicks": 0,
+      "impressions": 7,
+      "ctr": 0,
+      "position": 8.4
+    },
+    {
+      "page": "https://wordpress-kcg8gkowcgg44cks04gsc0c0.cloud.mywebmaster.co.uk/",
+      "clicks": 0,
+      "impressions": 85,
+      "ctr": 0,
+      "position": 6.3
+    },
+    {
+      "page": "https://wordpress-kcg8gkowcgg44cks04gsc0c0.cloud.mywebmaster.co.uk/about-bsd/",
+      "clicks": 0,
+      "impressions": 25,
+      "ctr": 0,
+      "position": 6.6
+    },
+    {
+      "page": "https://wordpress-kcg8gkowcgg44cks04gsc0c0.cloud.mywebmaster.co.uk/bsd-membership/",
+      "clicks": 0,
+      "impressions": 7,
+      "ctr": 0,
+      "position": 12
+    },
+    {
+      "page": "https://wordpress-kcg8gkowcgg44cks04gsc0c0.cloud.mywebmaster.co.uk/bsd-self-assessment-course",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 5
+    },
+    {
+      "page": "https://wordpress-kcg8gkowcgg44cks04gsc0c0.cloud.mywebmaster.co.uk/contact-us",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 3
+    },
+    {
+      "page": "https://wordpress-kcg8gkowcgg44cks04gsc0c0.cloud.mywebmaster.co.uk/contact-us/",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 2
+    },
+    {
+      "page": "https://wordpress-kcg8gkowcgg44cks04gsc0c0.cloud.mywebmaster.co.uk/dermatopathology-an-art-and-a-science-part-1-the-beginning/",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0,
+      "position": 43.7
+    },
+    {
+      "page": "https://wordpress-kcg8gkowcgg44cks04gsc0c0.cloud.mywebmaster.co.uk/dermatopathology-an-art-and-a-science-part-2-a-happy-interlude/",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0,
+      "position": 30.3
+    },
+    {
+      "page": "https://wordpress-kcg8gkowcgg44cks04gsc0c0.cloud.mywebmaster.co.uk/dermatopathology-an-art-and-a-science-part-3-the-enigmatic-dysplastic-nevus/",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 90
+    },
+    {
+      "page": "https://wordpress-kcg8gkowcgg44cks04gsc0c0.cloud.mywebmaster.co.uk/digital-pathology-and-my-career/",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0,
+      "position": 1
+    },
+    {
+      "page": "https://wordpress-kcg8gkowcgg44cks04gsc0c0.cloud.mywebmaster.co.uk/document_type/nsdeqa/",
+      "clicks": 0,
+      "impressions": 9,
+      "ctr": 0,
+      "position": 6.4
+    },
+    {
+      "page": "https://wordpress-kcg8gkowcgg44cks04gsc0c0.cloud.mywebmaster.co.uk/dr-phillip-mckee-mb-md-frcpath/",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0,
+      "position": 7.3
+    },
+    {
+      "page": "https://wordpress-kcg8gkowcgg44cks04gsc0c0.cloud.mywebmaster.co.uk/educational-resources/bsd-self-assessment-course/",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0,
+      "position": 13.5
+    },
+    {
+      "page": "https://wordpress-kcg8gkowcgg44cks04gsc0c0.cloud.mywebmaster.co.uk/login/",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0,
+      "position": 4.3
+    },
+    {
+      "page": "https://wordpress-kcg8gkowcgg44cks04gsc0c0.cloud.mywebmaster.co.uk/lower-socioeconomic-status-linked-with-more-severe-skin-disease-including-melanoma/",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0,
+      "position": 18.5
+    },
+    {
+      "page": "https://wordpress-kcg8gkowcgg44cks04gsc0c0.cloud.mywebmaster.co.uk/member-dashboard/",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0,
+      "position": 7.5
+    },
+    {
+      "page": "https://wordpress-kcg8gkowcgg44cks04gsc0c0.cloud.mywebmaster.co.uk/news/",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0,
+      "position": 20.7
+    },
+    {
+      "page": "https://wordpress-kcg8gkowcgg44cks04gsc0c0.cloud.mywebmaster.co.uk/privacy-policy/",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 44
+    },
+    {
+      "page": "https://wordpress-kcg8gkowcgg44cks04gsc0c0.cloud.mywebmaster.co.uk/sitemap/",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 10
+    },
+    {
+      "page": "https://wordpress-kcg8gkowcgg44cks04gsc0c0.cloud.mywebmaster.co.uk/terms-conditions/",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0,
+      "position": 17.3
+    },
+    {
+      "page": "https://wordpress-kcg8gkowcgg44cks04gsc0c0.cloud.mywebmaster.co.uk/the-humble-he-stain-for-discovering-melanoma-prognostic-features-pathetically-inadequate-in-the-molecular-era-or-a-wastefully-unexplored-treasure-trove/",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0,
+      "position": 6.5
+    },
+    {
+      "page": "https://wordpress-kcg8gkowcgg44cks04gsc0c0.cloud.mywebmaster.co.uk/update-on-our-first-online-dermatopathology-teaching-session-for-dermatology-and-histopathology-registrars/",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0,
+      "position": 7
+    },
+    {
+      "page": "https://www.mywebmaster.co.uk/",
+      "clicks": 0,
+      "impressions": 1046,
+      "ctr": 0,
+      "position": 46.1
+    },
+    {
+      "page": "https://www.mywebmaster.co.uk/affiliate-partners",
+      "clicks": 0,
+      "impressions": 17,
+      "ctr": 0,
+      "position": 14.2
+    },
+    {
+      "page": "https://www.mywebmaster.co.uk/computer-repair-shop-app",
+      "clicks": 0,
+      "impressions": 262,
+      "ctr": 0,
+      "position": 40.6
+    },
+    {
+      "page": "https://www.mywebmaster.co.uk/membership-booking-app",
+      "clicks": 0,
+      "impressions": 61,
+      "ctr": 0,
+      "position": 33.1
+    },
+    {
+      "page": "https://www.mywebmaster.co.uk/mobile-app-design-development-service",
+      "clicks": 0,
+      "impressions": 731,
+      "ctr": 0,
+      "position": 69.5
+    },
+    {
+      "page": "https://www.mywebmaster.co.uk/mywebmaster-customer-reviews",
+      "clicks": 0,
+      "impressions": 27,
+      "ctr": 0,
+      "position": 14.5
+    },
+    {
+      "page": "https://www.mywebmaster.co.uk/nocode-ycode-analysis",
+      "clicks": 0,
+      "impressions": 19,
+      "ctr": 0,
+      "position": 12.5
+    },
+    {
+      "page": "https://www.mywebmaster.co.uk/portfolio",
+      "clicks": 0,
+      "impressions": 237,
+      "ctr": 0,
+      "position": 30.4
+    },
+    {
+      "page": "https://www.mywebmaster.co.uk/privacy-policy",
+      "clicks": 0,
+      "impressions": 32,
+      "ctr": 0,
+      "position": 33.3
+    },
+    {
+      "page": "https://www.mywebmaster.co.uk/support-request",
+      "clicks": 0,
+      "impressions": 63,
+      "ctr": 0,
+      "position": 38
+    },
+    {
+      "page": "https://www.mywebmaster.co.uk/terms-conditions",
+      "clicks": 0,
+      "impressions": 57,
+      "ctr": 0,
+      "position": 24.8
+    },
+    {
+      "page": "https://www.mywebmaster.co.uk/website-design-development-service",
+      "clicks": 0,
+      "impressions": 47,
+      "ctr": 0,
+      "position": 45
+    }
+  ],
+  "devices": [
+    {
+      "device": "DESKTOP",
+      "clicks": 16,
+      "impressions": 14489
+    },
+    {
+      "device": "MOBILE",
+      "clicks": 10,
+      "impressions": 3250
+    },
+    {
+      "device": "TABLET",
+      "clicks": 0,
+      "impressions": 262
+    }
+  ],
+  "countries": [
+    {
+      "country": "gbr",
+      "clicks": 18,
+      "impressions": 11141
+    },
+    {
+      "country": "nga",
+      "clicks": 2,
+      "impressions": 17
+    },
+    {
+      "country": "gib",
+      "clicks": 1,
+      "impressions": 1
+    },
+    {
+      "country": "ind",
+      "clicks": 1,
+      "impressions": 137
+    },
+    {
+      "country": "isr",
+      "clicks": 1,
+      "impressions": 6
+    },
+    {
+      "country": "mar",
+      "clicks": 1,
+      "impressions": 12
+    },
+    {
+      "country": "pak",
+      "clicks": 1,
+      "impressions": 41
+    },
+    {
+      "country": "tur",
+      "clicks": 1,
+      "impressions": 26
+    },
+    {
+      "country": "afg",
+      "clicks": 0,
+      "impressions": 1
+    },
+    {
+      "country": "ago",
+      "clicks": 0,
+      "impressions": 4
+    }
+  ],
+  "opportunities": [
+    {
+      "query": "web maintenance services",
+      "impressions": 1263,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 36.4
+    },
+    {
+      "query": "webmaster services",
+      "impressions": 1032,
+      "clicks": 1,
+      "ctr": 0.1,
+      "position": 41
+    },
+    {
+      "query": "web maintenance",
+      "impressions": 724,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 50.2
+    },
+    {
+      "query": "web maintenance and support",
+      "impressions": 590,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 55.1
+    },
+    {
+      "query": "website maintenance and support",
+      "impressions": 525,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 64.8
+    },
+    {
+      "query": "web maintenance service",
+      "impressions": 518,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 37.1
+    },
+    {
+      "query": "best reseller hosting",
+      "impressions": 421,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 19.1
+    },
+    {
+      "query": "domain name system",
+      "impressions": 370,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 28.5
+    },
+    {
+      "query": "website design and maintenance",
+      "impressions": 254,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 43.1
+    },
+    {
+      "query": "website cost calculator",
+      "impressions": 208,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 27.2
+    },
+    {
+      "query": "how domain name system works",
+      "impressions": 205,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 28.7
+    },
+    {
+      "query": "domain name system ip",
+      "impressions": 192,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 37.1
+    },
+    {
+      "query": "web design and maintenance",
+      "impressions": 191,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 37.1
+    },
+    {
+      "query": "how do domain names work",
+      "impressions": 190,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 28
+    },
+    {
+      "query": "web design maintenance",
+      "impressions": 188,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 43.6
+    },
+    {
+      "query": "how does domain name system work",
+      "impressions": 186,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 29.6
+    },
+    {
+      "query": "webmaster support services",
+      "impressions": 186,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 28.2
+    },
+    {
+      "query": "website maintenance service",
+      "impressions": 184,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 42.7
+    },
+    {
+      "query": "domain name system and ip address",
+      "impressions": 182,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 38.4
+    },
+    {
+      "query": "what is the purpose of a domain name system",
+      "impressions": 182,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 68.7
+    },
+    {
+      "query": "what is a domain name system",
+      "impressions": 180,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 40.6
+    },
+    {
+      "query": "website maintenance services",
+      "impressions": 178,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 43.2
+    },
+    {
+      "query": "webmaster service",
+      "impressions": 172,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 34
+    },
+    {
+      "query": "what is the function of the domain name system",
+      "impressions": 158,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 56.9
+    },
+    {
+      "query": "mobile and web app development",
+      "impressions": 156,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 71.3
+    },
+    {
+      "query": "what is domain name system",
+      "impressions": 138,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 33.5
+    },
+    {
+      "query": "how does domain name work",
+      "impressions": 136,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 32.1
+    },
+    {
+      "query": "mobile web developer",
+      "impressions": 136,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 74.8
+    },
+    {
+      "query": "what does domain name system do",
+      "impressions": 126,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 28
+    },
+    {
+      "query": "how domain name works",
+      "impressions": 118,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 28.6
+    },
+    {
+      "query": "how does a domain work?",
+      "impressions": 114,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 44
+    },
+    {
+      "query": "how does domain name service work",
+      "impressions": 112,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 27.3
+    },
+    {
+      "query": "website design maintenance",
+      "impressions": 110,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 40.4
+    },
+    {
+      "query": "webmaster hosting",
+      "impressions": 108,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 33.3
+    },
+    {
+      "query": "importance of website maintenance",
+      "impressions": 103,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 43.7
+    },
+    {
+      "query": "custom mobile application development",
+      "impressions": 102,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 85.7
+    },
+    {
+      "query": "web site maintenance",
+      "impressions": 96,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 46.7
+    },
+    {
+      "query": "website maintenance and design",
+      "impressions": 95,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 38
+    },
+    {
+      "query": "website design cost calculator uk",
+      "impressions": 91,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 33.2
+    },
+    {
+      "query": "mobile web developers",
+      "impressions": 90,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 71.8
+    },
+    {
+      "query": "web reseller hosting",
+      "impressions": 84,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 63.5
+    },
+    {
+      "query": "website maintenance and support services",
+      "impressions": 82,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 78.5
+    },
+    {
+      "query": "best reseller hosting uk",
+      "impressions": 77,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 28.9
+    },
+    {
+      "query": "how do domains work",
+      "impressions": 76,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 28.4
+    },
+    {
+      "query": "best web hosting reseller",
+      "impressions": 67,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 39.4
+    },
+    {
+      "query": "web maintance",
+      "impressions": 67,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 53.9
+    },
+    {
+      "query": "best reseller web hosting",
+      "impressions": 63,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 39.1
+    },
+    {
+      "query": "web hosting and maintenance",
+      "impressions": 61,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 90.2
+    },
+    {
+      "query": "managed wordpress hosting vs regular hosting",
+      "impressions": 60,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 64.4
+    },
+    {
+      "query": "webmaster diensten",
+      "impressions": 59,
+      "clicks": 0,
+      "ctr": 0,
+      "position": 61.9
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+---
+import Base from "~/layouts/Base.astro";
+---
+<Base
+  title="Page not found | MyWebMaster"
+  description="That page does not exist. Autopilot logs every 404 it finds and repairs the internal link that caused it."
+  noindex={true}
+>
+  <section class="section">
+    <div class="wrap wrap--narrow">
+      <p class="label">404</p>
+      <h1>That page isn't here.</h1>
+      <p class="lede">
+        If you followed a link from this site, Autopilot will find it in tonight's crawl and
+        repair it. Broken internal links are in the class of change it fixes unattended.
+      </p>
+      <div class="links">
+        <a class="btn btn--primary" href="/">Homepage</a>
+        <a class="btn btn--ghost" href="/answers/">Answers</a>
+        <a class="btn btn--ghost" href="/changelog/">Changelog</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  h1 { margin-block: 1rem 1.2rem; }
+  .links { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 2rem; }
+</style>

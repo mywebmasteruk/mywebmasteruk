@@ -1,0 +1,97 @@
+name: Autopilot
+
+# Daily observation, weekly release. Search Console finalises data about three days
+# late, so a 06:00 run reads yesterday's complete picture rather than a partial one.
+on:
+  schedule:
+    - cron: "0 6 * * *"      # observe daily
+    - cron: "0 7 * * TUE"    # release weekly
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: "Apply the cleared safe class (otherwise observe only)"
+        type: boolean
+        default: false
+
+concurrency:
+  group: autopilot
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Restore Google credentials
+        env:
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+        run: |
+          if [ -z "$GCP_SA_KEY" ]; then
+            echo "::warning::GCP_SA_KEY is not set — the run will proceed without Search Console data."
+          else
+            mkdir -p "$HOME/.config/gsc"
+            printf '%s' "$GCP_SA_KEY" > "$HOME/.config/gsc/service-account.json"
+          fi
+
+      - name: Run the loop
+        id: loop
+        env:
+          GSC_PROPERTY: ${{ vars.GSC_PROPERTY || 'sc-domain:mywebmaster.co.uk' }}
+          GA4_PROPERTY_ID: ${{ vars.GA4_PROPERTY_ID }}
+        run: |
+          git config user.name "autopilot"
+          git config user.email "autopilot@users.noreply.github.com"
+          # The weekly slot is the only one permitted to write; daily runs observe.
+          if [ "${{ github.event.inputs.apply }}" = "true" ] || [ "${{ github.event.schedule }}" = "0 7 * * TUE" ]; then
+            node ops/loop.mjs --write --push
+          else
+            node ops/loop.mjs
+          fi
+
+      - name: Publish the report to a human
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const date = new Date().toISOString().slice(0, 10);
+            const path = `ops/reports/${date}.md`;
+            if (!fs.existsSync(path)) {
+              core.warning('No report was produced — the run failed before reporting.');
+              return;
+            }
+            const body = fs.readFileSync(path, 'utf8');
+            const title = `Autopilot run — ${date}`;
+            const { owner, repo } = context.repo;
+            const existing = await github.rest.issues.listForRepo({
+              owner, repo, state: 'open', labels: 'autopilot',
+            });
+            const match = existing.data.find((i) => i.title === title);
+            if (match) {
+              await github.rest.issues.createComment({ owner, repo, issue_number: match.number, body });
+            } else {
+              await github.rest.issues.create({ owner, repo, title, body, labels: ['autopilot'] });
+            }
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: autopilot-data-${{ github.run_number }}
+          path: |
+            ops/data/*.json
+            ops/reports/*.md
+          retention-days: 90
