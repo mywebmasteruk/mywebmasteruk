@@ -7,6 +7,8 @@ import { site } from "~/data/site";
 import { faqNode, serviceNode } from "~/lib/schema";
 
 const plans = (await getCollection("plans")).sort((a, b) => a.data.order - b.data.order);
+const money = new Intl.NumberFormat("en-GB");
+
 
 const faqs = [
   {
@@ -70,7 +72,7 @@ const schema = [
           {p.data.featured && <p class="mono flag">Most chosen</p>}
           <h2>{p.data.name}</h2>
           <p class="price">
-            {p.data.priceMonthly ? <>£{p.data.priceMonthly}<span class="per mono">/mo</span></> : "Talk to us"}
+            {p.data.priceMonthly ? <>£{money.format(p.data.priceMonthly)}<span class="per mono">/mo</span></> : "Talk to us"}
           </p>
           {p.data.priceNote && <p class="mono muted note">{p.data.priceNote}</p>}
           <p class="tagline">{p.data.tagline}</p>
