@@ -71,6 +71,13 @@ export async function writeReport({ date, halted, breaker, plan, applied, metric
       for (const f of plan.propose.slice(0, 10)) {
         L(`- **${f.title}**`);
         L(`  ${f.detail}`);
+        if (f.draft?.blocked) {
+          L(`  > Needs you first: ${f.draft.blocked}`);
+        } else if (f.draft) {
+          L(`  > **Proposed:** ${f.draft.proposal}`);
+          L(`  > **Why:** ${f.draft.rationale}`);
+          L(`  > **We expect:** ${f.draft.hypothesis}`);
+        }
         L(`  <sub>${f.capability.change} · ${f.capability.autonomy}</sub>`);
       }
       L();

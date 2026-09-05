@@ -12,6 +12,7 @@
     "prebuild": "node ops/make-og.mjs"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.124.0",
     "@astrojs/mdx": "^4.2.6",
     "@astrojs/sitemap": "^3.3.1",
     "astro": "^5.7.13"

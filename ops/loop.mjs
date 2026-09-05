@@ -15,6 +15,7 @@ import { fileURLToPath } from "node:url";
 import { planRun, isHalted, circuitBreaker } from "./lib/policy.mjs";
 import { applyFindings } from "./apply.mjs";
 import { writeReport } from "./report.mjs";
+import { draftChange, aiConfig } from "./lib/ai.mjs";
 
 const exec = promisify(execFile);
 const CWD = fileURLToPath(new URL("../", import.meta.url));
@@ -90,8 +91,23 @@ step(7, "Applying policy");
 const plan = await planRun(findings);
 console.log(`  ${plan.auto.length} cleared to ship, ${plan.propose.length} need approval, ${plan.refused.length} refused`);
 
+// ---- Draft the proposals so a human has something concrete to approve ----
+step(8, aiConfig.draftingEnabled ? `Drafting proposals with ${aiConfig.model}` : "Drafting disabled");
+if (aiConfig.draftingEnabled) {
+  for (const finding of plan.propose.slice(0, 5)) {
+    try {
+      finding.draft = await draftChange(finding, { domain: "mywebmaster.co.uk" });
+      console.log(`  ${finding.draft ? "drafted" : "no draft"}: ${finding.title.slice(0, 62)}`);
+    } catch (e) {
+      // A drafting failure must never stop the run — the finding still reports.
+      console.log(`  drafting unavailable (${String(e.message).slice(0, 80)})`);
+      break;
+    }
+  }
+}
+
 // ---- Apply --------------------------------------------------------------
-step(8, write ? "Applying cleared changes" : "Dry run (pass --write to apply)");
+step(9, write ? "Applying cleared changes" : "Dry run (pass --write to apply)");
 const applied = await applyFindings(plan.auto, { dryRun: !write });
 for (const r of applied) {
   console.log(`  ${r.applied ? "✅ " + r.summary : "⏭️  " + r.finding.title + " — " + r.reason}`);
@@ -101,7 +117,7 @@ for (const r of applied) {
 let verification = null;
 const changed = applied.filter((r) => r.applied);
 if (changed.length) {
-  step(9, "Verifying the build before publishing");
+  step(10, "Verifying the build before publishing");
   try {
     await run("npm", ["run", "build"]);
     verification = await run("npm", ["run", "verify"]);
@@ -114,7 +130,7 @@ if (changed.length) {
   }
 
   if (push) {
-    step(10, "Committing and pushing");
+    step(11, "Committing and pushing");
     const summary = changed.map((r) => r.summary).join("; ");
     const files = changed.flatMap((r) => r.files ?? []);
     await run("git", ["add", ...files, "ops/data/freeze.json"]);
