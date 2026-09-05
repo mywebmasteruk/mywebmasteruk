@@ -1,0 +1,26 @@
+---
+date: 2026-09-06
+title: "Added visitor tracking, and what it cost"
+hypothesis: "We cannot honestly claim to measure results without measuring visitors. Loading the tag only after the page is usable should give us the data without slowing anything down."
+targets: ["/"]
+changeType: "technical"
+autonomy: "human"
+outcome: "neutral"
+result: "Code sent to the browser went from 2.2KB to 4.6KB. Google's own tag loads afterwards, once the page is already usable, so nothing waits on it."
+holdout: false
+---
+
+This site argues that other companies' code is what makes websites slow. Then we added
+some. That is worth being straight about.
+
+The reasoning: half of what Autopilot measures is whether visitors actually do anything
+once they arrive, and we cannot report that without counting them. So Google Analytics
+is now on the site.
+
+What we did to keep it honest. The tag loads only after the page is finished and usable,
+so nothing on screen ever waits for it. Nothing is stored on your device unless you agree
+— if you decline, we get an anonymous count of the visit and nothing else. Advertising
+features are off.
+
+The cost, published rather than buried: the code we send went from 2.2KB to 4.6KB. The
+speed figures on the [proof page](/proof/) are measured after this change, not before it.

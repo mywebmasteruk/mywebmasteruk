@@ -1,0 +1,57 @@
+# Redirects from the previous site. Ordered by the search demand each URL earned
+# in the 90 days before cutover, so the highest-value ones are easiest to audit.
+#
+# Every target is the closest page that actually answers the same intent. Where
+# no equivalent exists, the homepage is the honest fallback rather than a 404.
+
+# --- Services (highest demand first) ---------------------------------------
+/webmaster-services                      /                                   301!
+/website-design-development-service      /                                   301!
+/mobile-app-design-development-service   /                                   301!
+/computer-repair-shop-app                /                                   301!
+/membership-booking-app                  /                                   301!
+/platform-charges                        /pricing/                           301!
+/portfolio                               /proof/                             301!
+
+# --- Contact and support ---------------------------------------------------
+/contact-mywebmaster                     /contact/                           301!
+/support-request                         /contact/                           301!
+/mywebmaster-customer-reviews            /about/                             301!
+/affiliate-partners                      /about/                             301!
+
+# --- Reference content -----------------------------------------------------
+/nocode-resources                        /answers/                           301!
+/nocode-ycode-analysis                   /answers/                           301!
+
+# --- Legal -----------------------------------------------------------------
+/privacy-policy                          /legal/privacy/                     301!
+/terms-conditions                        /legal/terms/                       301!
+
+# --- Housekeeping ----------------------------------------------------------
+# The old site's test page was never meant to be indexed.
+/test                                    /                                   301!
+# Old builder exported some pages with a trailing .html
+/*.html                                  /:splat/                            301
+
+# Anything else from the old site that no longer exists falls through to the
+# 404 page, which is deliberate: a wrong redirect is worse than an honest 404.
+
+# --- Retired blog subdomain -------------------------------------------------
+# These only take effect once blog.mywebmaster.co.uk points at this site and is
+# added as a domain alias in Netlify.
+#
+# Only posts with a genuine equivalent are redirected. Google treats a redirect
+# to an unrelated page as a soft 404 — it passes nothing and looks like a trick.
+# The off-strategy posts (reseller hosting, DNS explainers, IP lookup, WordPress
+# hosting, blogging tips) are deliberately left to 404: they earned impressions
+# but zero clicks, and this business will never answer those questions again.
+
+# 5,605 impressions in 90 days — the single biggest signal in the whole dataset.
+https://blog.mywebmaster.co.uk/why-good-website-maintenance-service-is-important/   https://mywebmaster.co.uk/answers/what-is-website-maintenance-and-support/   301!
+https://blog.mywebmaster.co.uk/do-website-maintenance-myself-or-get-professional-support/   https://mywebmaster.co.uk/answers/what-is-website-maintenance-and-support/   301!
+https://blog.mywebmaster.co.uk/how-much-does-a-website-cost-website-cost-calculator/   https://mywebmaster.co.uk/answers/how-much-does-website-maintenance-cost/   301!
+https://blog.mywebmaster.co.uk/webmaster-left-and-got-locked-out/   https://mywebmaster.co.uk/answers/what-happens-if-i-cancel/   301!
+https://blog.mywebmaster.co.uk/what-is-nocode-lowcode-web-development/   https://mywebmaster.co.uk/answers/   301!
+
+# The blog home has no equivalent; send it to the answers hub rather than nowhere.
+https://blog.mywebmaster.co.uk/   https://mywebmaster.co.uk/answers/   301!

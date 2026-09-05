@@ -3,6 +3,7 @@ import Base from "~/layouts/Base.astro";
 import Readout from "~/components/Readout.astro";
 import CtaBand from "~/components/CtaBand.astro";
 import experiment from "~/data/experiment.json";
+import performance from "~/data/performance.json";
 import { getCollection } from "astro:content";
 import { site } from "~/data/site";
 
@@ -88,6 +89,88 @@ const opps = experiment.topOpportunities;
     </p>
   </section>
 
+  <section class="section speed">
+    <div class="wrap">
+      <p class="label">Speed, published</p>
+      <h2>How fast this site actually is.</h2>
+      <p class="lede">
+        A service that sells page speed should show its own. These are updated
+        automatically, and they include the number we cannot report yet.
+      </p>
+
+      <div class="grid grid--4 shipped">
+        <div class="card">
+          <p class="mono k">Code sent to your browser</p>
+          <p class="v">{(performance.build.totalJsBytes / 1024).toFixed(1)}<span>KB</span></p>
+          <p class="mono muted">A typical site ships 300KB to 2MB</p>
+        </div>
+        <div class="card">
+          <p class="mono k">Heaviest page</p>
+          <p class="v">{(performance.build.largestPage.bytes / 1024).toFixed(0)}<span>KB</span></p>
+          <p class="mono muted">{performance.build.largestPage.path}</p>
+        </div>
+        <div class="card">
+          <p class="mono k">Fonts</p>
+          <p class="v">{(performance.build.fontBytes / 1024).toFixed(0)}<span>KB</span></p>
+          <p class="mono muted">One file, served from this site</p>
+        </div>
+        <div class="card">
+          <p class="mono k">Other companies' code loading first</p>
+          <p class="v">{performance.build.thirdPartyOnCriticalPath}</p>
+          <p class="mono muted">Nothing blocks the page appearing</p>
+        </div>
+      </div>
+
+      {performance.results.length > 0 && (
+        <div class="table-scroll lighthouse">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Google's test</th>
+                <th scope="col">Speed</th>
+                <th scope="col">Accessibility</th>
+                <th scope="col">Good practice</th>
+                <th scope="col">Search readiness</th>
+              </tr>
+            </thead>
+            <tbody>
+              {performance.results.map((r) => (
+                <tr>
+                  <th scope="row">{r.strategy === "mobile" ? "On a phone" : "On a desktop"}</th>
+                  <td class="num">{r.lab.performance}</td>
+                  <td class="num">{r.lab.accessibility}</td>
+                  <td class="num">{r.lab.bestPractices}</td>
+                  <td class="num">{r.lab.seo}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      <div class="field-note">
+        <p class="label">The number we cannot show you yet</p>
+        {performance.fieldDataAvailable ? (
+          <p>
+            Google now has enough real visits to this site to report what actual people
+            experience, and those figures are included above.
+          </p>
+        ) : (
+          <p>
+            Everything above is a test, not a measurement. The figures Google actually grades
+            you on come from real visitors on real phones, and Google only reports them once a
+            site has enough traffic. This one does not yet — which is exactly what you would
+            expect from a site that got {experiment.baseline.clicks} visits in 90 days.
+            When there is enough traffic to report, those numbers appear here, whatever they say.
+          </p>
+        )}
+        <p class="mono muted">
+          Last measured {new Date(performance.measuredAt).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}
+        </p>
+      </div>
+    </div>
+  </section>
+
   <section class="section method invert">
     <div class="wrap">
       <p class="label">Method</p>
@@ -147,6 +230,18 @@ const opps = experiment.topOpportunities;
   .num { text-align: right; font-variant-numeric: tabular-nums; font-family: var(--font-mono); font-size: 0.82rem; }
   th[scope="row"] { font-weight: 500; }
   .src { margin-top: 1rem; font-size: 0.7rem; }
+  .speed h2 { margin-block: 0.8rem 1rem; }
+  .speed .lede { margin-bottom: 2.5rem; }
+  .shipped .k { font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); line-height: 1.4; }
+  .shipped .v { font-size: var(--step-3); font-weight: 600; letter-spacing: -0.03em; margin: 0.5rem 0 0.35rem; font-variant-numeric: tabular-nums; }
+  .shipped .v span { font-size: 0.45em; font-weight: 500; color: var(--text-muted); margin-left: 0.15rem; }
+  .shipped .mono.muted { font-size: 0.68rem; line-height: 1.4; }
+  .lighthouse { margin-top: 2rem; }
+  .lighthouse table { min-width: 560px; border-top: 1px solid var(--line-strong); }
+  .field-note { margin-top: 2.5rem; border-left: 3px solid var(--warn-text); background: var(--bg-soft); padding: 1.2rem 1.4rem; border-radius: 0 var(--radius-lg) var(--radius-lg) 0; max-width: 70ch; }
+  .field-note p:nth-child(2) { margin-top: 0.7rem; }
+  .field-note .mono { margin-top: 0.9rem; font-size: 0.7rem; }
+
   .method h2 { margin-block: 0.8rem 2rem; }
   .steps h3 { font-size: var(--step-1); margin-block: 0.4rem 0.6rem; }
   .steps p { font-size: var(--step--1); }

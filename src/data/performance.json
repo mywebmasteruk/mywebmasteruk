@@ -1,0 +1,21 @@
+{
+  "_comment": "Written by ops/collect-speed.mjs. Rendered publicly on /proof/.",
+  "measuredAt": "2026-09-05T23:54:04.364Z",
+  "url": "https://mywebmaster.co.uk/",
+  "build": {
+    "pages": 27,
+    "totalJsBytes": 4761,
+    "fontBytes": 29904,
+    "largestPage": {
+      "path": "/",
+      "bytes": 36755
+    },
+    "thirdPartyOnCriticalPath": 0
+  },
+  "results": [],
+  "fieldDataAvailable": false,
+  "notes": [
+    "mobile: Quota exceeded for quota metric 'Queries' and limit 'Queries per day' of service 'pagespeedonline.googleapis.com' for consumer 'project_number:583797351490'.",
+    "desktop: Quota exceeded for quota metric 'Queries' and limit 'Queries per day' of service 'pagespeedonline.googleapis.com' for consumer 'project_number:583797351490'."
+  ]
+}

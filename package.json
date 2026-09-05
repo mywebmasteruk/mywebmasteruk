@@ -9,7 +9,8 @@
     "preview": "astro preview --port 4000",
     "check": "astro check",
     "verify": "node ops/verify.mjs",
-    "prebuild": "node ops/make-og.mjs"
+    "prebuild": "node ops/make-og.mjs",
+    "speed": "node ops/collect-speed.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.124.0",

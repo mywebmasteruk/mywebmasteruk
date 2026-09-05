@@ -81,6 +81,8 @@ step(5, "Building and crawling");
 await run("npm", ["run", "build"]);
 console.log("  " + (await run("node", ["ops/crawl.mjs"])));
 
+console.log("  " + (await run("node", ["ops/collect-speed.mjs"])));
+
 step(6, "Analysing");
 console.log("  " + (await run("node", ["ops/analyse.mjs"])).split("\n").join("\n  "));
 

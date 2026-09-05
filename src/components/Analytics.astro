@@ -1,0 +1,46 @@
+---
+/**
+ * Renders nothing unless a GA4 measurement id is configured, so local builds
+ * and previews stay clean and no visitor is measured by accident.
+ */
+const GA_ID = import.meta.env.PUBLIC_GA4_ID;
+---
+{GA_ID && (
+  <>
+    <script is:inline defer src="/js/analytics.js" data-ga-id={GA_ID}></script>
+
+    <div id="consent-banner" class="consent" hidden role="dialog" aria-label="Cookie choice" aria-live="polite">
+      <p>
+        We count visits to see which pages are useful. Analytics cookies are only
+        set if you agree — everything works either way.
+      </p>
+      <div class="actions">
+        <button type="button" class="btn btn--primary" data-consent="granted">Allow</button>
+        <button type="button" class="btn btn--ghost" data-consent="denied">No thanks</button>
+        <a href="/legal/privacy/">What we collect</a>
+      </div>
+    </div>
+  </>
+)}
+
+<style>
+  .consent {
+    position: fixed;
+    inset-inline: 0.75rem;
+    bottom: 0.75rem;
+    z-index: 90;
+    max-width: 34rem;
+    margin-inline: auto;
+    background: var(--surface);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.15rem;
+    box-shadow: 0 8px 30px rgb(0 0 0 / 12%);
+    display: grid;
+    gap: 0.85rem;
+  }
+  .consent p { font-size: var(--step--1); color: var(--text-muted); margin: 0; }
+  .actions { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+  .actions .btn { padding: 0.5rem 1rem; }
+  .actions a { font-size: 0.75rem; color: var(--text-muted); margin-left: auto; }
+</style>
