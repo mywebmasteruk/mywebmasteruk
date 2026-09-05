@@ -1,7 +1,7 @@
 ---
 date: 2026-09-05
-title: "Rebuilt static, with a performance budget"
-hypothesis: "The previous site shipped several hundred kilobytes of third-party JavaScript from a page builder. Removing the runtime entirely should put Core Web Vitals inside Google's thresholds by construction rather than by tuning."
+title: "Rebuilt for speed, with a weight limit"
+hypothesis: "The old site loaded several hundred kilobytes of extra code from a page builder before it could show anything. Removing it entirely should put the site comfortably inside Google's speed standards permanently, rather than needing tuning."
 targets: ["/"]
 changeType: "performance"
 autonomy: "human"
@@ -9,12 +9,12 @@ outcome: "pending"
 holdout: false
 ---
 
-The site it replaces was a page-builder export: a 409KB HTML document pulling jQuery, Bootstrap,
-Popper, an iframe resizer and a marketing tag from four external origins before it could paint.
+The site this replaces was built with a website builder. Every page pulled in five separate
+bundles of code from four different companies before it could put anything on screen.
 
-The replacement is pre-rendered HTML with no client-side framework, one self-hosted variable
-font of roughly 30KB, and no third-party requests on the critical path. This is less an
-optimisation than a removal: there is no runtime left to be slow.
+The replacement has none of that. Pages are prepared in advance and arrive complete, with one
+small font file and nothing fetched from anybody else. This is less an optimisation than a
+removal: there is no longer anything there to be slow.
 
-The budget is enforced at build time rather than checked afterwards, so a future change that
-would breach it fails the build instead of quietly degrading the metric.
+The weight limit is enforced automatically whenever the site is rebuilt, so a future change that
+would make it heavy fails immediately rather than quietly making the site worse over months.

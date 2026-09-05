@@ -1,43 +1,47 @@
 ---
-title: "What is an autonomous website optimiser?"
-description: "An autonomous website optimiser reads a site's own performance data, ships improvements as reversible changes, and measures the result against a control group."
-heading: "What is an autonomous website optimiser?"
-question: "What is an autonomous website optimiser?"
-summary: "An autonomous website optimiser is a supervised system that measures a website's performance, decides which improvements are worth making, applies them as reversible changes, and proves whether they worked. The important word is supervised: the boundary of what it may change is fixed in advance."
-shortAnswer: "An autonomous website optimiser is a supervised system that reads a website's own performance data, decides which improvements are worth making, applies them as version-controlled changes, and measures whether they worked. It differs from an SEO audit tool because it acts, and from an agency because the cycle runs continuously rather than in monthly batches."
+title: "What is a self-improving website service?"
+description: "A service that watches how your website is really performing, makes small improvements, and proves they worked by comparing against pages left alone."
+heading: "What is a self-improving website service?"
+question: "What is a self-improving website service?"
+summary: "It is a service that keeps looking at how your website is really doing, makes small improvements based on what the numbers show, and then checks whether each one actually worked. The important part is that somebody sets firm limits on what it is allowed to change, before it starts."
+shortAnswer: "It is a service that watches how your website is really performing, decides which improvements are worth making, makes them, and then checks whether they worked. It differs from a website audit because it actually does the work, and from a traditional agency because it keeps going continuously rather than in monthly batches."
 topic: "autopilot"
-updated: 2026-09-05
+updated: 2026-09-06
 sources:
-  - label: "Google Search Central: Core Web Vitals and page experience"
+  - label: "Google's guidance on page experience and speed"
     url: "https://developers.google.com/search/docs/appearance/page-experience"
 related: ["can-ai-safely-edit-a-live-website", "how-do-you-measure-seo-improvement"]
 ---
 
-## The three things it must do
+## The three things it has to do
 
-A tool that only reports is an audit. A tool that only edits is a liability. An autonomous
-optimiser has to close all three sides of the loop:
+Something that only produces a report is an audit. Something that only makes changes is a
+liability. To be worth paying for, it has to do all three:
 
-1. **Measure** — pull real performance data rather than a synthetic score. Search Console for
-   demand and rankings, analytics for behaviour, a crawl for structural health, field data for
-   Core Web Vitals.
-2. **Act** — apply the change to the actual site, in version control, as a single reversible
-   commit with a hypothesis attached.
-3. **Prove** — wait a fixed measurement window, then compare against pages that were
+1. **Look at the real numbers.** Not a score out of a hundred from a testing tool, but what
+   people actually searched for, what they clicked, how fast your pages really load for real
+   visitors, and what is quietly broken.
+2. **Actually change things.** Make the improvement to the real website, one change at a time,
+   each one recorded and each one undoable on its own.
+3. **Check whether it worked.** Wait a set period, then compare against pages that were
    deliberately left alone.
 
-Skip the third step and you have a system that generates activity and calls it progress.
+Skip that third step and you have something that generates activity and calls it progress. Most
+of this industry skips the third step.
 
-## What separates it from an SEO tool
+## How it differs from the usual website audit
 
-Traditional SEO software produces a list of issues and hands it to a human. The bottleneck is
-never the list — it is the six weeks between the list and someone finding time to act on it.
-An autonomous optimiser removes that gap for the class of changes where human judgement adds
-nothing, and preserves it deliberately for the class where judgement is the whole point.
+The usual audit produces a long list of problems and hands it to you. But the list was never the
+hard part. The hard part is the six weeks between getting the list and someone finding time to
+do anything about it.
 
-## The supervision is the product
+A service like this removes that gap for the jobs where nobody's judgement is needed, and
+deliberately keeps it for the ones where your judgement is the whole point.
 
-Any language model can rewrite a title tag. The engineering that matters is everything around
-it: a published boundary of permitted changes, build-time validation that rejects an invalid
-edit, immutable deploys so rollback is instant, a stated hypothesis per change so the result
-can be judged honestly, and a control group so the lift is measured rather than asserted.
+## The limits are the product
+
+Anything can rewrite a page heading these days. What actually matters is everything built
+around it: a published list of what it is allowed to change, an automatic check that rejects
+a bad change before it can go live, the ability to put any change back in seconds, a written
+prediction for every change so the result can be judged honestly afterwards, and a group of
+pages left untouched so you can see what difference it really made.

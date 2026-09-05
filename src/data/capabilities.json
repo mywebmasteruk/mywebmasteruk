@@ -1,128 +1,128 @@
 [
   {
     "id": "broken-links",
-    "category": "Technical health",
-    "change": "Repair broken internal links and redirect chains",
+    "category": "Keeping the site working",
+    "change": "Fix links on your site that lead nowhere",
     "autonomy": "auto",
     "reversible": "instant",
-    "signal": "Crawl returns 404/410, or a redirect hop count above one",
-    "why": "A dead internal link wastes crawl budget and strands the page it pointed at. The fix is mechanical and has no editorial content, so there is nothing for a human to have an opinion about."
+    "signal": "A link points to a page that no longer exists",
+    "why": "A dead link sends a customer to an error page and wastes the visit. Fixing it is mechanical — there is no wording involved, so there is nothing for you to have an opinion about."
   },
   {
     "id": "sitemap",
-    "category": "Technical health",
-    "change": "Regenerate sitemaps and drop non-indexable URLs",
+    "category": "Keeping the site working",
+    "change": "Keep the page list you give Google accurate",
     "autonomy": "auto",
     "reversible": "instant",
-    "signal": "Sitemap contains a URL that is noindexed, redirected or missing",
-    "why": "Search Console reports sitemap URLs that cannot be indexed as errors, which suppresses trust in the whole file."
+    "signal": "The list includes a page that has moved or been removed",
+    "why": "Google treats a list full of missing pages as a sign the site is poorly kept, and trusts the rest of it less. Keeping it tidy costs nothing and is impossible to get wrong."
   },
   {
     "id": "img-attrs",
-    "category": "Performance",
-    "change": "Add width, height, lazy-loading and modern formats to images",
+    "category": "Speed",
+    "change": "Stop pictures making the page jump about as it loads",
     "autonomy": "auto",
     "reversible": "instant",
-    "signal": "Layout shift attributable to an image, or an oversized asset in the build output",
-    "why": "Missing intrinsic dimensions are one of the most common causes of Cumulative Layout Shift, and the fix cannot alter meaning."
+    "signal": "The page shifts while loading, or a picture is far larger than it needs to be",
+    "why": "When a picture loads late, everything below it jumps down and people tap the wrong thing. Telling the page how big the picture will be prevents it, and cannot change what the page says."
   },
   {
     "id": "perf-budget",
-    "category": "Performance",
-    "change": "Enforce page-weight and script budgets, defer non-critical assets",
+    "category": "Speed",
+    "change": "Keep pages inside a set weight limit so they stay fast",
     "autonomy": "auto",
     "reversible": "commit",
-    "signal": "A build exceeds its declared budget, or field LCP drifts above 2.5s",
-    "why": "Google's Core Web Vitals thresholds are published and fixed: LCP at or under 2.5s, INP at or under 200ms, CLS at or under 0.1. Budgets keep a site inside them by construction."
+    "signal": "A page grows heavier than its limit, or starts loading more slowly for real visitors",
+    "why": "Google publishes the speeds a page has to hit: the main content within 2.5 seconds, a response to a tap within 0.2 seconds, and no jumping about. A weight limit keeps you inside them automatically."
   },
   {
     "id": "schema-syntax",
-    "category": "Structured data",
-    "change": "Fix invalid or incomplete schema.org markup",
+    "category": "Labels search engines read",
+    "change": "Repair broken labels that describe your pages",
     "autonomy": "auto",
     "reversible": "instant",
-    "signal": "Validation error, or a required property missing from a type already in use",
-    "why": "Invalid structured data is silently ignored by search engines, so the markup delivers nothing while appearing present."
+    "signal": "A label is malformed, or is missing something it needs to work",
+    "why": "Every page carries hidden labels telling search engines what it is — a service, a question, a business. A broken label is ignored completely, so it looks present while doing nothing at all."
   },
   {
     "id": "schema-new",
-    "category": "Structured data",
-    "change": "Introduce a new schema type on a template",
+    "category": "Labels search engines read",
+    "change": "Add a new type of label to a page",
     "autonomy": "propose",
     "reversible": "commit",
-    "signal": "Page content matches a type it does not yet declare",
-    "why": "Declaring a type is a claim about what the page is. A wrong claim is a trust problem, so a human confirms it once per template."
+    "signal": "A page's content fits a description it does not yet claim",
+    "why": "A label is a claim about what the page is. Claiming the wrong thing damages trust with search engines, so a person confirms it once for each type of page."
   },
   {
     "id": "internal-links",
-    "category": "Internal linking",
-    "change": "Add contextual internal links between related pages",
+    "category": "Links between your pages",
+    "change": "Link related pages to each other",
     "autonomy": "auto",
     "reversible": "commit",
-    "signal": "Two pages are topically close but unlinked, or a page sits more than three clicks from home",
-    "why": "Internal links distribute authority and help engines understand topic clusters. Additions are capped per page so the text stays readable."
+    "signal": "Two pages cover related things but nothing joins them, or a page is buried too deep",
+    "why": "Links help people find the next thing they need, and help search engines see how your site fits together. We cap how many are added so the writing never turns into a list of links."
   },
   {
     "id": "titles",
-    "category": "Metadata",
-    "change": "Rewrite title tags and meta descriptions",
+    "category": "What Google shows",
+    "change": "Rewrite the headline and summary Google displays",
     "autonomy": "propose",
     "reversible": "commit",
-    "signal": "High impressions with click-through below the expected rate for that position",
-    "why": "Titles are brand voice as much as they are search copy. The system drafts and measures; a person decides how the business sounds."
+    "signal": "Lots of people see your listing in Google but few of them click it",
+    "why": "This is the sentence that decides whether someone visits you or a competitor, and it is your voice, not ours. We write a version and show you the numbers; you decide how the business sounds."
   },
   {
     "id": "answer-blocks",
-    "category": "Content",
-    "change": "Add or rewrite answer-first summary blocks",
+    "category": "Words on the page",
+    "change": "Add a short, direct answer near the top of a page",
     "autonomy": "propose",
     "reversible": "commit",
-    "signal": "A query with impressions has no passage on the page that answers it directly",
-    "why": "Answer engines extract self-contained passages. A block that fully answers one question without surrounding context is the unit they quote."
+    "signal": "People search a question you get shown for, but no part of the page answers it plainly",
+    "why": "AI assistants quote a paragraph, not a whole page. A short passage that answers one question completely is the piece they lift — and it is the piece a hurried reader wants too."
   },
   {
     "id": "faq-expand",
-    "category": "Content",
-    "change": "Expand FAQ sets from real queries in Search Console",
+    "category": "Words on the page",
+    "change": "Answer the real questions people are already searching",
     "autonomy": "propose",
     "reversible": "commit",
-    "signal": "Recurring question-shaped queries with no matching on-page answer",
-    "why": "The questions people actually type are better source material than keyword tools, and each one is a citable passage."
+    "signal": "The same question keeps appearing in your search data with no answer on the site",
+    "why": "The questions your customers actually type beat any keyword tool, because they are evidence rather than guesswork. Each answer you add is a reason for someone to find you."
   },
   {
     "id": "new-pages",
-    "category": "Content",
-    "change": "Publish an entirely new page",
+    "category": "Words on the page",
+    "change": "Publish a completely new page",
     "autonomy": "propose",
     "reversible": "commit",
-    "signal": "Demonstrated query demand the site ranks for but does not serve",
-    "why": "Publishing pages to chase keywords is what Google's spam policies call scaled content abuse. Every new page needs a human to confirm it earns its place."
+    "signal": "Clear demand exists for something your site does not cover",
+    "why": "Churning out pages to chase search traffic is exactly what Google penalises sites for. Every new page needs a person to agree it genuinely deserves to exist."
   },
   {
     "id": "cro",
-    "category": "Conversion",
-    "change": "Test calls to action, layout and form friction",
+    "category": "Turning visitors into enquiries",
+    "change": "Test buttons, layout and how hard the form is to fill in",
     "autonomy": "propose",
     "reversible": "commit",
-    "signal": "GA4 shows engaged sessions that do not reach the conversion event",
-    "why": "Ranking better is worthless if the page does not convert. These run as experiments against a holdout so the result is measured, not asserted."
+    "signal": "People arrive, look around, and leave without getting in touch",
+    "why": "Ranking higher is worth nothing if the page does not get you the enquiry. These run as proper tests against a comparison group, so you find out whether it worked rather than being told."
   },
   {
     "id": "pricing-claims",
-    "category": "Content",
-    "change": "Prices, guarantees, legal text and factual claims about the business",
+    "category": "Words on the page",
+    "change": "Your prices, promises, legal wording and claims about your business",
     "autonomy": "never",
     "reversible": "manual",
-    "signal": "Not applicable — permanently out of bounds",
-    "why": "No autonomous system should be able to change what a business charges or promises. These fields are locked in code and rejected at build time if edited by the loop."
+    "signal": "Not applicable — permanently off limits",
+    "why": "Nothing automatic should ever be able to change what you charge or what you promise a customer. These are locked, and an attempt to edit them stops the change from going live at all."
   },
   {
     "id": "index-controls",
-    "category": "Technical health",
-    "change": "robots.txt, noindex, canonical targets and hreflang",
+    "category": "Keeping the site working",
+    "change": "The settings that control whether Google shows your site",
     "autonomy": "never",
     "reversible": "manual",
-    "signal": "Not applicable — permanently out of bounds",
-    "why": "A single wrong directive can deindex an entire site. The blast radius is too large to automate, so these stay under human control."
+    "signal": "Not applicable — permanently off limits",
+    "why": "One wrong setting here can remove your entire website from Google, and you would not notice for weeks. That is far too much damage for anything automatic to be trusted with."
   }
 ]

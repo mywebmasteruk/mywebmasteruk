@@ -1,21 +1,21 @@
 ---
 date: 2026-09-05
-title: "Shipped one entity graph and an llms.txt"
-hypothesis: "Consistent entity markup and a curated site map for answer engines should increase the chance of being cited in AI answers for maintenance and optimisation questions, where the domain already earns impressions."
-targets: ["/", "/llms.txt", "/answers/"]
+title: "Made the site easier for AI to read"
+hypothesis: "Describing the business consistently, and giving AI assistants a simple map of the useful pages, should improve the odds of being quoted on maintenance and website questions this site already gets shown for."
+targets: ["/", "/answers/"]
 changeType: "schema"
 autonomy: "human"
 outcome: "pending"
 holdout: false
 ---
 
-All structured data is emitted as one `@graph` per page with a single `Organization` node
-referenced by `@id`, rather than as disconnected blocks per template. Engines resolving the
-graph see one entity instead of several similar ones.
+Every page now carries the same clear description of who this business is, rather than several
+slightly different ones scattered about. Search engines and AI assistants reading the site see
+one business instead of three vaguely similar ones.
 
-Alongside it, an `llms.txt` at the site root gives answer engines a curated map of the pages
-worth reading, and every answer page carries `QAPage` markup with the question and its accepted
-answer.
+Alongside it, there is now a short plain list at a standard address pointing to the pages worth
+reading, and every question page is labelled as a question with its answer attached.
 
-None of this creates authority on its own. It removes the ambiguity that stops existing content
-from being attributed correctly, which is a smaller claim and a more defensible one.
+None of this creates authority by itself. What it does is remove the confusion that stops
+existing content being credited properly, which is a smaller claim and a much easier one to
+stand behind.

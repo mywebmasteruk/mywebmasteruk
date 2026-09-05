@@ -1,7 +1,7 @@
 ---
 date: 2026-09-05
-title: "Published the autonomy boundary"
-hypothesis: "Clients hesitate to give an automated system write access because the limits are usually vague. Publishing the exact permitted change classes should convert more of that hesitation than any reassurance in a sales page."
+title: "Published the limits as a public table"
+hypothesis: "People hesitate to let anything automatic change their website because the limits are usually vague. Publishing exactly what is and is not allowed should settle more of that hesitation than any amount of reassurance."
 targets: ["/what-it-changes/"]
 changeType: "content"
 autonomy: "human"
@@ -9,12 +9,13 @@ outcome: "pending"
 holdout: false
 ---
 
-Fourteen change types, each labelled with the autonomy level it is allowed to reach, whether it
-is reversible instantly or by commit, and the signal that triggers it.
+Fourteen kinds of change, each marked with who decides it, how quickly it can be undone, and
+what sets it off in the first place.
 
-Six ship unattended. Six require a human to approve a pull request. Two are permanently out of
-bounds: anything touching prices, guarantees, legal text or factual claims about the business,
-and anything touching indexing controls such as `robots.txt`, `noindex`, canonicals and hreflang.
+Six happen automatically. Six need a person to approve them. Two are never allowed at all:
+anything touching prices, guarantees, legal wording or claims about the business, and anything
+touching the settings that control whether Google shows the site.
 
-The second group is the point. A system that could change what a business charges, or could
-deindex it with a single directive, should not exist regardless of how well it performs.
+That last group is the point of the whole table. Something that could change what a business
+charges, or could remove it from Google with one wrong setting, should not exist — however well
+it performs the rest of the time.

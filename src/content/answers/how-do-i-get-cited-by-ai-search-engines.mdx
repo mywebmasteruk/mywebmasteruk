@@ -1,47 +1,51 @@
 ---
-title: "How do I get my site cited by ChatGPT and Perplexity?"
-description: "Let the AI crawlers in, publish self-contained answers to real questions, mark up entities consistently, and give engines a curated map with llms.txt."
-heading: "How do I get my site cited by ChatGPT and Perplexity?"
-question: "How do I get my site cited by ChatGPT and Perplexity?"
-summary: "Getting cited by AI answer engines requires four things: the AI crawlers must be allowed to fetch your pages, each page must contain a self-contained passage that answers a real question, your entity must be described consistently in structured data, and the site should expose a curated map of its best content."
-shortAnswer: "Allow the AI crawlers in robots.txt, publish self-contained passages that completely answer one question each, mark up your organisation and content consistently with schema.org, and add an llms.txt file that points engines at your best pages. Citation follows extractability and trust, not keyword density."
+title: "How do I get my business mentioned by ChatGPT?"
+description: "Let the AI systems read your site, answer one question completely per page, describe your business consistently, and give them a simple map of your best pages."
+heading: "How do I get my business mentioned by ChatGPT and Perplexity?"
+question: "How do I get my business mentioned by ChatGPT?"
+summary: "Four things matter. The AI systems have to be allowed to read your website. Each page needs a passage that completely answers one real question. Your business has to be described the same way everywhere. And it helps to give them a simple list of your most useful pages."
+shortAnswer: "Make sure your website is not blocking them, write a short passage on each page that completely answers one real question, describe your business identically everywhere it appears, and publish a simple list pointing at your most useful pages. Being quoted follows from being easy to quote and easy to trust."
 topic: "ai-search"
-updated: 2026-09-05
+updated: 2026-09-06
 sources:
   - label: "The llms.txt proposal"
     url: "https://llmstxt.org/"
-  - label: "Schema.org organization type"
+  - label: "How businesses describe themselves to search engines"
     url: "https://schema.org/Organization"
-related: ["what-is-generative-engine-optimisation", "what-is-an-autonomous-website-optimiser"]
+related: ["what-is-generative-engine-optimisation", "do-ai-crawlers-execute-javascript"]
 ---
 
-## 1. Check you are not blocking the crawlers
+## 1. Check you are not accidentally blocking them
 
-The most common cause of zero AI visibility is a `robots.txt` rule written years ago. `GPTBot`,
-`ClaudeBot`, `PerplexityBot` and `Google-Extended` are separate user agents, and a blanket
-disallow silently removes you from every answer engine at once. Check this before anything else,
-because nothing else matters while it is wrong.
+Every website has a small settings file telling automated visitors what they may read. AI
+assistants each arrive under their own name — OpenAI's, Anthropic's, Perplexity's, Google's —
+and a blanket "no robots" rule written years ago quietly shuts all of them out at once.
 
-## 2. Write the answer before the argument
+Check this before anything else. Nothing else you do matters while it is wrong, and a
+surprising number of businesses are blocking themselves without knowing it.
 
-Put a complete, standalone answer in the first paragraph under the heading. Engines extract
-passages, not pages, and a passage that requires the previous three paragraphs for context is
-not extractable.
+## 2. Answer the question before you make the argument
 
-## 3. Be one entity, not three
+Put a complete answer in the first paragraph under the heading. AI assistants quote a
+*passage*, not a whole page, and a paragraph that only makes sense if you have read the three
+before it cannot be quoted at all.
 
-If you are "MyWebMaster" on the site, "My Web Master" in your schema markup and "mywebmaster.co.uk"
-in your citations, engines build three weak entity nodes instead of one strong one. Pick the
-canonical name and use it identically in content, structured data and every profile you control.
+## 3. Be one business, not three
 
-## 4. Publish an llms.txt
+If you are "Smith & Sons" on your website, "Smith and Sons Ltd" in your listings, and
+"smithandsons.co.uk" in your own writing, you have quietly split yourself into three
+half-recognised businesses instead of one well-known one. Pick the version of your name you
+want, and use exactly that everywhere.
 
-An `llms.txt` file at the site root is a curated markdown map of your most useful pages, so an
-engine does not have to infer your site's structure by crawling. It is a navigation aid rather
-than a permission grant — it does not help if the pages it points at are blocked or unindexed.
+## 4. Give them a map
 
-## 5. Measure it, because Search Console will not
+You can publish a short, plain list of your most useful pages at a standard address on your
+site, so an AI assistant does not have to work out your structure by wandering around it. It
+is a signpost, not a magic trick — it will not help if the pages themselves are blocked or
+missing from Google.
 
-Search Console does not report AI answer citations. What you can measure is server-side: which
-AI user agents fetched which URLs and how often, plus referral traffic from `chatgpt.com` and
-`perplexity.ai` in analytics. Those two signals are the closest available proxy today.
+## 5. Expect to measure it yourself
+
+Google's own tools do not tell you when ChatGPT mentions you. What you *can* see is which AI
+systems visited your site and which pages they read, plus anyone who arrived from one. That is
+the closest anyone can currently get, and it is more than most providers will show you.

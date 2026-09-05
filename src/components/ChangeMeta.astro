@@ -2,16 +2,25 @@
 interface Props { changeType: string; autonomy: string; outcome: string; holdout?: boolean }
 const { changeType, autonomy, outcome, holdout = false } = Astro.props;
 const autonomyLabel: Record<string, string> = {
-  auto: "Shipped unattended",
-  proposed: "Human approved",
-  human: "Human authored",
+  auto: "Done automatically",
+  proposed: "You approved it",
+  human: "Written by a person",
+};
+const typeLabel: Record<string, string> = {
+  technical: "site health",
+  metadata: "what Google shows",
+  content: "wording",
+  schema: "search labels",
+  "internal-linking": "links",
+  performance: "speed",
+  rollback: "undone",
 };
 ---
 <ul class="meta mono">
   <li class={`pill pill--${outcome}`}>{outcome}</li>
-  <li class="pill">{changeType}</li>
+  <li class="pill">{typeLabel[changeType] ?? changeType}</li>
   <li class="pill">{autonomyLabel[autonomy] ?? autonomy}</li>
-  {holdout && <li class="pill">holdout tested</li>}
+  {holdout && <li class="pill">compared against untouched pages</li>}
 </ul>
 
 <style>

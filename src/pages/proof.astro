@@ -22,9 +22,9 @@ const opps = experiment.topOpportunities;
       <p class="label">Proof &amp; method</p>
       <h1>The experiment is this website.</h1>
       <p class="lede">
-        Selling an autonomous optimiser with a hand-built marketing site would be a
-        contradiction. So mywebmaster.co.uk is the test subject: same system, same constraints,
-        same published record — and the starting numbers were posted before any work began.
+        It would be a bit rich to sell a service that improves websites automatically, using a
+        website we polished by hand. So this one is the guinea pig: same system, same rules, same
+        public record — and we posted the starting numbers before doing any of the work.
       </p>
     </div>
   </section>
@@ -37,22 +37,22 @@ const opps = experiment.topOpportunities;
     <div class="wrap wrap--narrow prose">
       <h2>What the baseline says</h2>
       <p>
-        Over the 90 days to {experiment.baseline.window.endDate}, this domain was shown in
-        Google results {fmt.format(experiment.baseline.impressions)} times and received
-        {experiment.baseline.clicks} clicks — a click-through rate of
-        {experiment.baseline.ctr}% at an average position of {experiment.baseline.position}.
+        In the 90 days to {experiment.baseline.window.endDate}, this website appeared in Google
+        {fmt.format(experiment.baseline.impressions)} times and got
+        {experiment.baseline.clicks} visits from it. That is roughly one visit for every seven
+        hundred times we were shown, sitting on average around page four.
       </p>
       <p>
-        An average position near forty means the site is indexed and considered relevant, but
-        sits three or four pages beyond where anyone looks. The impressions are real demand
-        arriving and finding nothing. That is a more useful starting point than no traffic at
-        all, because the demand does not have to be created — only served.
+        Sitting around page four means Google knows the site exists and thinks it is roughly
+        relevant, but nobody scrolls that far. Those eighteen thousand appearances are real
+        people looking for something we could have helped with. That is a better starting point
+        than no interest at all, because the demand is already there — it just is not being met.
       </p>
 
       <h2>The demand that is already arriving</h2>
       <p>
-        These are the queries where this domain earns impressions but almost no clicks. Note
-        what they have in common: they describe the problem Autopilot exists to solve.
+        These are the searches where this site gets shown but almost never clicked. Look at what
+        they have in common: they are all describing the exact problem Autopilot exists to fix.
       </p>
     </div>
   </section>
@@ -62,11 +62,11 @@ const opps = experiment.topOpportunities;
       <table>
         <thead>
           <tr>
-            <th scope="col">Query</th>
-            <th scope="col">Impressions</th>
-            <th scope="col">Clicks</th>
-            <th scope="col">CTR</th>
-            <th scope="col">Avg. position</th>
+            <th scope="col">What people searched for</th>
+            <th scope="col">Times shown</th>
+            <th scope="col">Visits</th>
+            <th scope="col">Click rate</th>
+            <th scope="col">Typical spot</th>
           </tr>
         </thead>
         <tbody>
@@ -83,35 +83,35 @@ const opps = experiment.topOpportunities;
       </table>
     </div>
     <p class="mono muted src">
-      Source: Google Search Console, domain property, {experiment.baseline.window.startDate} to
-      {experiment.baseline.window.endDate}, final data state.
+      Source: Google's own search figures for this website, {experiment.baseline.window.startDate}
+      to {experiment.baseline.window.endDate}.
     </p>
   </section>
 
   <section class="section method invert">
     <div class="wrap">
       <p class="label">Method</p>
-      <h2>How a result gets called a result</h2>
+      <h2>How we decide something actually worked</h2>
       <div class="grid grid--2 steps">
         <div class="card">
           <p class="mono n">01</p>
-          <h3>Publish the baseline first</h3>
-          <p class="muted">Recorded before any change ships, from final-state data so it cannot drift. It removes the option of picking a flattering start date after the fact.</p>
+          <h3>Post the starting numbers first</h3>
+          <p class="muted">Written down before a single change is made. That removes the oldest trick in the trade: quietly choosing a flattering start date once you already know how it turned out.</p>
         </div>
         <div class="card">
           <p class="mono n">02</p>
-          <h3>Split into treatment and control</h3>
-          <p class="muted">Comparable pages are randomly assigned. The control group is deliberately left unoptimised, which costs real value and buys a trustworthy number.</p>
+          <h3>Leave some pages alone</h3>
+          <p class="muted">Similar pages are split at random into two groups, and one group is deliberately never improved. That genuinely costs something — and it is what buys you a number you can trust.</p>
         </div>
         <div class="card">
           <p class="mono n">03</p>
-          <h3>Fix the window before looking</h3>
-          <p class="muted">28 days, chosen in advance, with the page frozen throughout. Anything shorter measures noise; anything chosen afterwards measures wishful thinking.</p>
+          <h3>Agree the timescale up front</h3>
+          <p class="muted">28 days, decided in advance, with the page left untouched throughout. Anything shorter is measuring noise. Anything decided afterwards is measuring wishful thinking.</p>
         </div>
         <div class="card">
           <p class="mono n">04</p>
-          <h3>Report the difference, losses included</h3>
-          <p class="muted">Treatment movement minus control movement. Changes that lose are reverted and published with the same prominence as the ones that win.</p>
+          <h3>Report the difference, losses and all</h3>
+          <p class="muted">How the improved pages moved, minus how the untouched ones moved. Anything that lost gets put back, and published just as visibly as anything that won.</p>
         </div>
       </div>
     </div>
@@ -119,25 +119,25 @@ const opps = experiment.topOpportunities;
 
   <section class="section">
     <div class="wrap wrap--narrow prose">
-      <h2>What we cannot claim yet</h2>
+      <h2>What we cannot honestly claim yet</h2>
       <p>
-        This experiment started on {experiment.baseline.capturedAt}. Search results move slowly:
-        a change takes weeks to settle, and a control comparison needs a full measurement window
-        before it says anything. Any provider showing you dramatic results within days of
-        starting is showing you variance.
+        This started on {experiment.baseline.capturedAt}. Search results move slowly — a change
+        takes weeks to settle, and a fair comparison needs a full month before it means anything.
+        Anyone showing you dramatic results a few days after starting is showing you random
+        movement and calling it progress.
       </p>
       <p>
-        So there is currently one honest claim on this page: here is the starting line, here is
-        the method, and here is the log. The next readout publishes when the first window closes
-        — whether or not the numbers flatter us.
+        So there is exactly one honest claim on this page today: here is where we started, here
+        is how we will measure it, and here is everything we have done. The next set of numbers
+        goes up when the first month is done — whether or not they make us look good.
       </p>
-      <p><a href="/changelog/">Read the {entries.length} changes made so far →</a></p>
+      <p><a href="/changelog/">See the {entries.length} changes made so far →</a></p>
     </div>
   </section>
 
   <CtaBand
-    heading="Want the same experiment run on your site?"
-    body="It starts the same way: a published baseline, a control group, and a fixed window. No graph without a control group."
+    heading="Want the same thing run on your site?"
+    body="It starts the same way every time: your starting numbers written down, a group of pages left alone to compare against, and an agreed timescale."
   />
 </Base>
 

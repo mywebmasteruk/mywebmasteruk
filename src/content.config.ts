@@ -102,13 +102,13 @@ const capabilities = defineCollection({
   schema: z.object({
     id: z.string(),
     category: z.enum([
-      "Technical health",
-      "Performance",
-      "Metadata",
-      "Structured data",
-      "Internal linking",
-      "Content",
-      "Conversion",
+      "Keeping the site working",
+      "Speed",
+      "What Google shows",
+      "Labels search engines read",
+      "Links between your pages",
+      "Words on the page",
+      "Turning visitors into enquiries",
     ]),
     change: z.string().min(10).max(120),
     /** auto = ships unattended, propose = opens a PR, never = out of bounds. */

@@ -1,10 +1,10 @@
 ---
 title: "What are the Core Web Vitals thresholds?"
-description: "Google's Core Web Vitals thresholds are LCP at or under 2.5 seconds, INP at or under 200 milliseconds and CLS at or under 0.1, measured at the 75th percentile."
+description: "Main content within 2.5 seconds, a reaction to a tap within 0.2 seconds, and almost no jumping about — measured across most of your real visitors, not a test tool."
 heading: "What are the Core Web Vitals thresholds?"
 question: "What are the Core Web Vitals thresholds?"
-summary: "Google's Core Web Vitals thresholds are Largest Contentful Paint at or under 2.5 seconds, Interaction to Next Paint at or under 200 milliseconds, and Cumulative Layout Shift at or under 0.1. A page passes only when all three are met at the 75th percentile of real user visits."
-shortAnswer: "A page passes Core Web Vitals when Largest Contentful Paint is 2.5 seconds or less, Interaction to Next Paint is 200 milliseconds or less, and Cumulative Layout Shift is 0.1 or less, each measured at the 75th percentile of real-world visits over 28 days. INP replaced First Input Delay as the responsiveness metric in March 2024."
+summary: "Google measures three things: how long your main content takes to appear, how quickly the page reacts when someone taps it, and how much it jumps about while loading. The limits are 2.5 seconds, 0.2 seconds and barely any movement — and you have to pass all three for most of your real visitors."
+shortAnswer: "A page passes when the main content appears within 2.5 seconds, the page reacts to a tap within 0.2 seconds, and it barely shifts about while loading. In Google's own terms those are LCP, INP and CLS, each measured across roughly three quarters of your real visitors over the past 28 days."
 topic: "seo"
 updated: 2026-09-05
 sources:
@@ -21,20 +21,20 @@ related: ["what-is-an-autonomous-website-optimiser", "how-do-you-measure-seo-imp
 | INP | Responsiveness — delay before the page reacts | ≤ 200ms | 200–500ms | > 500ms |
 | CLS | Visual stability — how much the layout jumps | ≤ 0.1 | 0.1–0.25 | > 0.25 |
 
-## Field data, not lab scores
+## Real visitors, not a testing tool
 
-The thresholds apply to the 75th percentile of real visits, gathered from actual users over a
-rolling 28-day window. A perfect score in a local audit tool tells you the page *can* be fast;
-it does not tell you it *is* fast for the quarter of your audience on a poor connection and an
-older phone.
+These are measured from your actual visitors, on their own phones and connections, over the
+past month — and you have to be fast for roughly three quarters of them, not on average.
 
-This is why a site can hold a near-perfect Lighthouse score and still fail Core Web Vitals in
-Search Console. The two are measuring different things, and only one of them is what search
-engines use.
+That is why a website can score almost perfectly in a speed-testing tool and still be marked
+as failing by Google. The tool tells you the page *can* be fast on a good connection. Google is
+telling you what it is actually like for the quarter of your customers on an older phone with
+patchy signal. Only one of those is what search engines use.
 
 ## The cheapest wins
 
-Most failures come from a small set of causes: images without width and height attributes
-causing layout shift, render-blocking scripts delaying paint, fonts loading late and reflowing
-text, and third-party tags executing on the main thread. Fixing those four covers the majority
-of pages, and none of them require a redesign.
+Most failures come down to four things: pictures that do not reserve their space, so
+everything jumps down when they load; code that has to finish before anything appears; fonts
+arriving late and reshuffling the text; and third-party extras — chat widgets, tracking, social
+buttons — holding everything up. Fixing those four covers most websites, and none of them
+require a redesign.

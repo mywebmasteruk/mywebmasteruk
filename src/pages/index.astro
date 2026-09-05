@@ -20,28 +20,28 @@ const counts = {
 
 const faqs = [
   {
-    q: "What is an autonomous website optimiser?",
-    a: "An autonomous website optimiser is a supervised system that reads a site's own performance data, decides which improvements are worth making, applies them as version-controlled changes, and measures whether they worked. Autopilot runs that cycle continuously: it scans daily, releases weekly, and reports the result of every change against a control group of pages it deliberately left alone.",
+    q: "What does Autopilot actually do?",
+    a: "It looks at how your website is really performing — what people search for, what they click, how fast your pages load, what is broken — and then it improves things, a few at a time. It checks every day, makes changes once a week, and tells you whether each change worked by comparing it against pages we deliberately left alone.",
   },
   {
-    q: "Does an AI make changes to my live site without asking?",
-    a: `Only within a class of changes that is published in advance and reversible in one command. ${counts.auto} kinds of change ship unattended — broken links, sitemaps, image attributes, schema syntax, internal links and performance budgets. ${counts.propose} kinds arrive as a pull request you approve, including anything that changes wording. ${counts.never} kinds are permanently out of bounds: prices, guarantees, legal text, robots directives and canonical tags.`,
+    q: "Will it change my site without asking me?",
+    a: `Only the safe, mechanical things — ${counts.auto} of them, all listed publicly before we start, all undoable in seconds. Things like broken links, page speed and pictures that make the page jump about. Anything that changes your actual words, all ${counts.propose} of those, is sent to you to approve first. And ${counts.never} things are never touched at all: your prices, your promises, your legal wording, and the settings that control whether Google shows your site.`,
   },
   {
-    q: "How do you prove the changes actually worked?",
-    a: "By holding pages back. Comparable pages are split into a treatment group that Autopilot works on and a control group it is forbidden to touch. Both groups face the same algorithm updates, the same seasonality and the same market. The difference between them is the part attributable to the work, and it is reported monthly including the changes that lost.",
+    q: "How do I know it actually worked?",
+    a: "Because we leave some pages alone on purpose. We split similar pages into two groups, improve one and deliberately do not touch the other. Both groups go through the same Google updates, the same quiet months and the same competition. Whatever difference opens up between them is the bit we caused — and we report it monthly, including the months where our changes lost.",
   },
   {
-    q: "Why does it release weekly if it scans every day?",
-    a: "Because the feedback is slower than the data. Search Console finalises data about three days after the fact, and a change to a page takes weeks to settle in rankings. A system that edited pages daily would be reacting to noise and would never learn whether its last change helped. Daily observation, weekly action and a fixed measurement window is what makes the result readable.",
+    q: "Why only change things once a week if you check every day?",
+    a: "Because Google is slow to respond. It takes weeks for a change to settle into the search results, and the data itself arrives a few days late. If we changed pages every day we would be reacting to random wobbles, and we would never know which change caused what. Watching daily but changing weekly is what makes the answer readable.",
   },
   {
-    q: "What happens if a change makes things worse?",
-    a: "It is reverted and the revert is published. Every change is a single commit with a stated hypothesis, deployed as an immutable build, so rolling back is one command and takes seconds rather than a rebuild. If the control group outperforms the treatment group for two consecutive cycles on the Compound plan, that month is refunded.",
+    q: "What if a change makes things worse?",
+    a: "We put it back, and we say so publicly. Every change is made separately and dated, so undoing any single one takes seconds and does not disturb anything else. On the Compound plan, if the pages we left alone beat the pages we worked on two months running, that month is refunded.",
   },
   {
-    q: "Will this get my site penalised by Google?",
-    a: "It is designed not to. Google's spam policies target scaled content abuse — mass-producing pages to capture search traffic without serving the reader. Autopilot works on a fixed set of pages and improves their accuracy, speed, structure and usefulness. Publishing an entirely new page always requires human approval, precisely because that is where the line sits.",
+    q: "Could this get me in trouble with Google?",
+    a: "It is built specifically to avoid it. What Google punishes is churning out piles of low-quality pages to hoover up traffic. Autopilot does the opposite: it works on the pages you already have and makes them faster, clearer and more useful. Publishing a brand new page always needs your approval, precisely because that is where the line sits.",
   },
 ];
 
@@ -70,14 +70,14 @@ const schema = [
       <p class="label">Autopilot · running live on this domain</p>
       <h1>Most websites are finished on the day they launch. This one isn't.</h1>
       <p class="lede">
-        Autopilot is a supervised AI system that reads a website's own performance data every
-        day, ships small evidence-led improvements every week, and proves the lift against a
-        control group of pages it was forbidden to touch. It is running on
-        mywebmaster.co.uk right now, and every change it makes is published.
+        Autopilot looks at how your website is really doing every single day, makes a few small
+        improvements every week, and proves they worked by comparing against pages it was told to
+        leave alone. It is running on mywebmaster.co.uk right now, and every change it makes is
+        published for anyone to read.
       </p>
       <div class="actions">
         <a class="btn btn--primary" href="/how-it-works/">See how the loop works</a>
-        <a class="btn btn--ghost" href="/changelog/">Read what it changed today</a>
+        <a class="btn btn--ghost" href="/changelog/">See what it changed today</a>
       </div>
     </div>
   </section>
@@ -90,16 +90,17 @@ const schema = [
           <h2>We started by publishing how bad it was.</h2>
         </div>
         <p class="lede">
-          Before Autopilot changed anything, this domain earned
-          {new Intl.NumberFormat("en-GB").format(experiment.baseline.impressions)} search
-          impressions in 90 days and converted {experiment.baseline.clicks} of them into
-          clicks. That is the honest starting line. Everything after it is measured from here.
+          Before Autopilot changed a thing, this website was shown in Google
+          {new Intl.NumberFormat("en-GB").format(experiment.baseline.impressions)} times in 90
+          days, and got {experiment.baseline.clicks} visits out of it. That is the honest
+          starting line, and everything from here is measured against it.
         </p>
       </div>
       <Readout />
       <p class="footnote mono muted">
-        Anyone selling SEO can show you a graph that goes up. Far fewer will show you the
-        number they started from, in public, before the work. <a href="/proof/">See the method →</a>
+        Anyone selling you search marketing can show you a graph that goes up. Far fewer will
+        show you where they started, in public, before doing any of the work.
+        <a href="/proof/">How we measure →</a>
       </p>
     </div>
   </section>
@@ -113,32 +114,34 @@ const schema = [
           <p class="mono step-n">01</p>
           <h3>Measure</h3>
           <p class="muted">
-            Every day: Search Console, GA4, a full crawl, Core Web Vitals field data, structured
-            data validation, and which AI crawlers fetched which pages.
+            Every day we check your Google search figures, your visitor numbers, every page on
+            the site, how fast it really loads for people, and which AI assistants have been
+            reading you.
           </p>
         </li>
         <li class="card">
           <p class="mono step-n">02</p>
           <h3>Decide</h3>
           <p class="muted">
-            Findings are ranked by expected value, not by how easy they are. Each candidate change
-            carries a written hypothesis before it is allowed to ship.
+            We sort what we find by how much it is likely to be worth, not by how easy it is.
+            Each change has to come with a written prediction before it is allowed anywhere
+            near your site.
           </p>
         </li>
         <li class="card">
           <p class="mono step-n">03</p>
           <h3>Ship</h3>
           <p class="muted">
-            One change, one commit, one immutable deploy. The safe class goes out unattended;
-            anything with an opinion in it waits for a human to approve the pull request.
+            Changes go out one at a time, each on its own, each undoable on its own. The safe
+            mechanical ones we simply do. Anything involving your words waits for you to say yes.
           </p>
         </li>
         <li class="card">
           <p class="mono step-n">04</p>
           <h3>Prove</h3>
           <p class="muted">
-            The page is frozen for a fixed measurement window, then compared with the control
-            group. Winners stay, losers are reverted, and both are published.
+            We then leave that page completely alone for 28 days and compare it with the pages
+            we never touched. What worked stays, what did not is put back, and we publish both.
           </p>
         </li>
       </ol>
@@ -153,9 +156,9 @@ const schema = [
           <h2>The interesting question is not what it can change. It's what it can't.</h2>
         </div>
         <p class="lede">
-          Handing an AI write access to a live website is only reasonable if the boundary is
-          written down, enforced in code, and published where clients can hold you to it.
-          Ours is a table on a public page.
+          Letting something automatic change your live website is only sensible if the limits
+          are written down, enforced by the system itself, and published where you can hold us
+          to them. Ours is a table anyone can read.
         </p>
       </div>
       <div class="grid grid--3 tiers">
@@ -163,24 +166,26 @@ const schema = [
           <p class="mono count">{counts.auto}</p>
           <h3>Ships unattended</h3>
           <p class="muted">
-            Mechanical, reversible, no editorial judgement: broken links, sitemaps, image
-            attributes, schema syntax, internal links, performance budgets.
+            Mechanical, instantly undoable, and involving no judgement about your business:
+            broken links, page speed, pictures that make the page jump, and the hidden labels
+            search engines read.
           </p>
         </div>
         <div class="card tier tier--propose">
           <p class="mono count">{counts.propose}</p>
           <h3>Waits for approval</h3>
           <p class="muted">
-            Anything that changes what the business says: titles, descriptions, answer blocks,
-            FAQ sets, new pages, conversion experiments. Delivered as a pull request.
+            Anything that changes what your business says: the headline Google shows, the
+            wording on the page, new questions answered, new pages, layout tests. You see it
+            before it goes live.
           </p>
         </div>
         <div class="card tier tier--never">
           <p class="mono count">{counts.never}</p>
           <h3>Never touched</h3>
           <p class="muted">
-            Prices, guarantees, legal text, factual claims about the business, robots
-            directives, canonical tags. Locked in code and rejected at build time.
+            Your prices, your guarantees, your legal wording, claims about your business, and
+            the settings that decide whether Google shows your site at all. Sealed off entirely.
           </p>
         </div>
       </div>
@@ -195,45 +200,48 @@ const schema = [
       <div class="grid grid--3 diffs">
         <article class="card">
           <p class="mono diff-n">01</p>
-          <h3>It changes your code, not your browser</h3>
+          <h3>We change your website, not a layer on top of it</h3>
           <p class="muted">
-            Most automated SEO tools work by injecting changes with a script in your page. An
-            analysis of over 500 million AI crawler requests found that GPTBot, ClaudeBot and
-            PerplexityBot download JavaScript but never execute it — so script-injected
-            improvements are invisible to the exact engines they are sold to impress.
+            Most tools of this kind do not really change your site. They bolt a script onto it
+            that rewrites the page while a visitor is looking at it. The problem is that
+            ChatGPT, Claude and Perplexity do not run those scripts — a study of over 500
+            million of their visits found they never do.
           </p>
           <p class="muted">
-            Autopilot commits to your repository. The improvement is in the HTML your server
-            sends, to every visitor and every crawler, identically.
+            So those "get found by AI" fixes are invisible to the very things they are sold for.
+            We change the site itself, so everyone sees the improvement: people, Google, and
+            every AI assistant.
           </p>
           <a class="mono more" href="/answers/do-ai-crawlers-execute-javascript/">The evidence →</a>
         </article>
         <article class="card">
           <p class="mono diff-n">02</p>
-          <h3>You keep the work if you leave</h3>
+          <h3>You keep everything if you leave</h3>
           <p class="muted">
-            When an overlay tool is cancelled, its optimisations stop loading and your pages
-            revert. You were renting improvements to your own website.
+            With the bolt-on tools, the day you stop paying, the script stops loading and your
+            pages quietly go back to how they were. You were renting improvements to your own
+            website.
           </p>
           <p class="muted">
-            Here, every change is a commit in your repository, deployed by your pipeline.
-            Cancelling stops future work and removes nothing already done. There is no runtime
-            dependency on us to switch off.
+            Here, the improvements are part of your site. Cancelling stops us doing anything
+            more; it takes nothing away. There is no switch on our end that turns your website
+            back off.
           </p>
           <a class="mono more" href="/answers/what-happens-if-i-cancel/">What cancelling does →</a>
         </article>
         <article class="card">
           <p class="mono diff-n">03</p>
-          <h3>The failures are published too</h3>
+          <h3>We publish the failures too</h3>
           <p class="muted">
-            Every change is logged with the hypothesis recorded before it shipped, so it can be
-            judged against what was actually predicted rather than what sounds good afterwards.
+            Every change is written down along with what we predicted it would do — before we
+            made it. That way it can be judged against what we actually expected, rather than
+            against a story invented afterwards.
           </p>
           <p class="muted">
-            Reverts appear with the same prominence as wins. A log containing only successes
-            tells you it is curated, not that the system works.
+            The ones we had to undo are listed just as prominently as the wins. A list with
+            nothing but successes on it tells you the list has been tidied.
           </p>
-          <a class="mono more" href="/changelog/">Read the log →</a>
+          <a class="mono more" href="/changelog/">Read the list →</a>
         </article>
       </div>
     </div>
@@ -244,8 +252,8 @@ const schema = [
       <p class="label">Plans</p>
       <h2>Three levels of trust.</h2>
       <p class="lede">
-        Start where you are comfortable. Most clients begin on Watch, see a month of findings
-        they agree with, and move up.
+        Start wherever you feel comfortable. Most people begin on Watch, spend a month seeing
+        whether they agree with what we find, and then move up.
       </p>
       <div class="grid grid--3 plan-grid">
         {plans.map((p) => (
@@ -265,7 +273,7 @@ const schema = [
     </div>
   </section>
 
-  <Faq faqs={faqs} title="What people ask before they hand over write access" />
+  <Faq faqs={faqs} title="What people ask before they let us near their site" />
   <CtaBand />
 </Base>
 

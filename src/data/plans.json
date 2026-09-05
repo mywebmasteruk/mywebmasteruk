@@ -3,25 +3,25 @@
     "id": "watch",
     "name": "Autopilot Watch",
     "order": 1,
-    "tagline": "The system watches, measures and tells you exactly what to fix. It changes nothing.",
+    "tagline": "We watch your site, measure it, and tell you exactly what to fix. We change nothing.",
     "priceMonthly": 149,
     "currency": "GBP",
     "priceNote": "per site, per month. No contract.",
     "autonomy": "report-only",
-    "cadence": "Daily scan, weekly report",
-    "bestFor": "Teams with their own developers who want the diagnosis and the priority order, not the hands.",
+    "cadence": "Checked daily, reported weekly",
+    "bestFor": "Businesses with their own web person, who need to know what to fix first rather than who fixes it.",
     "includes": [
-      "First full report within five working days of starting",
-      "Daily crawl: broken links, redirects, indexability, canonical and robots errors",
-      "Core Web Vitals tracked against Google's LCP, INP and CLS thresholds",
-      "Structured-data validation on every template",
-      "AI-crawler visibility: which answer engines fetched your pages, and which pages",
-      "Search Console and GA4 pulled into one weekly report with a ranked fix list",
-      "Every finding includes the exact diff needed to fix it"
+      "Your first full report within five working days",
+      "Daily check for links that lead nowhere, error pages, and pages Google cannot see",
+      "How fast your pages really are for real visitors, measured against Google's standards",
+      "A check that the hidden labels describing your pages are working",
+      "Which AI assistants are reading your site, and which pages they looked at",
+      "One weekly email with a plain list of what to fix, in the order that matters most",
+      "Every item comes with the exact change needed, so your developer can just do it"
     ],
     "excludes": [
-      "No changes are made to your site",
-      "No holdout testing"
+      "Nothing on your site is changed",
+      "No comparison testing"
     ],
     "featured": false,
     "cta": "Start watching"
@@ -30,26 +30,27 @@
     "id": "apply",
     "name": "Autopilot Apply",
     "order": 2,
-    "tagline": "The safe class of fixes ships unattended. Everything with an opinion in it comes to you as a pull request.",
+    "tagline": "We fix the safe, mechanical things ourselves. Anything involving your words comes to you first.",
     "priceMonthly": 449,
     "currency": "GBP",
     "priceNote": "per site, per month. Cancel any time; the site stays yours.",
     "autonomy": "safe-auto",
-    "cadence": "Daily scan, weekly release",
-    "bestFor": "Owners who want the maintenance burden gone without handing over editorial control.",
+    "cadence": "Checked daily, changes made weekly",
+    "bestFor": "Owners who want the endless small jobs to stop landing on their desk, without losing control of what the site says.",
     "includes": [
       "Everything in Watch",
       "Week one is deliberately visible: speed, broken links and errors fixed first",
-      "Unattended fixes for the reversible class: links, sitemaps, image attributes, schema syntax, internal links, performance budgets",
-      "Titles, descriptions and content edits proposed as pull requests you approve",
-      "Every change is one commit with a stated hypothesis and a one-command rollback",
-      "Immutable deploys with instant rollback to any previous build",
-      "Public or private changelog of every change made",
-      "Kill switch: one command halts all autonomous activity",
-      "You keep every change if you cancel \u2014 commits in your repo, not an injected script"
+      "Before we touch anything we take a full copy of your site as it is today, kept for as long as you are a client",
+      "We fix the safe things ourselves \u2014 links, page lists, pictures, labels and speed",
+      "Anything that changes your wording is sent to you to approve before it goes live",
+      "Every change is separate and dated, so any one of them can be undone on its own",
+      "Putting a previous version back takes seconds, not a rebuild",
+      "A running list of every change made, which you can keep private or publish",
+      "One instruction stops everything, immediately",
+      "Leaving? Keep our improvements, or ask for your original site back exactly as it was. Your choice"
     ],
     "excludes": [
-      "No content experiments against a holdout group"
+      "No content or layout testing against a comparison group"
     ],
     "featured": true,
     "cta": "Put it on Apply"
@@ -58,24 +59,25 @@
     "id": "compound",
     "name": "Autopilot Compound",
     "order": 3,
-    "tagline": "Content and conversion experiments, run against a holdout, so the lift is measured rather than claimed.",
+    "tagline": "We improve the words and the layout, and prove it worked by comparing against pages we left alone.",
     "priceMonthly": 1200,
     "currency": "GBP",
-    "priceNote": "per site, per month. Minimum three months, because the measurement window needs it.",
+    "priceNote": "per site, per month. Three months minimum, because proving it works takes that long.",
     "autonomy": "full-auto",
-    "cadence": "Daily scan, weekly release, monthly readout",
-    "bestFor": "Sites where search and conversion are a material revenue line and the gains compound.",
+    "cadence": "Checked daily, changes weekly, results monthly",
+    "bestFor": "Businesses where being found and getting enquiries is a real part of the income, and small gains add up.",
     "includes": [
       "Everything in Apply",
-      "Page-level holdout: comparable pages are deliberately left alone as a control group",
-      "Content rewrites, answer blocks and FAQ expansion aimed at answer-engine citation",
-      "Conversion experiments on layout, calls to action and form friction",
-      "Monthly readout reporting lift against the control group, including the losses",
-      "Query-gap analysis: pages built for demand you rank for but do not serve",
-      "Guarantee: if the holdout beats the treatment group two cycles running, that month is free"
+      "Before we touch anything we take a full copy of your site as it is today, kept for as long as you are a client",
+      "We deliberately leave a group of similar pages untouched, to compare against",
+      "Better wording and clearer answers, aimed at getting quoted by AI assistants",
+      "Testing on buttons, layout and forms to turn more visitors into enquiries",
+      "A monthly result showing the difference against the untouched pages \u2014 including the losses",
+      "Pages built for questions people already ask you but your site does not answer",
+      "If the untouched pages beat ours two months running, that month is free"
     ],
     "excludes": [
-      "Not sold to sites under ~30 comparable pages \u2014 a control group needs volume to mean anything"
+      "Not sold to sites under about 30 similar pages \u2014 a fair comparison needs enough of them"
     ],
     "featured": false,
     "cta": "Talk to us"

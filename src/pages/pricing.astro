@@ -12,24 +12,24 @@ const money = new Intl.NumberFormat("en-GB");
 
 const faqs = [
   {
-    q: "Is there a contract?",
-    a: "Watch and Apply are month to month and can be cancelled any time. Compound has a three-month minimum, purely because a holdout comparison needs a full measurement window plus a readout to say anything meaningful — charging for a shorter period would be selling a number nobody can trust.",
+    q: "Am I tied into a contract?",
+    a: "Watch and Apply are month to month, cancel whenever you like. Compound has a three-month minimum for one reason only: comparing against untouched pages needs a full month to run and a little longer to report on. Charging you for less than that would be selling you a number nobody could trust.",
   },
   {
-    q: "What happens to the work if we leave?",
-    a: "You keep all of it. The site, the repository, the full commit history and the changelog are yours and stay on your infrastructure throughout. Nothing is hosted in a proprietary system you would lose access to, because the output is ordinary code in your own git repository.",
+    q: "What happens to the work if I leave?",
+    a: "You keep all of it. The site and everything we improved on it are yours and always were. Nothing sits inside some system of ours that you would lose access to. And if you would rather have your original site back exactly as it was before we started, we kept a copy of that from day one and will put it back for you.",
   },
   {
-    q: "Do you work on sites you did not build?",
-    a: "Yes, provided the site is in version control and deploys from that repository. If it is a page builder with no repository, the first piece of work is usually moving it onto a pipeline that can be measured and reverted — which is worth doing regardless of who does the optimisation afterwards.",
+    q: "Do you work on websites you did not build?",
+    a: "Yes, most of the time. What matters is that changes to your site can be tracked and undone. If your site was made with a website builder that keeps no history, the first job is usually moving it somewhere changes can be measured and reversed — which is worth doing whoever ends up looking after it.",
   },
   {
     q: "How does the guarantee work?",
-    a: "On Compound, if the control group outperforms the treatment group across two consecutive measurement windows, that month is refunded. It is offerable only because the holdout design produces a number that can settle the question, rather than a traffic graph that can be argued about.",
+    a: "On Compound we improve one group of pages and deliberately leave a similar group alone. If the untouched pages do better than ours two months running, that month is refunded. We can only offer this because leaving pages alone produces a number that settles the argument, instead of a graph that can be spun either way.",
   },
   {
     q: "What is not included?",
-    a: "Hosting, domains, paid advertising, and large redesign projects are outside the subscription. Autopilot improves an existing site continuously; it is not a replacement for a rebuild if the underlying site is fundamentally wrong for the business.",
+    a: "Hosting, domain names, paid advertising and full redesigns are not part of it. Autopilot keeps improving the website you already have. If your site is fundamentally wrong for your business, it needs rebuilding first — and we will tell you that rather than take the monthly fee.",
   },
 ];
 
@@ -59,8 +59,8 @@ const schema = [
       <p class="label">Pricing</p>
       <h1>You are buying autonomy, one level at a time.</h1>
       <p class="lede">
-        The tiers differ by how much the system is allowed to do without asking — not by how many
-        features are unlocked. Everyone gets the same measurement.
+        What changes between them is how much we are allowed to do without asking you first —
+        not how many features you unlock. Everyone gets measured the same way.
       </p>
     </div>
   </section>
@@ -100,7 +100,7 @@ const schema = [
       ))}
     </div>
     <p class="vat mono muted">
-      Prices exclude VAT. One site per subscription. Multi-site pricing on request.
+      Prices exclude VAT. One website per plan. Got several? Ask us and we will work something out.
     </p>
   </section>
 
@@ -108,36 +108,42 @@ const schema = [
     <div class="wrap wrap--narrow prose">
       <h2>Two kinds of proof, at two different speeds</h2>
       <p>
-        Search results move slowly. A change takes weeks to settle and a control comparison needs
-        a full 28-day window before it says anything, which is an uncomfortably long time to pay
-        for something and see nothing.
+        Google is slow. A change takes weeks to settle, and a fair comparison needs a full month
+        before it means anything — which is an uncomfortably long time to be paying for something
+        and seeing nothing happen.
       </p>
       <p>
-        So the work is deliberately ordered to produce both kinds of evidence. <strong>Fast
-        proof</strong> comes first: page speed, broken links, server errors, invalid markup and
-        crawler access — all measurable the same week, all verifiable by you without taking our
-        word for it. <strong>Slow proof</strong> matures underneath it: ranking and conversion
-        movement measured against the control group, reported when the window closes.
+        So we deliberately order the work to give you both. <strong>Fast proof</strong> comes
+        first: page speed, broken links, error pages, and whether AI assistants can even read
+        you. All of that shifts in the first week, and you can check it yourself without taking
+        our word for anything.
       </p>
       <p>
-        If a provider can only offer the slow kind, you are being asked to fund a month of faith.
-        If they only offer the fast kind, they are showing you activity and calling it results.
+        <strong>Slow proof</strong> builds underneath it: where you actually rank and how many
+        people get in touch, measured against the pages we left alone, reported once the month
+        is up.
+      </p>
+      <p>
+        If someone can only offer you the slow kind, they are asking you to fund a month of
+        faith. If they only offer the fast kind, they are showing you activity and calling it
+        results.
       </p>
 
       <h2>How to choose</h2>
       <p>
-        <strong>Take Watch</strong> if you already have developers and the problem is knowing
-        what to fix first. You get the diagnosis and the exact diff; your team applies it.
+        <strong>Take Watch</strong> if you already have someone who looks after the site, and
+        the real problem is knowing what to fix first. We tell you exactly what to change; your
+        person makes the change.
       </p>
       <p>
-        <strong>Take Apply</strong> if the maintenance backlog never gets done. The mechanical
-        half disappears without you giving up any editorial control, because everything with an
-        opinion in it still arrives as a pull request.
+        <strong>Take Apply</strong> if the list of small jobs never actually gets done. The
+        mechanical half simply stops being your problem, and you still approve anything that
+        changes what your website says.
       </p>
       <p>
-        <strong>Take Compound</strong> if search and conversion are a real revenue line. This is
-        the only tier that runs a holdout, which means it is the only tier where the answer to
-        "did this work" is a measured number rather than a considered opinion.
+        <strong>Take Compound</strong> if being found and getting enquiries is a real part of
+        your income. It is the only one where we leave pages alone to compare against — which
+        makes it the only one where "did this work?" has a measured answer rather than an opinion.
       </p>
     </div>
   </section>

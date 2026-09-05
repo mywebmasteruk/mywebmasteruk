@@ -14,13 +14,13 @@ const counts = {
   never: caps.filter((c) => c.data.autonomy === "never").length,
 };
 const autonomyLabel: Record<string, string> = {
-  auto: "Unattended",
-  propose: "Needs approval",
+  auto: "We just do it",
+  propose: "We ask you first",
   never: "Never",
 };
 const reversibleLabel: Record<string, string> = {
-  instant: "Instant rollback",
-  commit: "Revert commit",
+  instant: "Undone instantly",
+  commit: "Undone in one step",
   manual: "Not applicable",
 };
 ---
@@ -32,15 +32,15 @@ const reversibleLabel: Record<string, string> = {
   <section class="section head">
     <div class="wrap">
       <p class="label">The boundary</p>
-      <h1>The full list. Including the things it is forbidden to touch.</h1>
+      <h1>The full list. Including the things it is never allowed to touch.</h1>
       <p class="lede">
-        Giving an automated system write access to a live website is only reasonable if the limit
-        is specific, enforced in code, and public. This is ours. If a change type is not on this
-        list, Autopilot cannot make it.
+        Letting something automatic change your live website is only sensible if the limits are
+        specific, enforced by the system itself, and published where you can hold us to them.
+        These are ours. If a change is not on this list, Autopilot cannot make it.
       </p>
       <div class="summary">
-        <div class="sum sum--auto"><span class="n">{counts.auto}</span> ship unattended</div>
-        <div class="sum sum--propose"><span class="n">{counts.propose}</span> need approval</div>
+        <div class="sum sum--auto"><span class="n">{counts.auto}</span> we do ourselves</div>
+        <div class="sum sum--propose"><span class="n">{counts.propose}</span> we ask you first</div>
         <div class="sum sum--never"><span class="n">{counts.never}</span> never happen</div>
       </div>
     </div>
@@ -55,10 +55,10 @@ const reversibleLabel: Record<string, string> = {
             <caption class="visually-hidden">{cat} changes and their autonomy levels</caption>
             <thead>
               <tr>
-                <th scope="col">Change</th>
-                <th scope="col">Autonomy</th>
-                <th scope="col">Reversal</th>
-                <th scope="col">What triggers it</th>
+                <th scope="col">What can change</th>
+                <th scope="col">Who decides</th>
+                <th scope="col">Undoing it</th>
+                <th scope="col">What sets it off</th>
               </tr>
             </thead>
             <tbody>
@@ -83,27 +83,24 @@ const reversibleLabel: Record<string, string> = {
   <section class="section note">
     <div class="wrap wrap--narrow">
       <h2>Why the "never" list matters more than the rest</h2>
+      <p>Two things are locked permanently, and no plan unlocks them.</p>
       <p>
-        Two categories are locked permanently, and no plan unlocks them.
+        The first is anything that says what you charge or what you promise. Something automatic
+        that could change a price or a guarantee could commit you to a deal you never agreed to.
+        Those words are sealed off, and an attempt to edit them stops the change going live at all.
       </p>
       <p>
-        The first is anything that states what the business charges or promises. An automated
-        system that could edit a price or a guarantee is a system that can commit you to
-        something you did not agree to. Those fields live in code that the optimiser has no
-        write path to, and an attempted edit fails the build.
-      </p>
-      <p>
-        The second is indexing control: <code>robots.txt</code>, <code>noindex</code>, canonical
-        tags and hreflang. A single wrong directive can remove an entire site from search, and
-        the damage is discovered weeks later. The blast radius is too large to delegate at any
-        level of confidence, so these stay under human control permanently.
+        The second is the handful of settings that tell Google whether it is allowed to show your
+        site. One wrong setting there can take your entire website out of Google, and you would
+        not notice for weeks — by which time the damage is done. Nothing automatic should be
+        trusted with that, however confident it is, so a person keeps hold of it permanently.
       </p>
     </div>
   </section>
 
   <CtaBand
-    heading="Disagree with where a line sits?"
-    body="The boundary is configurable per client. Some tighten it, some loosen the metadata tier. Nobody has yet asked to unlock the never list."
+    heading="Think a line is in the wrong place?"
+    body="We can move most of them for you — tighter or looser, whichever you prefer. Nobody has yet asked us to unlock the never list."
   />
 </Base>
 

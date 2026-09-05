@@ -1,10 +1,10 @@
 ---
 title: "Do AI crawlers execute JavaScript?"
-description: "Mostly no. Analysis of over 500 million AI crawler requests found GPTBot, ClaudeBot and PerplexityBot render no JavaScript at all — only what is in the HTML is seen."
+description: "Mostly no. A study of 500 million visits found the readers behind ChatGPT, Claude and Perplexity take your page exactly as it arrives and never run the code on it."
 heading: "Do AI crawlers execute JavaScript?"
 question: "Do AI crawlers execute JavaScript?"
-summary: "Most AI crawlers do not execute JavaScript. Analysis of over 500 million requests from AI crawlers found that OpenAI's GPTBot, Anthropic's ClaudeBot, PerplexityBot and Meta's crawler fetched JavaScript files but never ran them. Anything injected into a page by a script is invisible to them."
-shortAnswer: "Mostly no. An analysis of more than 500 million AI crawler requests found that GPTBot, ClaudeBot, PerplexityBot and Meta's crawler download JavaScript but never execute it. Only content present in the server's HTML response is visible to them. Google's Gemini and Applebot are the notable exceptions, as they reuse rendering infrastructure that does run scripts."
+summary: "Mostly they do not. A study of over 500 million visits found that the systems behind ChatGPT, Claude, Perplexity and Meta download a page's code but never run it. In practice that means anything added to your page after it arrives — by a plugin, widget or tool — is invisible to them."
+shortAnswer: "Mostly no. A study of more than 500 million visits found the readers behind ChatGPT, Claude, Perplexity and Meta take your page exactly as it arrives and never run the extra code on it. So anything a tool adds to your page in the visitor's browser is invisible to them. Google's Gemini and Apple are the exceptions."
 topic: "ai-search"
 updated: 2026-09-05
 sources:
@@ -17,33 +17,33 @@ related: ["how-do-i-get-cited-by-ai-search-engines", "what-is-generative-engine-
 
 ## Why this matters more than it sounds
 
-A large category of SEO automation tools works by injecting changes into the page with
-JavaScript: you paste a snippet into your `<head>`, and the tool rewrites titles, adds schema
-markup and injects content in the browser after the page loads.
+In plain terms: a lot of website tools do not really change your website. They add a small
+piece of code to it that rewrites your pages *while a visitor is looking at them* — the page
+arrives plain, and the tool redecorates it a moment later in the visitor's browser.
 
-For traditional search this mostly works, because Googlebot renders JavaScript. For answer
-engines it does not work at all. If the crawler never runs the script, the "optimised" version
-of the page never exists as far as it is concerned. It sees the original HTML.
+For Google that mostly works, because Google waits for the redecorating to finish. AI
+assistants do not wait. They take the page exactly as it arrives and read that. Anything the
+tool would have added never happens as far as they are concerned.
 
-The uncomfortable implication: tools sold on the promise of getting you cited in ChatGPT or
-Perplexity, which deliver that promise through client-side injection, are shipping changes to
-the one audience that cannot see them.
+Which leads somewhere uncomfortable. Tools sold on the promise of getting you mentioned by
+ChatGPT, that deliver it by redecorating pages in the browser, are making changes that the one
+audience they are sold for cannot see.
 
-## The server-side workaround has its own problem
+## The expensive workaround has its own problem
 
-The enterprise alternative is to rewrite HTML at the edge or the server, and serve the improved
-version to crawlers while human visitors get the original. That is visible to AI crawlers, but
-it means bots and people receive different content — which is dynamic rendering. Google
-[stopped recommending it](https://developers.google.com/search/docs/crawling-indexing/javascript/dynamic-rendering)
-and describes it as a workaround rather than a solution, and serving materially different
-content to crawlers is adjacent to cloaking.
+The big-budget alternative is to send one version of the page to the robots and a different
+version to people. That does solve the reading problem, but now your visitors and the search
+engines are being shown different things. Google
+[stopped recommending this approach](https://developers.google.com/search/docs/crawling-indexing/javascript/dynamic-rendering)
+and calls it a workaround rather than a solution — and showing search engines something
+different from what customers see is uncomfortably close to a practice they penalise sites for.
 
 ## What this means in practice
 
-If you want to be readable by answer engines, the reliable approach is for the improvement to
-exist in the HTML the server sends, to everyone, identically. That is an argument for changing
-the source of the site rather than layering a rewrite on top of it — which is why
-[Autopilot commits to your repository](/how-it-works/) instead of injecting into your pages.
+If you want AI assistants to be able to read you, the improvement has to be part of the page
+that arrives — the same page, for everyone, every time. That means changing the website itself
+rather than layering something on top of it, which is why
+[we change your site directly](/how-it-works/) rather than bolting a script onto it.
 
-There is a second, quieter benefit. A change committed to your repository is yours. A change
-injected by a subscription script disappears the day the subscription stops.
+There is a quieter benefit too. A change made to your website belongs to you. A change performed
+by somebody's script stops happening the day you stop paying for it.

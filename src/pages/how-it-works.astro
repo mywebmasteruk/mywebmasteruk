@@ -7,20 +7,20 @@ import { site } from "~/data/site";
 
 const faqs = [
   {
-    q: "Why weekly releases instead of daily?",
-    a: "Because a page needs to sit still to be measured. Search Console finalises data about three days after the fact and ranking changes take weeks to settle, so a system editing pages daily would be reacting to noise and could never attribute a result to a cause. Daily observation feeds a weekly release, and each changed page is then frozen for its measurement window.",
+    q: "Why change things weekly if you check every day?",
+    a: "Because a page has to sit still long enough to be measured. Google takes weeks to settle after a change, and the figures arrive a few days late anyway. Something editing pages every day would be chasing random wobbles and could never tell you which change caused what. So we watch daily, change weekly, and then leave that page completely alone while we measure it.",
   },
   {
-    q: "What data does Autopilot read?",
-    a: "Google Search Console for queries, impressions, clicks and position; GA4 for behaviour and conversion events; a full crawl of the site for structural health; Core Web Vitals field data for real-user performance; and server logs for which AI crawlers fetched which pages. It reads more than it writes, by a wide margin.",
+    q: "What information do you look at?",
+    a: "The free search figures Google already gives you as the site owner: what people searched for, how often you appeared, and how often they clicked. Your visitor statistics. Every page on your site, checked for anything broken. How fast pages really load for real people on real phones. And which AI assistants have been reading you. We look at far more than we ever change.",
   },
   {
-    q: "Do you need access to our hosting?",
-    a: "No. Autopilot works through your git repository and your deployment pipeline. It opens pull requests and triggers builds the same way a developer on your team would, which means your existing review, permissions and audit trail all still apply.",
+    q: "Do you need the passwords to my hosting?",
+    a: "No. We work the same way a web developer on your team would: through whatever system already publishes your website. Your existing approvals and permissions still apply, and everything we do is recorded under our own name, so you can always see exactly what came from us.",
   },
   {
-    q: "What if we want to stop it?",
-    a: "One command halts all autonomous activity immediately, and it does not require the person who set it up to be available. Everything Autopilot has built stays yours: the site, the repository, the history and the changelog. There is no lock-in mechanism because there is nothing proprietary in the output.",
+    q: "What if I want it stopped?",
+    a: "Tell us, and everything stops immediately — it does not depend on one particular person being at their desk. Everything built stays yours: the site, the improvements and the full record of what was done. And if you would rather go back to how your site was before we started, we kept a copy of that too.",
   },
 ];
 ---
@@ -35,9 +35,9 @@ const faqs = [
       <p class="label">The cycle</p>
       <h1>Slow enough to be measurable. Fast enough to compound.</h1>
       <p class="lede">
-        The hard part of automating website optimisation is not making changes. It is knowing
-        which change caused which result — and that requires deliberately going slower than the
-        technology allows.
+        The hard part of improving a website automatically is not making changes. It is knowing
+        which change caused which result — and that means deliberately going slower than the
+        technology could.
       </p>
     </div>
   </section>
@@ -47,31 +47,31 @@ const faqs = [
       <li>
         <p class="phase-n mono">Phase 01 · every day</p>
         <h2>Measure</h2>
-        <p class="lede">Read everything, change nothing.</p>
+        <p class="lede">Look at everything. Change nothing.</p>
         <div class="cols">
           <div>
-            <h3>Search</h3>
-            <p class="muted">Queries, impressions, clicks and average position from Search Console, restricted to final-state data so numbers cannot shift under the analysis.</p>
+            <h3>What people search</h3>
+            <p class="muted">The words people typed, how often you appeared, how often they clicked, and roughly where you sat in the results — straight from Google's own figures for your site.</p>
           </div>
           <div>
-            <h3>Behaviour</h3>
-            <p class="muted">Sessions, engagement and conversion events from GA4, joined to the landing page so search demand and on-page outcome sit in one table.</p>
+            <h3>What visitors do</h3>
+            <p class="muted">How many people arrive, whether they stay, and whether they get in touch — matched up to the page they landed on, so you can see where interest turns into enquiries.</p>
           </div>
           <div>
-            <h3>Structure</h3>
-            <p class="muted">A full crawl: status codes, redirect chains, canonical conflicts, orphaned pages, duplicate titles, invalid structured data.</p>
+            <h3>What is broken</h3>
+            <p class="muted">Every page checked: links that lead nowhere, error pages, pages nothing links to, duplicated headlines, and labels that have stopped working.</p>
           </div>
           <div>
-            <h3>Speed</h3>
-            <p class="muted">Core Web Vitals field data at the 75th percentile, against Google's published thresholds of 2.5s LCP, 200ms INP and 0.1 CLS.</p>
+            <h3>Speed, for real people</h3>
+            <p class="muted">Not a score from a testing tool, but what your actual visitors experience on their own phones — measured against the speeds Google says a page has to hit.</p>
           </div>
           <div>
-            <h3>AI visibility</h3>
-            <p class="muted">Which answer-engine crawlers fetched which URLs, and referral traffic arriving from AI assistants — the closest available proxy for citation.</p>
+            <h3>Whether AI is reading you</h3>
+            <p class="muted">Which AI assistants came to your site, which pages they read, and whether anyone arrived from one. Nobody can measure this properly yet, but this is the closest anyone can get.</p>
           </div>
           <div>
-            <h3>Competitors</h3>
-            <p class="muted">Where rivals are answering questions you are shown for but do not serve, so gaps surface as demand rather than as opinion.</p>
+            <h3>What rivals answer</h3>
+            <p class="muted">Questions you get shown for but do not actually answer, where a competitor does. Gaps found this way are real demand, not somebody's opinion about your website.</p>
           </div>
         </div>
       </li>
@@ -79,49 +79,48 @@ const faqs = [
       <li>
         <p class="phase-n mono">Phase 02 · weekly</p>
         <h2>Decide</h2>
-        <p class="lede">Rank by expected value, not by ease.</p>
+        <p class="lede">Sort by what it is worth, not by how easy it is.</p>
         <p>
-          Every candidate change is scored on the size of the demand behind it, the distance
-          between current and achievable performance, and the risk if it is wrong. The output is
-          an ordered queue, and only the top of that queue is allowed to ship in a given week.
+          Each possible change is scored on how many people it could reach, how much room there
+          is to improve, and what happens if we have got it wrong. That produces a list in order,
+          and only the top few are allowed anywhere near your site in a given week.
         </p>
         <p>
-          Each candidate carries a written hypothesis before it is permitted to proceed. If a
-          change cannot be expressed as "we expect X to move because Y", it does not ship —
-          not because the rule is elegant, but because an unfalsifiable change can never be
-          judged afterwards.
+          Every one of them has to come with a written prediction first. If we cannot say "we
+          expect this to improve, because of that", the change does not happen. Not out of
+          fussiness — a change nobody predicted can never be judged fairly afterwards.
         </p>
       </li>
 
       <li>
         <p class="phase-n mono">Phase 03 · weekly</p>
         <h2>Ship</h2>
-        <p class="lede">One change, one commit, one immutable build.</p>
+        <p class="lede">One change at a time, each one undoable on its own.</p>
         <p>
-          Changes in the safe class are committed and deployed unattended. Everything else opens
-          a pull request describing the hypothesis, the diff and the expected effect, and waits.
+          The safe mechanical changes we simply make. Everything else we send to you first,
+          showing exactly what would change, why, and what we expect to happen — and then we
+          wait until you say yes.
         </p>
         <p>
-          Content is stored as structured data with a validated schema, so the system edits
-          fields rather than rewriting page code. An edit that violates the schema — a title too
-          long for a search result, a missing description, a malformed date — fails the build and
-          never reaches production.
+          Your website is built so that the text lives in clearly defined slots with rules
+          attached. If a change breaks a rule — a headline too long for Google to display, a
+          missing summary, a date that makes no sense — the change is rejected automatically and
+          never reaches your live site.
         </p>
       </li>
 
       <li>
         <p class="phase-n mono">Phase 04 · 28 days</p>
         <h2>Prove</h2>
-        <p class="lede">Compare against pages that were left alone.</p>
+        <p class="lede">Compare against the pages we left alone.</p>
         <p>
-          A changed page is frozen for its measurement window. At the end, its movement is
-          compared with the control group — comparable pages that were deliberately excluded from
-          optimisation and therefore absorbed the same algorithm updates and seasonal swings.
+          Once a page is changed, we leave it completely alone for 28 days. Then we compare how
+          it moved with the pages we deliberately never touched — which went through the same
+          Google updates and the same quiet weeks as everything else.
         </p>
         <p>
-          Changes that beat the control are kept and the pattern is reused. Changes that lose are
-          reverted, and the revert is published in the changelog with the same prominence as
-          anything that worked.
+          Anything that beat the untouched pages stays, and we do more of it. Anything that lost
+          gets put back, and we publish that just as prominently as the wins.
         </p>
       </li>
     </ol>
@@ -133,20 +132,20 @@ const faqs = [
       <h2>What stops it running away</h2>
       <div class="grid grid--2 rails">
         <div class="card">
-          <h3>A capped blast radius</h3>
-          <p class="muted">A fixed maximum number of pages may change per cycle. Exceeding it requires a human, regardless of how confident the system is.</p>
+          <h3>A limit on how much can change</h3>
+          <p class="muted">Only a small, fixed number of pages can change at once. Going beyond that needs a person to agree, no matter how confident the system is.</p>
         </div>
         <div class="card">
-          <h3>An automatic circuit breaker</h3>
-          <p class="muted">If overall clicks or conversions fall beyond a set threshold, autonomous releases stop and the last change is rolled back without waiting for anyone.</p>
+          <h3>An automatic emergency stop</h3>
+          <p class="muted">If visits or enquiries drop sharply, everything stops on its own and the last change is put back — without waiting for anybody to notice.</p>
         </div>
         <div class="card">
-          <h3>A change freeze per page</h3>
-          <p class="muted">A page that has just changed cannot change again until its measurement window closes, so results stay attributable to a single cause.</p>
+          <h3>One change per page at a time</h3>
+          <p class="muted">A page that has just been changed cannot be changed again until we have finished measuring it. Otherwise we could never tell which change did what.</p>
         </div>
         <div class="card">
-          <h3>A kill switch</h3>
-          <p class="muted">One command halts everything. It works whether or not the person who configured the system is available.</p>
+          <h3>An off switch</h3>
+          <p class="muted">One instruction stops everything, immediately. It does not depend on any particular person being available to do it.</p>
         </div>
       </div>
     </div>

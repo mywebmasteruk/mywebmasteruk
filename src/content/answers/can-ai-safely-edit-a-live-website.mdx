@@ -1,43 +1,49 @@
 ---
-title: "Can AI safely make changes to a live website?"
-description: "Yes, within a published boundary. Safety comes from limiting the class of change, validating at build time, and making every edit reversible in one command."
-heading: "Can AI safely make changes to a live website?"
-question: "Can AI safely make changes to a live website?"
-summary: "AI can safely change a live website when three conditions hold: the class of permitted change is fixed and published in advance, every edit is validated at build time before it can ship, and any change can be reverted in one command. Unbounded write access to a production site is not safe, and no amount of model quality fixes that."
-shortAnswer: "Yes, but only within a boundary that is written down before the system is given access. Safety comes from three properties: the permitted class of change is published in advance, every edit is validated at build time so an invalid change cannot ship, and each change is a single commit on an immutable deploy so rollback takes seconds."
+title: "Is it safe to let AI change my live website?"
+description: "It can be, if the limits are agreed before it starts, every change is checked automatically before going live, and anything can be undone in seconds."
+heading: "Is it safe to let AI change my live website?"
+question: "Is it safe to let AI change my live website?"
+summary: "It can be safe, but only under three conditions: exactly what it is allowed to change is agreed and published beforehand, every change is checked automatically before it can reach your live site, and any change can be undone in seconds. Giving anything unlimited freedom over a live website is not safe, no matter how clever it is."
+shortAnswer: "Yes, but only inside limits agreed before it starts. Three things make it safe: exactly what it may change is written down in advance, every change is checked automatically so a broken one cannot go live, and each change is made separately so it can be undone in seconds without disturbing anything else."
 topic: "safety"
-updated: 2026-09-05
+updated: 2026-09-06
 sources:
-  - label: "Google Search Essentials: spam policies"
+  - label: "Google's rules on low-quality mass-produced content"
     url: "https://developers.google.com/search/docs/essentials/spam-policies"
-related: ["what-is-an-autonomous-website-optimiser", "how-do-you-measure-seo-improvement"]
+related: ["what-is-an-autonomous-website-optimiser", "what-happens-if-i-cancel"]
 ---
 
-## Safety is an architecture problem, not a model problem
+## Safety is about the setup, not the cleverness
 
-The instinct is to ask whether the AI is good enough to be trusted. That is the wrong question.
-A better one: what is the worst thing this system can do, and how quickly can it be undone?
+The instinct is to ask whether the AI is clever enough to be trusted. That is the wrong
+question, because the answer changes every few months and you cannot check it yourself.
 
-Design the answer to that question first and model quality becomes a performance concern rather
-than a safety one.
+A better question: **what is the worst thing this could do to my website, and how fast can it be
+undone?** Get the answer to that right and cleverness becomes a matter of how well it performs,
+not whether it is dangerous.
 
-## The three tiers
+## The three levels
 
-**Ships unattended.** Mechanical and reversible, with no editorial content: repairing broken
-links, regenerating sitemaps, adding image dimensions, fixing invalid schema syntax, enforcing
-performance budgets. There is no version of these a human would do differently.
+**Things it just does.** Mechanical, instantly reversible, with no wording involved: fixing
+links that lead nowhere, keeping your page list accurate, stopping pictures making the page jump
+about, repairing labels that have stopped working. There is no version of these jobs that you
+would want done differently.
 
-**Waits for approval.** Anything that changes what the business says: titles, meta descriptions,
-body copy, new pages, conversion experiments. These arrive as a pull request with the reasoning
-attached.
+**Things it asks about first.** Anything that changes what your business says: your headline in
+Google, the wording on a page, a new page, a change to a form. These come to you with the
+reasoning attached, and nothing happens until you say yes.
 
-**Never touched.** Prices, guarantees, legal text, factual claims about the company, robots
-directives, canonical tags and hreflang. A single wrong `noindex` can remove an entire site from
-search. That blast radius does not belong to an automated system at any confidence level.
+**Things it never touches.** Your prices, your guarantees, your legal wording, claims about your
+business, and the settings that decide whether Google is allowed to show your site at all. One
+wrong move on that last one can remove your entire website from Google, and you would not notice
+for weeks. That is far too much damage to hand over, at any level of confidence.
 
-## Reversibility beats caution
+## Being able to undo it beats being careful
 
-A cautious system that cannot be undone is more dangerous than an aggressive one that can.
-Every change should be a single commit with a stated hypothesis, deployed as an immutable
-build, so reverting is a rollback rather than a rebuild — and a kill switch should stop all
-autonomous activity without needing the person who set it up.
+A cautious system you cannot undo is more dangerous than a bolder one you can. Every change
+should stand on its own, so putting it back takes seconds and disturbs nothing else — and there
+should be a single instruction that stops everything, which does not depend on one particular
+person being at their desk.
+
+Worth asking any provider: *before you start, will you take a full copy of my site as it is
+now, and will you give it back if I ask?*

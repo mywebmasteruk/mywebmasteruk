@@ -13,7 +13,7 @@ export const site = {
   url: "https://mywebmaster.co.uk",
   tagline: "Websites that optimise themselves",
   description:
-    "MyWebMaster Autopilot is a supervised AI system that measures a website every day, ships small evidence-led improvements, and proves the lift against a control group.",
+    "MyWebMaster Autopilot checks your website every day, makes small improvements based on what the numbers show, and proves they worked by comparing against pages we left alone.",
   // TODO_CONFIRM: real contact details before launch.
   email: "hello@mywebmaster.co.uk",
   phone: null as string | null,
