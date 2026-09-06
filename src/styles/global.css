@@ -266,6 +266,7 @@ th { font-weight: 600; }
 .related a,
 .sources a,
 .footnote a,
+.crumbs a,
 .more,
 .feed a {
   display: inline-block;

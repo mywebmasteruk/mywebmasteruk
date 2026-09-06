@@ -23,7 +23,7 @@ const {
 <style>
   /* This band holds two short lines and two buttons. A full --section of padding
      top and bottom made it taller than its own content, so it gets its own scale. */
-  .band { padding-block: clamp(2.75rem, 2rem + 3vw, 4.5rem); }
+  .band { padding-block: clamp(2.75rem, 2rem + 3vw, 4.5rem) clamp(2.25rem, 1.7rem + 2.4vw, 3.5rem); }
   .inner { display: grid; gap: 1.75rem; align-items: center; }
   @media (min-width: 900px) { .inner { grid-template-columns: 1.4fr auto; gap: 3rem; } }
   h2 { max-width: 16ch; margin-bottom: 1rem; }

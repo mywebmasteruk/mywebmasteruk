@@ -167,6 +167,9 @@ const faqs = [
   @media (min-width: 700px) { .cols { grid-template-columns: repeat(3, 1fr); } }
   .cols h3 { font-size: var(--step-0); margin-bottom: 0.4rem; }
   .cols p { font-size: var(--step--1); }
+  /* The phases list has no bottom padding of its own, so without this the last
+     phase ends flush against the dark band below it. */
+  .guard { margin-top: var(--section); }
   .guard h2 { margin-block: 0.8rem 2rem; }
   .rails h3 { font-size: var(--step-1); margin-bottom: 0.5rem; }
   .rails p { font-size: var(--step--1); }

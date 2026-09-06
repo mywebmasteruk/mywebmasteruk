@@ -44,8 +44,9 @@ const year = new Date().getFullYear();
      the dark CTA band the two merged into one large empty black area. */
   .site-footer {
     padding-block: clamp(2.5rem, 1.8rem + 2.6vw, 4rem) 2rem;
-    /* The CTA band above is the same ink as the footer, so without a rule the two
-       merge into one large dark area with the content floating at the top of it. */
+    /* The CTA band above is also ink. Separating the two by tone rather than by
+       more empty space keeps the boundary obvious without lengthening the page. */
+    background: var(--ink-800);
     border-top: 1px solid var(--line);
   }
   .top { display: grid; gap: 2.5rem; }
