@@ -224,6 +224,11 @@ a:hover { text-decoration-color: var(--accent); }
   padding: clamp(1.25rem, 0.9rem + 1.3vw, 1.9rem);
 }
 .rule { height: 1px; background: var(--line); border: 0; }
+
+/* A full-bleed band that follows a padded .section already has space above it.
+   Following a bare .wrap it does not, and the content ends flush against the
+   colour change — so give it its own separation only in that case. */
+main > .wrap + .band { margin-top: var(--section); }
 .grid { display: grid; gap: clamp(1rem, 0.7rem + 1.2vw, 1.6rem); }
 @media (min-width: 700px) {
   .grid--2 { grid-template-columns: repeat(2, 1fr); }

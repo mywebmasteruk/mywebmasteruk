@@ -39,7 +39,15 @@ const year = new Date().getFullYear();
 </footer>
 
 <style>
-  .site-footer { padding-block: var(--section) 2rem; margin-top: var(--section); }
+  /* No margin-top: the footer's own padding is the separation. A margin here
+     stacked on top of the preceding section's padding, and when that section was
+     the dark CTA band the two merged into one large empty black area. */
+  .site-footer {
+    padding-block: clamp(2.5rem, 1.8rem + 2.6vw, 4rem) 2rem;
+    /* The CTA band above is the same ink as the footer, so without a rule the two
+       merge into one large dark area with the content floating at the top of it. */
+    border-top: 1px solid var(--line);
+  }
   .top { display: grid; gap: 2.5rem; }
   @media (min-width: 800px) { .top { grid-template-columns: 1.6fr repeat(3, 1fr); gap: 2rem; } }
   .brand { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; font-weight: 600; margin-bottom: 1rem; }
