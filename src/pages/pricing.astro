@@ -93,9 +93,16 @@ const schema = [
             </ul>
           )}
 
-          <a class:list={["btn", p.data.featured ? "btn--primary" : "btn--ghost"]} href="/contact/">
+          <a
+            class:list={["btn", p.data.featured ? "btn--primary" : "btn--ghost"]}
+            href={p.data.checkoutUrl ?? "/contact/"}
+            rel={p.data.checkoutUrl ? "noopener" : undefined}
+          >
             {p.data.cta}
           </a>
+          {p.data.checkoutUrl && (
+            <p class="mono muted secure">Secure checkout by Stripe · cancel any time</p>
+          )}
         </article>
       ))}
     </div>
@@ -177,6 +184,7 @@ const schema = [
   .excludes { flex: 0; margin-top: 0.6rem; color: var(--text-muted); }
   .excludes li::before { content: "—"; position: absolute; left: 0; }
   .plan .btn { margin-top: 1.6rem; justify-content: center; }
+  .secure { font-size: 0.65rem; margin-top: 0.6rem; text-align: center; }
   .vat { margin-top: 1.5rem; font-size: 0.7rem; }
   .compare h2 { font-size: var(--step-3); margin-bottom: 1.2rem; }
   .compare p + p { margin-top: 1rem; }

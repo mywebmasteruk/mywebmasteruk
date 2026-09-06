@@ -264,7 +264,11 @@ const schema = [
               {p.data.priceMonthly ? <>£{money.format(p.data.priceMonthly)}<span class="mono per">/mo</span></> : "Talk to us"}
             </p>
             <p class="muted plan-tag">{p.data.tagline}</p>
-            <a class:list={["btn", p.data.featured ? "btn--primary" : "btn--ghost"]} href="/pricing/">
+            <a
+              class:list={["btn", p.data.featured ? "btn--primary" : "btn--ghost"]}
+              href={p.data.checkoutUrl ?? "/pricing/"}
+              rel={p.data.checkoutUrl ? "noopener" : undefined}
+            >
               {p.data.cta}
             </a>
           </article>

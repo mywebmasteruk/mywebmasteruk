@@ -37,7 +37,6 @@ export const nav = [
   { href: "/proof/", label: "Proof" },
   { href: "/pricing/", label: "Pricing" },
   { href: "/answers/", label: "Answers" },
-  { href: "/changelog/", label: "Changelog" },
 ] as const;
 
 export const footerNav = [
@@ -53,7 +52,7 @@ export const footerNav = [
   {
     title: "Evidence",
     links: [
-      { href: "/changelog/", label: "Live changelog" },
+      { href: "/changelog/", label: "Changelog" },
       { href: "/answers/", label: "Answers" },
       { href: "/rss.xml", label: "RSS feed" },
       { href: "/llms.txt", label: "llms.txt" },

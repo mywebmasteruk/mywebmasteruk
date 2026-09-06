@@ -11,7 +11,7 @@ guess rather than a fact.
 | Phone number | `src/data/site.ts` | `null` — omitted rather than invented |
 | Founding year | `src/data/site.ts` | `2016` — guessed; feeds `foundingDate` in schema |
 | `sameAs` profiles | `src/data/site.ts` | GitHub only. Add LinkedIn / Companies House once verified |
-| Prices | `src/data/plans.json` | £149 / £449 / £1,200 per month — plausible UK rates, not decided |
+| ~~Prices~~ | `src/data/plans.json` | **Confirmed 6 Sep 2026.** £149 / £449 / £1,200 per month, excluding VAT. Live in Stripe. |
 | Legal pages | `src/pages/legal/` | Written to be honest and specific, but not reviewed by a solicitor |
 
 Entity consistency matters more than it looks: a name or profile that disagrees across the

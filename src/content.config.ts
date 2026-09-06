@@ -90,6 +90,8 @@ const plans = defineCollection({
     excludes: z.array(z.string().min(6).max(140)).default([]),
     featured: z.boolean().default(false),
     cta: z.string().min(4).max(30),
+    /** Stripe Payment Link. Omitted where the plan needs a conversation first. */
+    checkoutUrl: z.string().url().optional(),
   }),
 });
 

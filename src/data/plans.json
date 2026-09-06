@@ -24,7 +24,8 @@
       "No comparison testing"
     ],
     "featured": false,
-    "cta": "Start watching"
+    "cta": "Start watching",
+    "checkoutUrl": "https://buy.stripe.com/00w8wQgyQ3AZ44LbbkdAk07"
   },
   {
     "id": "apply",
@@ -53,7 +54,8 @@
       "No content or layout testing against a comparison group"
     ],
     "featured": true,
-    "cta": "Put it on Apply"
+    "cta": "Put it on Apply",
+    "checkoutUrl": "https://buy.stripe.com/28E28sbew5J730HbbkdAk08"
   },
   {
     "id": "compound",
