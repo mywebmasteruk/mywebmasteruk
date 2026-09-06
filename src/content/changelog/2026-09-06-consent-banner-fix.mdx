@@ -1,0 +1,26 @@
+---
+date: 2026-09-06
+title: "Fixed a cookie banner that would not close"
+hypothesis: "The banner ignored every click because a styling rule overrode the instruction to hide it. Making the hide instruction win should let people dismiss it and get on with reading."
+targets: ["/"]
+changeType: "technical"
+autonomy: "human"
+outcome: "improved"
+result: "Clicking either button now closes the banner immediately and the choice is remembered across pages. Verified on the live site."
+holdout: false
+---
+
+For a few hours on launch day, the cookie banner on this site could not be dismissed.
+Clicking Allow or No thanks did nothing. It just sat there.
+
+The cause was a small conflict in the styling. The banner was told to lay itself out in a
+particular way, and that instruction quietly outranked the separate instruction to hide it.
+So the code was doing exactly what it was asked — setting the banner to hidden — while the
+styling kept it on screen anyway. Nothing errored. It simply did not go away.
+
+The fix was one line, making "hidden" mean hidden regardless of any other styling.
+
+Worth saying plainly: this is on a site that sells checking whether things actually work.
+It is the sort of thing an automated check should have caught, and did not, because the
+checks look at whether pages load and whether the markup is valid — not at whether a button
+does what it says. That gap is now a known one.

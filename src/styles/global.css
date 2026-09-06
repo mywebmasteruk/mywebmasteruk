@@ -118,6 +118,10 @@ body {
 }
 img, svg, video { display: block; max-width: 100%; height: auto; }
 
+/* The hidden attribute must beat any display rule an author sets, or an element
+   toggled with el.hidden silently stays on screen. */
+[hidden] { display: none !important; }
+
 h1, h2, h3, h4 {
   line-height: 1.08;
   letter-spacing: -0.023em;
