@@ -14,6 +14,7 @@
 import Stripe from "stripe";
 import { send } from "../../mail/send.mjs";
 import { welcome, paymentFailed, cancelled, adminAlert } from "../../mail/templates.mjs";
+import { sign } from "../../mail/tokens.mjs";
 
 const money = (pence, currency = "gbp") =>
   new Intl.NumberFormat("en-GB", { style: "currency", currency: currency.toUpperCase() }).format(
@@ -105,10 +106,32 @@ export default async (request) => {
         const sub = event.data.object;
         const customer = await stripe.customers.retrieve(sub.customer);
         if (!customer.deleted && customer.email) {
+          // A signed link so restoring is self-serve. It opens a confirmation
+          // page rather than acting, because mail clients prefetch links.
+          let restoreLink = null;
+          try {
+            restoreLink =
+              `https://mywebmaster.co.uk/api/restore?t=` +
+              encodeURIComponent(
+                sign({
+                  action: "restore",
+                  sub: customer.id,
+                  website: customer.metadata?.website ?? null,
+                  siteId: customer.metadata?.netlify_site_id ?? null,
+                  baselineDeployId: customer.metadata?.baseline_deploy_id ?? null,
+                }),
+              );
+          } catch (e) {
+            console.error("Could not sign restore link:", String(e?.message ?? e));
+          }
           results.push(
             await send({
               to: customer.email,
-              ...cancelled({ name: customer.name, website: customer.metadata?.website ?? null }),
+              ...cancelled({
+                name: customer.name,
+                website: customer.metadata?.website ?? null,
+                restoreLink,
+              }),
             }),
           );
         }

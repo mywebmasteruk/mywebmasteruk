@@ -13,7 +13,7 @@ const MUTED = "#5a6472";
 const LINE = "#e7e4da";
 
 /** Minimal, table-free, inline-styled shell. Renders acceptably everywhere. */
-function shell({ preheader, heading, body, cta }) {
+function shell({ preheader, heading, body, cta, manageLink }) {
   return `<!doctype html>
 <html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;padding:0;background:#fcfbf8;">
@@ -30,8 +30,8 @@ function shell({ preheader, heading, body, cta }) {
       : ""
   }
   <p style="margin:32px 0 0;padding-top:20px;border-top:1px solid ${LINE};color:${MUTED};font-size:13px">
-    Reply to this email to change anything, or reply with the word <strong>stop</strong> to halt all
-    automatic activity immediately.<br>
+    ${manageLink ? `<a href="${manageLink}" style="color:${MUTED}"><strong>Pause, change your settings or manage billing</strong></a><br>` : ""}
+    Or just reply to this email — a person reads it.<br>
     <a href="${SITE}/what-it-changes/" style="color:${MUTED}">What we can and cannot change</a>
   </p>
 </div></body></html>`;
@@ -112,7 +112,7 @@ Nothing has stopped. Autopilot carries on while this resolves, and we will only 
   };
 }
 
-export function cancelled({ name, website }) {
+export function cancelled({ name, website, restoreLink }) {
   const who = name ? name.split(" ")[0] : "there";
   const text = `Hello ${who},
 
@@ -120,7 +120,11 @@ Your subscription has been cancelled and nothing further will be charged.
 
 Everything we improved on ${website || "your site"} stays exactly where it is. It is part of your website, not something we switch on from our end, so there is nothing to remove.
 
-If you would rather have your original site back — the copy we took before we touched anything — reply to this email and we will put it in place. We will tell you exactly what would change before doing it.
+If you would rather have your original site back — the copy we took before we touched anything — you can do that yourself here:
+
+${restoreLink || "(reply to this email and we will send you the link)"}
+
+It shows you exactly what would change and does nothing until you confirm.
 
 No hard feelings either way. If it is something we got wrong, I would genuinely like to know.`;
 
@@ -130,13 +134,14 @@ No hard feelings either way. If it is something we got wrong, I would genuinely 
     html: shell({
       preheader: "Nothing is removed. The original is still available if you want it.",
       heading: "Your subscription is cancelled.",
+      ...(restoreLink ? { cta: { href: restoreLink, label: "Restore my original site" } } : {}),
       body:
         p(`Hello ${who}, nothing further will be charged.`) +
         p(
           `Everything we improved on ${website || "your site"} stays exactly where it is. It is part of your website rather than something we switch on from our end, so there is nothing to remove.`,
         ) +
         p(
-          `If you would rather have your <strong>original site back</strong> — the copy we took before touching anything — reply and we will put it in place, after telling you exactly what would change.`,
+          `If you would rather have your <strong>original site back</strong> — the copy we took before touching anything — you can do it yourself. It shows what would change and does nothing until you confirm.`,
         ) +
         p(`If we got something wrong, I would genuinely like to know.`),
     }),
