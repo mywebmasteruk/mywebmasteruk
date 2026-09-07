@@ -1,0 +1,14 @@
+{
+  "host": "mywebmaster.co.uk",
+  "chosenAt": "2026-09-07T09:38:54.280Z",
+  "method": "sha256(slug:path) mod 5 == 0; never home, contact, pricing, proof, or the two top earners",
+  "candidates": 19,
+  "protected": [],
+  "holdout": [
+    "/answers/what-happens-if-i-cancel",
+    "/answers/what-is-generative-engine-optimisation",
+    "/legal/privacy",
+    "/what-it-changes"
+  ],
+  "frozenUntil": "2027-09-07"
+}

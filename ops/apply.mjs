@@ -18,7 +18,7 @@
 import { readFile, writeFile, readdir, access } from "node:fs/promises";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { freezePage, decline } from "./lib/policy.mjs";
+import { freezePage, decline, loadHoldout, sourcesForPath } from "./lib/policy.mjs";
 import { draftEdit, draftAnswerPage, draftSection, FIELD_BUDGETS, aiConfig } from "./lib/ai.mjs";
 import { dimensions, shrink, imagesMissingSize, withSize } from "./lib/images.mjs";
 import { getAccessToken } from "./lib/google.mjs";
@@ -434,7 +434,12 @@ const fixers = {
    * a fortnight. Dimensions are read from the file itself, never guessed.
    */
   "img-attrs": async () => {
-    const sources = await sourceFiles();
+    // This fixer is the one that ignores `target` and sweeps the whole tree, so
+    // the policy layer's per-finding holdout refusal cannot protect the control
+    // group from it. The guard has to live here, at the point of writing.
+    const holdout = await loadHoldout();
+    const offLimits = new Set(holdout.paths.flatMap((path) => sourcesForPath(path).map((f) => root(f))));
+    const sources = (await sourceFiles()).filter((f) => !offLimits.has(f));
     const changed = [];
     let fixed = 0;
 
@@ -465,7 +470,9 @@ const fixers = {
       applied: true,
       files: changed,
       changeType: "performance",
-      summary: `Declared the size of ${fixed} image${fixed === 1 ? "" : "s"} so the page stops jumping as it loads`,
+      summary:
+        `Declared the size of ${fixed} image${fixed === 1 ? "" : "s"} so the page stops jumping as it loads` +
+        (holdout.active ? ` (${holdout.paths.length} held-back pages skipped)` : ""),
       hypothesis:
         "Images without width and height are the commonest cause of layout shift, which Google measures directly and visitors experience as the page moving under their thumb.",
     };

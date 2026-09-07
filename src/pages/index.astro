@@ -5,9 +5,11 @@ import Faq from "~/components/Faq.astro";
 import CtaBand from "~/components/CtaBand.astro";
 import { getCollection } from "astro:content";
 import experiment from "~/data/experiment.json";
+import { evidence } from "~/lib/evidence";
 import { site } from "~/data/site";
 import { faqNode, serviceNode } from "~/lib/schema";
 import experiment from "~/data/experiment.json";
+import { evidence } from "~/lib/evidence";
 
 const plans = (await getCollection("plans")).sort((a, b) => a.data.order - b.data.order);
 const money = new Intl.NumberFormat("en-GB");
@@ -23,7 +25,7 @@ const counts = {
 
 /** The same field /proof/ reads. No surface describes the method independently. */
 const design = experiment.design ?? { kind: "none", holdout: null, note: "" };
-const controlled = design.kind === "controlled" && Array.isArray(design.holdout) && design.holdout.length > 0;
+const controlled = evidence.controlled;
 
 const faqs = [
   {
@@ -37,7 +39,7 @@ const faqs = [
   {
     q: "How do I know it actually worked?",
     a: controlled
-      ? `Because we leave ${design.holdout.length} pages alone on purpose. Both groups go through the same Google updates, the same quiet months and the same competition, so whatever difference opens up between them is the bit we caused — and we report it monthly, including the months where our changes lost.`
+      ? `Because we leave ${evidence.holdout.length} pages alone on purpose — chosen before any change was made, and never touched since. Both groups go through the same Google updates, the same quiet months and the same competition, so whatever difference opens up between them is the bit we caused.${evidence.hasResult ? " We report it monthly, including the months where our changes lost." : " The first comparison window has not closed yet, so there is no number to show you."}`
       : `Honestly: not with certainty yet. ${design.note} We publish every change and what happened after it, including the ones that lost, but a good month for your whole trade would look like our work — and we would rather say that than hand you a confident number we cannot stand behind.`,
   },
   {
