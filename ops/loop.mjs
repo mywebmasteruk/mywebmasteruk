@@ -23,8 +23,9 @@ import { fileURLToPath } from "node:url";
 import { planRun, isHalted, circuitBreaker, hasSnapshot, readSnapshot } from "./lib/policy.mjs";
 import { applyFindings } from "./apply.mjs";
 import { writeReport } from "./report.mjs";
-import { aiConfig } from "./lib/ai.mjs";
-import { queueNotice, flushNotices, notifyConfig } from "./lib/notify.mjs";
+import { aiConfig, applySettings as applyAiSettings } from "./lib/ai.mjs";
+import { queueNotice, flushNotices, notifyConfig, applySettings as applyNotifySettings } from "./lib/notify.mjs";
+import { loadSettings } from "./lib/settings.mjs";
 import { mailNotice } from "./lib/notify-mail.mjs";
 import { writeChangelogEntry } from "./lib/changelog.mjs";
 import { loadFleet, evidenceStrength, baselineFor } from "./lib/fleet.mjs";
@@ -85,6 +86,14 @@ if (client) {
 } else {
   console.log("  No client record — running against our own site.");
 }
+
+// ---- Settings ----------------------------------------------------------
+// What the admin console says, over the environment, over the built-in defaults.
+const configured = await loadSettings({ slug: client?.slug });
+applyAiSettings(configured.settings);
+applyNotifySettings(configured.settings);
+console.log(`  ${configured.summary}`);
+console.log(`  Model: ${aiConfig.model} (${configured.source.model}) · drafting ${aiConfig.draftingEnabled ? "on" : "off"} · digest ${notifyConfig.cadence}`);
 
 // ---- Collect ------------------------------------------------------------
 step(2, "Collecting Search Console");

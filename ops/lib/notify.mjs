@@ -36,6 +36,14 @@ export const notifyConfig = {
 
 const CADENCE_DAYS = { instant: 0, daily: 1, weekly: 7 };
 
+/** Lets the admin console set the cadence without a deploy. */
+export function applySettings(settings = {}) {
+  if (settings.notifyCadence && settings.notifyCadence in CADENCE_DAYS) {
+    notifyConfig.cadence = settings.notifyCadence;
+  }
+  return notifyConfig;
+}
+
 /**
  * The customer's own address, from the record the pipeline wrote.
  *

@@ -1,6 +1,6 @@
 {
   "_comment": "Written by ops/collect-speed.mjs. Rendered publicly on /proof/.",
-  "measuredAt": "2026-09-07T08:40:57.914Z",
+  "measuredAt": "2026-09-07T17:38:08.065Z",
   "url": "https://mywebmaster.co.uk/",
   "build": {
     "pages": 31,
@@ -8,7 +8,7 @@
     "fontBytes": 29904,
     "largestPage": {
       "path": "/",
-      "bytes": 37037
+      "bytes": 37020
     },
     "thirdPartyOnCriticalPath": 0
   },
