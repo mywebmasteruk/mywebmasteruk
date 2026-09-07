@@ -1,120 +1,191 @@
 /**
- * Self-serve restore of a customer's original site.
+ * The customer's own changelog, with every entry restorable.
  *
- * GET  shows what would change and asks for confirmation.
- * POST performs the restore.
+ * Rather than a single "put back the original", this lists every version of
+ * the site and lets them pick. Going all the way back is simply the oldest
+ * entry — usually what someone wants is "how it was before last Tuesday",
+ * not "erase four months of work".
  *
- * The split matters: mail clients prefetch links to scan them, so a GET that
- * acted would fire the moment the email landed, with nobody having clicked.
- * Anything destructive therefore needs a real form submission.
+ * GET  lists the versions.
+ * POST restores the chosen one.
  *
- * Restores are executed by rolling back to the deploy that was live before
- * Autopilot's first change. Netlify keeps every deploy, so this is a single
- * call rather than a rebuild — and it is itself reversible, because the
- * current deploy stays in the history too.
+ * The split is deliberate: mail clients prefetch links to scan them, so a GET
+ * that acted would fire on delivery with nobody having clicked.
  */
 import { verify } from "../../mail/tokens.mjs";
 import { send } from "../../mail/send.mjs";
 import { adminAlert } from "../../mail/templates.mjs";
 
-const page = (title, body, accent = "#c8f04a") => `<!doctype html>
+const esc = (s) =>
+  String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+const page = (title, body) => `<!doctype html>
 <html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex"><title>${title} · MyWebMaster</title>
+<meta name="robots" content="noindex"><title>${esc(title)} · MyWebMaster</title>
 <style>
  body{margin:0;background:#fcfbf8;color:#0b0e13;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.55}
- .wrap{max-width:620px;margin:0 auto;padding:48px 24px}
- h1{font-size:28px;letter-spacing:-.02em;margin:0 0 16px}
+ .wrap{max-width:680px;margin:0 auto;padding:44px 24px}
+ h1{font-size:27px;letter-spacing:-.02em;margin:0 0 14px}
  p{margin:0 0 14px} .muted{color:#5a6472;font-size:14px}
- .box{border:1px solid #e7e4da;border-radius:10px;padding:20px;background:#fff;margin:24px 0}
- button{background:${accent};color:#0b0e13;border:0;font:inherit;font-weight:600;padding:12px 22px;border-radius:4px;cursor:pointer}
+ .brand{font-weight:600;letter-spacing:-.02em;padding-bottom:20px;border-bottom:1px solid #e7e4da;margin-bottom:26px}
+ ol{list-style:none;padding:0;margin:26px 0;position:relative}
+ ol::before{content:"";position:absolute;left:5px;top:10px;bottom:10px;width:1px;background:#d8d4c8}
+ li{position:relative;padding-left:26px;padding-bottom:20px}
+ li::before{content:"";position:absolute;left:0;top:7px;width:11px;height:11px;border-radius:50%;background:#fcfbf8;border:2px solid #9ec421}
+ li.now::before{background:#9ec421}
+ li.first::before{border-color:#5a6472}
+ .when{font-family:ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#5a6472}
+ .what{font-weight:600;margin:3px 0 2px}
+ .tag{display:inline-block;font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:.07em;text-transform:uppercase;border:1px solid #d8d4c8;border-radius:99px;padding:2px 7px;color:#5a6472;margin-left:6px}
+ button{background:#c8f04a;color:#0b0e13;border:0;font:inherit;font-size:14px;font-weight:600;padding:7px 14px;border-radius:4px;cursor:pointer;margin-top:8px}
+ button.plain{background:#fff;border:1px solid #d8d4c8}
  a{color:#4f6d08}
- .brand{font-weight:600;letter-spacing:-.02em;padding-bottom:20px;border-bottom:1px solid #e7e4da;margin-bottom:28px}
+ .box{border:1px solid #e7e4da;border-radius:10px;padding:18px;background:#fff;margin:22px 0}
 </style></head><body><div class="wrap"><div class="brand">mywebmaster</div>${body}</div></body></html>`;
+
+const expired = () =>
+  new Response(
+    page("Link expired", `<h1>This link has expired.</h1>
+      <p>Version links last 30 days. Email <a href="mailto:autopilot@mywebmaster.co.uk">autopilot@mywebmaster.co.uk</a>
+      and we will send a fresh one.</p>`),
+    { status: 404, headers: { "content-type": "text/html; charset=utf-8" } },
+  );
+
+async function listVersions(siteId, apiToken) {
+  const headers = { authorization: `Bearer ${apiToken}` };
+  // published_at is set on every deploy that was ever live, so it cannot
+  // identify the current one. The site record names it explicitly.
+  const [siteRes, deployRes] = await Promise.all([
+    fetch(`https://api.netlify.com/api/v1/sites/${siteId}`, { headers }),
+    fetch(`https://api.netlify.com/api/v1/sites/${siteId}/deploys?per_page=40`, { headers }),
+  ]);
+  if (!deployRes.ok) throw new Error(`Netlify returned ${deployRes.status}`);
+  const liveId = siteRes.ok ? (await siteRes.json())?.published_deploy?.id ?? null : null;
+
+  return (await deployRes.json())
+    .filter((d) => d.state === "ready")
+    .map((d) => ({
+      id: d.id,
+      when: d.published_at ?? d.created_at,
+      title: d.title || d.commit_ref?.slice(0, 7) || "Update",
+      published: d.id === liveId,
+    }));
+}
 
 export default async (request) => {
   const url = new URL(request.url);
-  const token = url.searchParams.get("t");
-  const claim = token ? verify(token) : null;
+  const isPost = request.method === "POST";
+  const form = isPost ? await request.formData() : null;
+  const token = (isPost ? form.get("t") : url.searchParams.get("t")) ?? null;
+  const claim = token ? verify(String(token)) : null;
+  if (!claim || claim.action !== "restore") return expired();
 
-  if (!claim || claim.action !== "restore") {
+  const site = claim.website ?? "your site";
+  const apiToken = process.env.NETLIFY_API_TOKEN;
+  const siteId = claim.siteId;
+
+  if (!apiToken || !siteId) {
+    await send({
+      to: process.env.ADMIN_EMAIL,
+      ...adminAlert({
+        subject: `Version history unavailable: ${site}`,
+        lines: [`A customer opened their version history for <strong>${site}</strong> but it is not wired up yet.`],
+      }),
+    });
     return new Response(
-      page("Link expired", `<h1>This link has expired.</h1>
-       <p>Restore links are valid for 30 days. Email
-       <a href="mailto:autopilot@mywebmaster.co.uk">autopilot@mywebmaster.co.uk</a> and we will send a fresh one.</p>`),
-      { status: 404, headers: { "content-type": "text/html; charset=utf-8" } },
+      page("We are on it", `<h1>We have your request.</h1>
+        <p>Your version history is not available automatically yet, so a person has been alerted and will
+        sort this out today. You do not need to do anything else.</p>`),
+      { headers: { "content-type": "text/html; charset=utf-8" } },
     );
   }
 
-  const site = claim.website ?? "your site";
+  let versions;
+  try {
+    versions = await listVersions(siteId, apiToken);
+  } catch (err) {
+    return new Response(
+      page("Temporarily unavailable", `<h1>We could not load your history.</h1>
+        <p class="muted">${esc(String(err.message))}</p>
+        <p>Try again in a minute, or reply to any email from us.</p>`),
+      { status: 502, headers: { "content-type": "text/html; charset=utf-8" } },
+    );
+  }
 
-  if (request.method !== "POST") {
+  // ---- Restore -----------------------------------------------------------
+  if (isPost) {
+    const target = String(form.get("deploy") ?? "");
+    // Only a version from this site's own history may be restored — never an
+    // id supplied by whoever holds the link.
+    const chosen = versions.find((v) => v.id === target);
+    if (!chosen) return expired();
+
+    const res = await fetch(
+      `https://api.netlify.com/api/v1/sites/${siteId}/deploys/${chosen.id}/restore`,
+      { method: "POST", headers: { authorization: `Bearer ${apiToken}` } },
+    );
+    const ok = res.ok;
+
+    await send({
+      to: process.env.ADMIN_EMAIL,
+      ...adminAlert({
+        subject: ok ? `Version restored: ${site}` : `Restore FAILED: ${site}`,
+        lines: [
+          `<strong>${esc(site)}</strong> restored to "${esc(chosen.title)}" from ${new Date(chosen.when).toUTCString()}.`,
+          ok ? "Nothing was deleted; every other version is still in the history." : `<strong>It failed: ${res.status}</strong> — needs doing by hand.`,
+        ],
+      }),
+    });
+
     return new Response(
       page(
-        "Restore your original site",
-        `<h1>Restore ${site} to how it was?</h1>
-         <p>This puts back the copy we took before Autopilot changed anything.</p>
-         <div class="box">
-           <p><strong>What this does</strong></p>
-           <p class="muted">Every improvement made since we started is removed, and the site goes back to
-           exactly how it looked on day one. Speed fixes, repaired links and content changes all go with it.</p>
-           <p><strong>What it does not do</strong></p>
-           <p class="muted">Nothing is deleted permanently. The improved version stays in your site's history,
-           so this can be undone the same way.</p>
-         </div>
-         <form method="POST"><input type="hidden" name="t" value="${token}">
-           <button type="submit">Yes, restore my original site</button></form>
-         <p class="muted" style="margin-top:20px">Changed your mind? Close this page — nothing happens unless you press the button.</p>`,
+        ok ? "Restored" : "We are on it",
+        ok
+          ? `<h1>Done — your site is back to that version.</h1>
+             <p>${esc(site)} now matches <strong>${esc(chosen.title)}</strong> from
+             ${new Date(chosen.when).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}.
+             It usually appears within a minute.</p>
+             <p class="muted">Nothing was deleted. Every other version is still here, including the one you just
+             moved away from — so this can be undone the same way.</p>
+             <p><a href="/api/restore?t=${encodeURIComponent(String(token))}">Back to your version history</a></p>`
+          : `<h1>We have your request.</h1>
+             <p>It did not complete automatically, so a person has been alerted and will handle it today.</p>`,
       ),
       { headers: { "content-type": "text/html; charset=utf-8" } },
     );
   }
 
-  // --- Perform the restore -------------------------------------------------
-  const token_ = process.env.NETLIFY_API_TOKEN;
-  const siteId = claim.siteId;
-  const deployId = claim.baselineDeployId;
-  let outcome = { ok: false, reason: "not configured" };
-
-  if (token_ && siteId && deployId) {
-    try {
-      const res = await fetch(
-        `https://api.netlify.com/api/v1/sites/${siteId}/deploys/${deployId}/restore`,
-        { method: "POST", headers: { authorization: `Bearer ${token_}` } },
-      );
-      outcome = res.ok
-        ? { ok: true }
-        : { ok: false, reason: `Netlify returned ${res.status}` };
-    } catch (err) {
-      outcome = { ok: false, reason: String(err?.message ?? err).slice(0, 200) };
-    }
-  }
-
-  await send({
-    to: process.env.ADMIN_EMAIL,
-    ...adminAlert({
-      subject: outcome.ok ? `Original site restored: ${site}` : `Restore FAILED: ${site}`,
-      lines: [
-        `Customer requested their original site back for <strong>${site}</strong>.`,
-        outcome.ok
-          ? `Rolled back to deploy <code>${deployId}</code>. Nothing was deleted; the improved version is still in the deploy history.`
-          : `<strong>It did not complete: ${outcome.reason}</strong> — this needs doing by hand.`,
-      ],
-    }),
-  });
+  // ---- List --------------------------------------------------------------
+  const rows = versions
+    .map((v, i) => {
+      const isNow = v.published;
+      const isFirst = i === versions.length - 1;
+      const cls = [isNow ? "now" : "", isFirst ? "first" : ""].filter(Boolean).join(" ");
+      const when = new Date(v.when).toLocaleString("en-GB", {
+        day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit",
+      });
+      return `<li class="${cls}">
+        <div class="when">${esc(when)}${isNow ? '<span class="tag">live now</span>' : ""}${isFirst ? '<span class="tag">before we started</span>' : ""}</div>
+        <div class="what">${esc(v.title)}</div>
+        ${isNow ? '<p class="muted" style="margin:2px 0 0">This is what visitors see.</p>'
+                : `<form method="POST"><input type="hidden" name="t" value="${esc(token)}">
+                   <input type="hidden" name="deploy" value="${esc(v.id)}">
+                   <button class="plain" type="submit">Put this version back</button></form>`}
+      </li>`;
+    })
+    .join("");
 
   return new Response(
     page(
-      outcome.ok ? "Restored" : "We are on it",
-      outcome.ok
-        ? `<h1>Your original site is back.</h1>
-           <p>${site} now looks exactly as it did before we started. It usually takes under a minute to appear.</p>
-           <p class="muted">Nothing was deleted. If you change your mind, reply to any email from us and we can
-           put the improved version back just as easily.</p>`
-        : `<h1>We have your request.</h1>
-           <p>Something went wrong doing it automatically, so a person has been alerted and will handle it today.
-           You do not need to do anything else.</p>
-           <p class="muted">Sorry — this is the part that was meant to be automatic.</p>`,
-      outcome.ok ? "#c8f04a" : "#f0a93b",
+      "Your version history",
+      `<h1>Every version of ${esc(site)}.</h1>
+       <p>Pick any point and put it back. The oldest entry is your site exactly as it was before we
+       touched anything.</p>
+       <div class="box"><p class="muted" style="margin:0">Nothing is ever deleted. Restoring moves the site to
+       a previous version and leaves every other one here, so any change can be undone — including
+       the restore itself.</p></div>
+       <ol>${rows}</ol>
+       <p class="muted">Not what you were looking for? Reply to any email from us and a person will help.</p>`,
     ),
     { headers: { "content-type": "text/html; charset=utf-8" } },
   );
