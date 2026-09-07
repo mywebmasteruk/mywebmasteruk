@@ -19,90 +19,83 @@ import { site } from "~/data/site";
     </div>
   </section>
 
-  <section class="wrap wrap--narrow">
-    <ol class="steps">
-      <li>
-        <p class="mono n">Today</p>
-        <h2>You answer four questions</h2>
-        <p class="muted">Below. The rest we work out from your site and your Google figures.</p>
-      </li>
-      <li>
-        <p class="mono n">Within 2 working days</p>
-        <h2>We take a full copy of your site</h2>
-        <p class="muted">
-          Exactly as it is now, kept for as long as you are a client. If you ever want the
-          original back, you ask and we put it there.
-        </p>
-      </li>
-      <li>
-        <p class="mono n">Week one</p>
-        <h2>The visible fixes land first</h2>
-        <p class="muted">
-          Speed, broken links, error pages, and whether AI assistants can read you. All
-          measurable within days, all checkable by you without taking our word for it.
-        </p>
-      </li>
-      <li>
-        <p class="mono n">Every week after</p>
-        <h2>One email, 90 seconds to read</h2>
-        <p class="muted">
-          What changed, what it did, and anything waiting for your approval. There is no
-          dashboard to log into and nothing to remember.
-        </p>
-      </li>
-    </ol>
-  </section>
+  <section class="section split">
+    <div class="wrap">
+      <div class="cols">
+        <div class="timeline-col">
+          <p class="label">What happens</p>
+          <ol class="timeline">
+            <li>
+              <p class="mono n">Today</p>
+              <h2>You answer four questions</h2>
+              <p class="muted">The rest we work out from your site and your Google figures.</p>
+            </li>
+            <li>
+              <p class="mono n">Within 2 working days</p>
+              <h2>We take a full copy of your site</h2>
+              <p class="muted">Exactly as it is now, kept for as long as you are a client. If you ever want the original back, you ask and we put it there.</p>
+            </li>
+            <li>
+              <p class="mono n">Week one</p>
+              <h2>The visible fixes land first</h2>
+              <p class="muted">Speed, broken links, error pages, and whether AI assistants can read you. All checkable by you without taking our word for it.</p>
+            </li>
+            <li>
+              <p class="mono n">Every week after</p>
+              <h2>One email, 90 seconds to read</h2>
+              <p class="muted">What changed, what it did, and anything waiting for your approval. No dashboard to log into.</p>
+            </li>
+          </ol>
+        </div>
 
-  <section class="section">
-    <div class="wrap wrap--narrow">
-      <div class="card form-card">
-        <p class="label">Four questions</p>
-        <h2>Things we cannot work out by looking</h2>
-        <form
-          name="onboarding"
-          method="POST"
-          data-netlify="true"
-          netlify-honeypot="company-fax"
-          action="/onboarding-received/"
-          class="stack"
-        >
-          <input type="hidden" name="form-name" value="onboarding" />
-          <p class="hp"><label>Leave empty <input name="company-fax" tabindex="-1" autocomplete="off" /></label></p>
+        <div class="form-col">
+          <div class="card form-card">
+            <p class="label">Four questions</p>
+            <h2>Things we cannot work out by looking</h2>
+            <form
+              name="onboarding"
+              method="POST"
+              data-netlify="true"
+              netlify-honeypot="company-fax"
+              action="/onboarding-received/"
+              class="stack"
+            >
+              <input type="hidden" name="form-name" value="onboarding" />
+              <p class="hp"><label>Leave empty <input name="company-fax" tabindex="-1" autocomplete="off" /></label></p>
 
-          <div class="field">
-            <label for="site">1. Your website address</label>
-            <input id="site" name="site" type="url" required placeholder="https://" autocomplete="url" />
+              <div class="field">
+                <label for="site">1. Your website address</label>
+                <p class="hint" id="site-note" hidden></p>
+                <input id="site" name="site" type="url" required placeholder="https://" autocomplete="url" />
+              </div>
+
+              <div class="field">
+                <label for="locked">2. Which pages must never be touched?</label>
+                <p class="hint">Pricing, legal, anything you have fought over. One per line. Leave blank if none.</p>
+                <textarea id="locked" name="locked" rows="3" placeholder="/pricing/&#10;/terms/"></textarea>
+              </div>
+
+              <div class="field">
+                <label for="approver">3. Who approves wording changes?</label>
+                <p class="hint">Name and email. This is who we send proposed copy to.</p>
+                <input id="approver" name="approver" type="text" required placeholder="Name" />
+                <input id="approver_email" name="approver_email" type="email" required placeholder="email@example.com" />
+              </div>
+
+              <div class="field">
+                <label for="voice">4. Anything you would never say?</label>
+                <p class="hint">Words, claims or tone to avoid. The most useful answer here.</p>
+                <textarea id="voice" name="voice" rows="3" placeholder="Never call us cheap. Never promise rankings."></textarea>
+              </div>
+
+              <button type="submit" class="btn btn--primary">Send and get started</button>
+              <p class="mono muted small">
+                Change any of this later from the link in every email.
+                See the <a href="/legal/privacy/">privacy notice</a>.
+              </p>
+            </form>
           </div>
-
-          <div class="field">
-            <label for="locked">2. Which pages must never be touched?</label>
-            <p class="hint">Pricing, legal, anything you have fought over. One per line. Leave blank if none.</p>
-            <textarea id="locked" name="locked" rows="3" placeholder="/pricing/&#10;/terms/"></textarea>
-          </div>
-
-          <div class="field">
-            <label for="approver">3. Who approves wording changes?</label>
-            <p class="hint">Name and email. This is who we send proposed copy to.</p>
-            <input id="approver" name="approver" type="text" required placeholder="Name — email@example.com" />
-          </div>
-
-          <div class="field">
-            <label for="voice">4. Anything you would never say?</label>
-            <p class="hint">Words, claims or tone to avoid. This is the single most useful answer here.</p>
-            <textarea id="voice" name="voice" rows="3" placeholder="Never call us cheap. Never promise rankings."></textarea>
-          </div>
-
-          <div class="field">
-            <label for="urgent">If something breaks, who do we call? <span class="muted">(optional)</span></label>
-            <input id="urgent" name="urgent" type="text" placeholder="Phone or email" />
-          </div>
-
-          <button type="submit" class="btn btn--primary">Send and get started</button>
-          <p class="mono muted small">
-            You can change any of this later by replying to any email we send.
-            See the <a href="/legal/privacy/">privacy notice</a>.
-          </p>
-        </form>
+        </div>
       </div>
     </div>
   </section>
@@ -111,12 +104,14 @@ import { site } from "~/data/site";
     <div class="wrap wrap--narrow prose">
       <h2>A few things worth knowing</h2>
       <p>
-        <strong>Cancelling.</strong> Any time, from the link in your receipt. Everything we
-        improved stays yours, or you can ask for your original site back instead.
+        <strong>Cancelling.</strong> Any time, from the link in your receipt — no email to us
+        and no notice period. Billing stops, everything we improved stays yours, and you can
+        ask for your original site back instead if you prefer.
       </p>
       <p>
-        <strong>Stopping us mid-flight.</strong> Reply to any email with the word stop and all
-        automatic activity halts immediately. It does not wait for anyone to be at their desk.
+        <strong>Pausing us.</strong> One click in any email stops all automatic changes straight
+        away, while we carry on watching and reporting. Un-pause the same way. Use this if
+        something looks wrong — it is not the same as cancelling and costs you nothing.
       </p>
       <p>
         <strong>What we will never change.</strong> Your prices, your guarantees, your legal
@@ -128,17 +123,34 @@ import { site } from "~/data/site";
       </p>
     </div>
   </section>
+  <script is:inline defer src="/js/welcome.js"></script>
 </Base>
 
 <style>
   .head { padding-bottom: 2rem; }
   .head h1 { margin-block: 1rem 1.2rem; }
-  .steps { list-style: none; padding: 0; display: grid; gap: 1.5rem; }
-  @media (min-width: 720px) { .steps { grid-template-columns: repeat(2, 1fr); gap: 2rem; } }
-  .steps h2 { font-size: var(--step-1); margin-block: 0.35rem 0.5rem; }
-  .steps p.muted { font-size: var(--step--1); }
-  .steps .n { color: var(--accent); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; }
+  .cols { display: grid; gap: 2.5rem; align-items: start; }
+  @media (min-width: 940px) { .cols { grid-template-columns: 1fr 1fr; gap: 4rem; } }
+  @media (min-width: 940px) { .form-col { position: sticky; top: 82px; } }
+
+  /* Vertical timeline: one continuous rule with a marker per step. */
+  .timeline { list-style: none; padding: 0; margin-top: 1.5rem; position: relative; }
+  .timeline::before {
+    content: ""; position: absolute; left: 5px; top: 8px; bottom: 8px;
+    width: 1px; background: var(--line-strong);
+  }
+  .timeline li { position: relative; padding-left: 1.9rem; padding-bottom: 2rem; }
+  .timeline li:last-child { padding-bottom: 0; }
+  .timeline li::before {
+    content: ""; position: absolute; left: 0; top: 6px;
+    width: 11px; height: 11px; border-radius: 50%;
+    background: var(--bg); border: 2px solid var(--accent-graphic);
+  }
+  .timeline h2 { font-size: var(--step-1); margin-block: 0.35rem 0.5rem; }
+  .timeline p.muted { font-size: var(--step--1); }
+  .timeline .n { color: var(--accent); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; }
   .form-card h2 { font-size: var(--step-2); margin-block: 0.6rem 1.6rem; }
+  .field input + input { margin-top: 0.4rem; }
   form { --flow: 1.4rem; }
   .field { display: grid; gap: 0.35rem; }
   label { font-size: var(--step--1); font-weight: 600; }
