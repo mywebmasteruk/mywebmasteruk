@@ -245,7 +245,7 @@ for (const item of plan.decide) {
   });
 }
 
-const delivery = await flushNotices({ send: mailNotice, dryRun });
+const delivery = await flushNotices({ send: mailNotice, dryRun, client });
 if (delivery.dryRun) {
   console.log(
     `  Would send ${delivery.instant.length} same-day notice(s)` +

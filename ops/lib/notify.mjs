@@ -30,13 +30,30 @@ export const notifyConfig = {
   cadence: process.env.NOTIFY_CADENCE || "weekly",
   /** Autonomy classes that always send immediately, whatever the cadence. */
   instantClasses: (process.env.NOTIFY_INSTANT || "notify").split(",").map((s) => s.trim()),
-  /** Where notices go. Falls back to the admin address during setup. */
-  to: process.env.CUSTOMER_EMAIL || process.env.ADMIN_EMAIL || "",
   /** Set to "off" to stop sending. The queue still fills, so nothing is lost. */
   enabled: process.env.NOTIFY !== "off",
 };
 
 const CADENCE_DAYS = { instant: 0, daily: 1, weekly: 7 };
+
+/**
+ * The customer's own address, from the record the pipeline wrote.
+ *
+ * `contact.email` came off their site or their plan, so it is already known and
+ * a second copy of it would be the first thing to drift. `CUSTOMER_EMAIL` stays
+ * as the fallback for our own site, which has no client record because the
+ * pipeline did not build it.
+ */
+export function recipientFor(client) {
+  const email = client?.contact?.email;
+  if (email) {
+    return { to: email, name: client.contact.name ?? null, source: `${client.slug ?? "client"} record` };
+  }
+  if (process.env.CUSTOMER_EMAIL) {
+    return { to: process.env.CUSTOMER_EMAIL, name: null, source: "CUSTOMER_EMAIL" };
+  }
+  return { to: "", name: null, source: null, reason: client ? "the client record carries no contact email" : "no client record and no CUSTOMER_EMAIL set" };
+}
 
 export async function loadQueue() {
   try {
@@ -94,7 +111,7 @@ export function isInstant(notice) {
  *
  * @returns {Promise<{instant: object[], digest: object[]|null, failures: object[]}>}
  */
-export async function flushNotices({ send, dryRun = false, now = new Date() } = {}) {
+export async function flushNotices({ send, dryRun = false, now = new Date(), client = null } = {}) {
   const q = await loadQueue();
   const failures = [];
 
@@ -105,8 +122,9 @@ export async function flushNotices({ send, dryRun = false, now = new Date() } = 
   if (!notifyConfig.enabled) {
     return { instant: [], digest: null, failures: [{ reason: "notifications are switched off (NOTIFY=off)" }] };
   }
-  if (!notifyConfig.to) {
-    return { instant: [], digest: null, failures: [{ reason: "no recipient (set CUSTOMER_EMAIL)" }] };
+  const recipient = recipientFor(client);
+  if (!recipient.to) {
+    return { instant: [], digest: null, failures: [{ reason: `no recipient — ${recipient.reason}` }] };
   }
   if (dryRun) {
     return { instant, digest: sendDigest ? batched : null, failures: [], dryRun: true };
@@ -116,14 +134,14 @@ export async function flushNotices({ send, dryRun = false, now = new Date() } = 
 
   // Instant notices go one message per change: the subject line is the change.
   for (const notice of instant) {
-    const result = await send({ kind: "instant", notice, to: notifyConfig.to });
+    const result = await send({ kind: "instant", notice, to: recipient.to, name: recipient.name });
     if (result.sent) delivered.push(notice);
     else failures.push({ notice, reason: result.reason });
   }
 
   let digest = null;
   if (sendDigest) {
-    const result = await send({ kind: "digest", notices: batched, to: notifyConfig.to });
+    const result = await send({ kind: "digest", notices: batched, to: recipient.to, name: recipient.name });
     if (result.sent) {
       delivered.push(...batched);
       digest = batched;
