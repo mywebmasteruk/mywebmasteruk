@@ -21,3 +21,4 @@ ops/data/migration.json
 #   ops/reports/*.md        — the human-readable record
 
 .netlify/
+ops/data/measurement.json

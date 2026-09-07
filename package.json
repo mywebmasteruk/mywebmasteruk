@@ -12,6 +12,7 @@
     "loop": "node ops/loop.mjs",
     "loop:dry": "node ops/loop.mjs --dry-run",
     "migration": "node ops/check-migration.mjs",
+    "measure": "node ops/measure.mjs",
     "prebuild": "node ops/make-og.mjs",
     "speed": "node ops/collect-speed.mjs",
     "mail:test": "node ops/mail-test.mjs",
