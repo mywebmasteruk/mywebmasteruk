@@ -38,3 +38,13 @@ strong one. Fix these once, everywhere, before the site is indexed.
    `/webmaster-services` (3,600 impressions in 90 days) and a `blog.` subdomain with
    pages earning thousands of impressions. These need 301s to the closest new page, or that
    demand is lost at cutover. This is the single highest-risk item on the list.
+
+## Strategy, agreed 7 September 2026
+
+The product rebuilds the customer's site on our stack rather than adapting to
+theirs. See [ARCHITECTURE.md](ARCHITECTURE.md) for the reasoning and the four
+open questions that decide whether it works.
+
+The live site's copy still describes the previous model — a subscription that
+improves an existing site. It is deliberately unchanged until the rebuild
+economics are tested.
