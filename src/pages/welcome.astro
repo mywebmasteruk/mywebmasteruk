@@ -1,0 +1,160 @@
+---
+import Base from "~/layouts/Base.astro";
+import { site } from "~/data/site";
+---
+<Base
+  title="You're on Autopilot — what happens next"
+  description="Your subscription is live. Four questions and we can start, plus exactly what happens in the first week."
+  noindex={true}
+>
+  <section class="section head">
+    <div class="wrap wrap--narrow">
+      <p class="label">Subscription active</p>
+      <h1>You're on Autopilot.</h1>
+      <p class="lede">
+        Payment went through and your receipt is on its way. There are four things we cannot
+        work out by looking at your site, so they are below. It takes about two minutes, and
+        nothing starts until you have answered them.
+      </p>
+    </div>
+  </section>
+
+  <section class="wrap wrap--narrow">
+    <ol class="steps">
+      <li>
+        <p class="mono n">Today</p>
+        <h2>You answer four questions</h2>
+        <p class="muted">Below. The rest we work out from your site and your Google figures.</p>
+      </li>
+      <li>
+        <p class="mono n">Within 2 working days</p>
+        <h2>We take a full copy of your site</h2>
+        <p class="muted">
+          Exactly as it is now, kept for as long as you are a client. If you ever want the
+          original back, you ask and we put it there.
+        </p>
+      </li>
+      <li>
+        <p class="mono n">Week one</p>
+        <h2>The visible fixes land first</h2>
+        <p class="muted">
+          Speed, broken links, error pages, and whether AI assistants can read you. All
+          measurable within days, all checkable by you without taking our word for it.
+        </p>
+      </li>
+      <li>
+        <p class="mono n">Every week after</p>
+        <h2>One email, 90 seconds to read</h2>
+        <p class="muted">
+          What changed, what it did, and anything waiting for your approval. There is no
+          dashboard to log into and nothing to remember.
+        </p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="section">
+    <div class="wrap wrap--narrow">
+      <div class="card form-card">
+        <p class="label">Four questions</p>
+        <h2>Things we cannot work out by looking</h2>
+        <form
+          name="onboarding"
+          method="POST"
+          data-netlify="true"
+          netlify-honeypot="company-fax"
+          action="/onboarding-received/"
+          class="stack"
+        >
+          <input type="hidden" name="form-name" value="onboarding" />
+          <p class="hp"><label>Leave empty <input name="company-fax" tabindex="-1" autocomplete="off" /></label></p>
+
+          <div class="field">
+            <label for="site">1. Your website address</label>
+            <input id="site" name="site" type="url" required placeholder="https://" autocomplete="url" />
+          </div>
+
+          <div class="field">
+            <label for="locked">2. Which pages must never be touched?</label>
+            <p class="hint">Pricing, legal, anything you have fought over. One per line. Leave blank if none.</p>
+            <textarea id="locked" name="locked" rows="3" placeholder="/pricing/&#10;/terms/"></textarea>
+          </div>
+
+          <div class="field">
+            <label for="approver">3. Who approves wording changes?</label>
+            <p class="hint">Name and email. This is who we send proposed copy to.</p>
+            <input id="approver" name="approver" type="text" required placeholder="Name — email@example.com" />
+          </div>
+
+          <div class="field">
+            <label for="voice">4. Anything you would never say?</label>
+            <p class="hint">Words, claims or tone to avoid. This is the single most useful answer here.</p>
+            <textarea id="voice" name="voice" rows="3" placeholder="Never call us cheap. Never promise rankings."></textarea>
+          </div>
+
+          <div class="field">
+            <label for="urgent">If something breaks, who do we call? <span class="muted">(optional)</span></label>
+            <input id="urgent" name="urgent" type="text" placeholder="Phone or email" />
+          </div>
+
+          <button type="submit" class="btn btn--primary">Send and get started</button>
+          <p class="mono muted small">
+            You can change any of this later by replying to any email we send.
+            See the <a href="/legal/privacy/">privacy notice</a>.
+          </p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="section closing">
+    <div class="wrap wrap--narrow prose">
+      <h2>A few things worth knowing</h2>
+      <p>
+        <strong>Cancelling.</strong> Any time, from the link in your receipt. Everything we
+        improved stays yours, or you can ask for your original site back instead.
+      </p>
+      <p>
+        <strong>Stopping us mid-flight.</strong> Reply to any email with the word stop and all
+        automatic activity halts immediately. It does not wait for anyone to be at their desk.
+      </p>
+      <p>
+        <strong>What we will never change.</strong> Your prices, your guarantees, your legal
+        wording, or the settings that control whether Google shows your site.
+        <a href="/what-it-changes/">The full list is public</a>.
+      </p>
+      <p class="muted">
+        Questions before we start? Email <a href={`mailto:${site.email}`}>{site.email}</a>.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .head { padding-bottom: 2rem; }
+  .head h1 { margin-block: 1rem 1.2rem; }
+  .steps { list-style: none; padding: 0; display: grid; gap: 1.5rem; }
+  @media (min-width: 720px) { .steps { grid-template-columns: repeat(2, 1fr); gap: 2rem; } }
+  .steps h2 { font-size: var(--step-1); margin-block: 0.35rem 0.5rem; }
+  .steps p.muted { font-size: var(--step--1); }
+  .steps .n { color: var(--accent); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; }
+  .form-card h2 { font-size: var(--step-2); margin-block: 0.6rem 1.6rem; }
+  form { --flow: 1.4rem; }
+  .field { display: grid; gap: 0.35rem; }
+  label { font-size: var(--step--1); font-weight: 600; }
+  .hint { font-size: 0.78rem; color: var(--text-muted); margin: 0; }
+  input, textarea {
+    font: inherit; font-size: 16px; padding: 0.7rem 0.8rem;
+    border: 1px solid var(--line-strong); border-radius: var(--radius);
+    background: var(--bg); color: var(--text); width: 100%;
+  }
+  textarea { resize: vertical; }
+  input:focus-visible, textarea:focus-visible { border-color: var(--focus); }
+  button { width: 100%; justify-content: center; margin-top: 0.5rem; }
+  .small { font-size: 0.7rem; line-height: 1.5; }
+  .small a { color: var(--accent); }
+  .hp { position: absolute; left: -9999px; }
+  .closing h2 { font-size: var(--step-2); margin-bottom: 1.2rem; }
+  .closing p + p { margin-top: 1rem; }
+  .closing a { color: var(--accent); }
+</style>

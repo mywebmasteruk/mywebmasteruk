@@ -1,0 +1,44 @@
+---
+import Base from "~/layouts/Base.astro";
+import { site } from "~/data/site";
+---
+<Base
+  title="Thanks — that's everything we need to start"
+  description="Your onboarding answers are in. Here is what happens now and when to expect the first email."
+  noindex={true}
+>
+  <section class="section">
+    <div class="wrap wrap--narrow">
+      <p class="label">All set</p>
+      <h1>That's everything we need.</h1>
+      <p class="lede">
+        Nothing else is required from you. The first full check runs within two working days,
+        and your first weekly email arrives the Monday after that.
+      </p>
+      <div class="next">
+        <p><strong>Before we touch anything</strong>, we take a complete copy of your site as it
+        is today. You will get a note confirming it is stored.</p>
+        <p><strong>The first changes</strong> are the mechanical, visible ones — speed, broken
+        links, error pages. You will be able to see them for yourself.</p>
+        <p><strong>Anything involving your words</strong> comes to whoever you named, with the
+        reasoning attached, before it goes anywhere near your site.</p>
+      </div>
+      <p class="muted">
+        Changed your mind about something? Reply to any email from us, or write to
+        <a href={`mailto:${site.email}`}>{site.email}</a>.
+      </p>
+      <div class="links">
+        <a class="btn btn--ghost" href="/what-it-changes/">What we can and cannot change</a>
+        <a class="btn btn--ghost" href="/changelog/">See it running on our own site</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  h1 { margin-block: 1rem 1.2rem; }
+  .next { margin-block: 2rem; display: grid; gap: 1rem; border-left: 3px solid var(--ok-text); padding-left: 1.2rem; }
+  .next p { max-width: 62ch; font-size: var(--step--1); }
+  .links { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 2rem; }
+  .muted a { color: var(--accent); }
+</style>
