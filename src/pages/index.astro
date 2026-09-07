@@ -4,6 +4,7 @@ import Readout from "~/components/Readout.astro";
 import Faq from "~/components/Faq.astro";
 import CtaBand from "~/components/CtaBand.astro";
 import { getCollection } from "astro:content";
+import experiment from "~/data/experiment.json";
 import { site } from "~/data/site";
 import { faqNode, serviceNode } from "~/lib/schema";
 import experiment from "~/data/experiment.json";
@@ -20,6 +21,10 @@ const counts = {
   never: liveCaps.filter((c) => c.data.autonomy === "never").length,
 };
 
+/** The same field /proof/ reads. No surface describes the method independently. */
+const design = experiment.design ?? { kind: "none", holdout: null, note: "" };
+const controlled = design.kind === "controlled" && Array.isArray(design.holdout) && design.holdout.length > 0;
+
 const faqs = [
   {
     q: "What does Autopilot actually do?",
@@ -31,7 +36,9 @@ const faqs = [
   },
   {
     q: "How do I know it actually worked?",
-    a: "Because we leave some pages alone on purpose. We split similar pages into two groups, improve one and deliberately do not touch the other. Both groups go through the same Google updates, the same quiet months and the same competition. Whatever difference opens up between them is the bit we caused — and we report it monthly, including the months where our changes lost.",
+    a: controlled
+      ? `Because we leave ${design.holdout.length} pages alone on purpose. Both groups go through the same Google updates, the same quiet months and the same competition, so whatever difference opens up between them is the bit we caused — and we report it monthly, including the months where our changes lost.`
+      : `Honestly: not with certainty yet. ${design.note} We publish every change and what happened after it, including the ones that lost, but a good month for your whole trade would look like our work — and we would rather say that than hand you a confident number we cannot stand behind.`,
   },
   {
     q: "Why only change things once a week if you check every day?",

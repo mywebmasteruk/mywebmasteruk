@@ -12,10 +12,56 @@ const entries = (await getCollection("changelog")).sort(
 );
 const fmt = new Intl.NumberFormat("en-GB");
 const opps = experiment.topOpportunities;
+
+/**
+ * What kind of claim this page is allowed to make.
+ *
+ * The method below used to be hard-coded prose describing a randomised control —
+ * on a site that has never run one. That is the worst place on the site to be
+ * describing something we do not do, so the steps are rendered from the data that
+ * says what we actually do. A missing `design` reads as "none", never as proof.
+ */
+const design = experiment.design ?? { kind: "none", holdout: null, note: "" };
+const controlled = design.kind === "controlled" && Array.isArray(design.holdout) && design.holdout.length > 0;
+
+const steps = [
+  {
+    n: "01",
+    h: "Post the starting numbers first",
+    p: "Written down before a single change is made. That removes the oldest trick in the trade: quietly choosing a flattering start date once you already know how it turned out.",
+  },
+  controlled
+    ? {
+        n: "02",
+        h: "Leave some pages alone",
+        p: `Similar pages are split into two groups, and ${design.holdout.length} of them are deliberately never improved. That genuinely costs something — and it is what buys you a number you can trust.`,
+      }
+    : {
+        n: "02",
+        h: "Say what the number cannot tell you",
+        p: design.note || "No pages are being held back as a comparison on this site, so a result here cannot be separated from whatever the market did that month.",
+      },
+  {
+    n: "03",
+    h: "Agree the timescale up front",
+    p: "28 days, decided in advance, with the page left untouched throughout. Anything shorter is measuring noise. Anything decided afterwards is measuring wishful thinking.",
+  },
+  controlled
+    ? {
+        n: "04",
+        h: "Report the difference, losses and all",
+        p: "How the improved pages moved, minus how the untouched ones moved. Anything that lost gets put back, and published just as visibly as anything that won.",
+      }
+    : {
+        n: "04",
+        h: "Report the movement, losses and all",
+        p: "How the changed pages moved, before against after, with no claim that we caused it. Anything that lost gets put back, and published just as visibly as anything that won.",
+      },
+];
 ---
 <Base
   title="Proof & method — the experiment running on this domain"
-  description="The measurement method behind Autopilot: the published baseline, the holdout design, the measurement window, and what gets reported including the losses."
+  description="The measurement method behind Autopilot: the published baseline, what the numbers can and cannot show, the agreed window, and what gets reported — including losses."
   breadcrumbs={[{ name: "Proof", href: "/proof/" }]}
 >
   <section class="section head">
@@ -176,26 +222,13 @@ const opps = experiment.topOpportunities;
       <p class="label">Method</p>
       <h2>How we decide something actually worked</h2>
       <div class="grid grid--2 steps">
-        <div class="card">
-          <p class="mono n">01</p>
-          <h3>Post the starting numbers first</h3>
-          <p class="muted">Written down before a single change is made. That removes the oldest trick in the trade: quietly choosing a flattering start date once you already know how it turned out.</p>
-        </div>
-        <div class="card">
-          <p class="mono n">02</p>
-          <h3>Leave some pages alone</h3>
-          <p class="muted">Similar pages are split at random into two groups, and one group is deliberately never improved. That genuinely costs something — and it is what buys you a number you can trust.</p>
-        </div>
-        <div class="card">
-          <p class="mono n">03</p>
-          <h3>Agree the timescale up front</h3>
-          <p class="muted">28 days, decided in advance, with the page left untouched throughout. Anything shorter is measuring noise. Anything decided afterwards is measuring wishful thinking.</p>
-        </div>
-        <div class="card">
-          <p class="mono n">04</p>
-          <h3>Report the difference, losses and all</h3>
-          <p class="muted">How the improved pages moved, minus how the untouched ones moved. Anything that lost gets put back, and published just as visibly as anything that won.</p>
-        </div>
+        {steps.map((step) => (
+          <div class="card">
+            <p class="mono n">{step.n}</p>
+            <h3>{step.h}</h3>
+            <p class="muted">{step.p}</p>
+          </div>
+        ))}
       </div>
     </div>
   </section>

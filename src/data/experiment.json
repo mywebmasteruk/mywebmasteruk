@@ -1,6 +1,12 @@
 {
   "_comment": "Published proof figures. Updated by the loop when a measurement window closes.",
   "property": "sc-domain:mywebmaster.co.uk",
+  "design": {
+    "_comment": "What kind of claim the numbers on this page can support. Every surface that describes the method or renders a result must read this rather than hard-coding prose \u2014 a page that says 'we split pages at random' while nothing does is a false claim on the page we point at as proof.",
+    "kind": "before-after",
+    "holdout": null,
+    "note": "No holdout is running on this domain. The site is 31 pages and the loop does not yet split them into treated and untouched groups, so a difference between the two cannot be reported. Results here are before-and-after, which cannot separate our work from the season."
+  },
   "baseline": {
     "window": {
       "startDate": "2026-06-04",
