@@ -5,6 +5,10 @@
 [build.environment]
   NODE_VERSION = "20"
 
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
 # Immutable, fingerprinted assets can be cached forever; HTML must revalidate so a
 # rollback or a fresh deploy is visible immediately rather than after a TTL.
 [[headers]]

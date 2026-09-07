@@ -10,15 +10,20 @@
     "check": "astro check",
     "verify": "node ops/verify.mjs",
     "prebuild": "node ops/make-og.mjs",
-    "speed": "node ops/collect-speed.mjs"
+    "speed": "node ops/collect-speed.mjs",
+    "mail:test": "node ops/mail-test.mjs",
+    "report:send": "node ops/send-report.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.124.0",
     "@astrojs/mdx": "^4.2.6",
     "@astrojs/sitemap": "^3.3.1",
-    "astro": "^5.7.13"
+    "astro": "^5.7.13",
+    "nodemailer": "^10.0.0",
+    "stripe": "^22.6.1"
   },
   "devDependencies": {
+    "@types/nodemailer": "^8.0.1",
     "linkinator": "^6.1.2"
   }
 }
