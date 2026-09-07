@@ -1,4 +1,5 @@
 ---
+import { evidence } from "~/lib/evidence";
 import Base from "~/layouts/Base.astro";
 import Faq from "~/components/Faq.astro";
 import CtaBand from "~/components/CtaBand.astro";
@@ -112,7 +113,7 @@ const faqs = [
       <li>
         <p class="phase-n mono">Phase 04 · 28 days</p>
         <h2>Prove</h2>
-        <p class="lede">Compare against the pages we left alone.</p>
+        <p class="lede">{evidence.controlled ? `Compare against the ${evidence.holdout.length} pages we hold back.` : "Compare before against after — with no control group, and we say so."}</p>
         <p>
           Once a page is changed, we leave it completely alone for 28 days. Then we compare how
           it moved with the pages we deliberately never touched — which went through the same
@@ -121,6 +122,7 @@ const faqs = [
         <p>
           Anything that beat the untouched pages stays, and we do more of it. Anything that lost
           gets put back, and we publish that just as prominently as the wins.
+          {!evidence.hasResult && " No window has closed yet, so there is nothing of ours to report under this heading — and until there is, this page will not invent one."}
         </p>
       </li>
     </ol>

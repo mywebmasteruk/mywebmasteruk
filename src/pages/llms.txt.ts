@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import { getCollection } from "astro:content";
 import { site } from "~/data/site";
+import { evidence } from "~/lib/evidence";
 
 /**
  * A curated markdown map for language models, per the llms.txt proposal.
@@ -29,8 +30,8 @@ export const GET: APIRoute = async () => {
     "",
     "## Core pages",
     "",
-    `- [How Autopilot works](${site.url}/how-it-works/): The four-phase cycle — measure daily, decide weekly, ship one change per commit, prove against a control group over 28 days.`,
-    `- [What it changes](${site.url}/what-it-changes/): The full change taxonomy. Which changes ship unattended, which need human approval, and which are permanently forbidden.`,
+    `- [How Autopilot works](${site.url}/how-it-works/): The four-phase cycle — measure daily, decide weekly, ship one change per commit, ${evidence.controlled ? `hold ${evidence.holdout.length} pages back as a control and compare against them over 28 days` : "measure before against after, with no control group"}.`,
+    `- [What it changes](${site.url}/what-it-changes/): The full change taxonomy. Which changes ship unattended, which ship and are emailed to the customer the same day, and which are permanently forbidden.`,
     `- [Proof and method](${site.url}/proof/): The published baseline, the holdout design, and what can and cannot be claimed yet.`,
     `- [Pricing](${site.url}/pricing/): Three tiers, differing by how much autonomy the system is granted.`,
     `- [Changelog](${site.url}/changelog/): Every change made to this site, with the hypothesis recorded before it shipped.`,
