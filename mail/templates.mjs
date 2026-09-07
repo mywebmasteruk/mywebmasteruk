@@ -160,3 +160,151 @@ export function adminAlert({ subject, lines }) {
     }),
   };
 }
+
+/** Escapes text that came from a model or a search query before it enters HTML. */
+const esc = (s) =>
+  String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+const beforeAfter = (before, after) =>
+  [
+    before
+      ? `<p style="margin:0 0 6px;color:${MUTED};font-size:13px">BEFORE</p><p style="margin:0 0 16px;padding:12px 14px;background:#f4f2ec;border-radius:4px;font-size:15px;white-space:pre-wrap">${esc(before)}</p>`
+      : "",
+    after
+      ? `<p style="margin:0 0 6px;color:${MUTED};font-size:13px">${before ? "AFTER" : "ADDED"}</p><p style="margin:0 0 16px;padding:12px 14px;background:#f2f7e4;border-radius:4px;font-size:15px;white-space:pre-wrap">${esc(after)}</p>`
+      : "",
+  ].join("");
+
+/**
+ * One change, sent the same day it ships.
+ *
+ * The subject line is the change itself, not "an update about your website" —
+ * an owner should be able to tell from the inbox list whether they need to open it.
+ * Both versions are shown because a notice that only shows the new wording is
+ * asking to be trusted rather than checked.
+ */
+export function changeMade({ notice, undoLink }) {
+  const { title, detail, target, before, after, hypothesis } = notice;
+
+  const text = `We changed something on your website today.
+
+${title}
+${target ? `Page: ${SITE}${target}\n` : ""}
+${before ? `Before:\n${before}\n\nAfter:\n${after}\n` : after ? `Added:\n${after}\n` : ""}
+${hypothesis ? `Why: ${hypothesis}\n` : ""}${detail ? `${detail}\n` : ""}
+${undoLink ? `Put it back exactly as it was:\n${undoLink}\n` : ""}
+This is one of the changes we do without asking, and tell you about the same day.
+The full list of what we can and cannot touch: ${SITE}/what-it-changes/
+
+Reply to this email to change anything, or reply with the word stop to halt all
+automatic activity immediately.`;
+
+  return {
+    subject: title,
+    text,
+    html: shell({
+      preheader: detail || "One change, live now, reversible with one click.",
+      heading: "We changed something today.",
+      body:
+        p(`<strong>${esc(title)}</strong>`) +
+        (target ? muted(`On <a href="${SITE}${target}" style="color:${MUTED}">${SITE}${target}</a>`) : "") +
+        beforeAfter(before, after) +
+        (hypothesis ? p(esc(hypothesis)) : "") +
+        (detail ? muted(esc(detail)) : "") +
+        muted(
+          `This is one of the changes we make without asking and tell you about the same day. <a href="${SITE}/what-it-changes/" style="color:${MUTED}">What we can and cannot touch</a>.`,
+        ),
+      cta: undoLink ? { href: undoLink, label: "Put it back" } : null,
+    }),
+  };
+}
+
+/**
+ * The batch. Mechanical repairs an owner does not want an email each for, but is
+ * entitled to see. Grouped by page, because that is how an owner thinks about
+ * their site — not by our internal capability names.
+ */
+export function changeDigest({ notices, since, manageLink }) {
+  const byTarget = new Map();
+  for (const n of notices) {
+    const key = n.target || "Across the site";
+    if (!byTarget.has(key)) byTarget.set(key, []);
+    byTarget.get(key).push(n);
+  }
+
+  const count = notices.length;
+  const heading = `${count} ${count === 1 ? "change" : "changes"} to your website`;
+
+  const text = [
+    `${heading}${since ? ` since ${since}` : ""}.`,
+    ``,
+    ...[...byTarget].flatMap(([target, list]) => [
+      target === "Across the site" ? target : `${SITE}${target}`,
+      ...list.map((n) => `  - ${n.title}`),
+      ``,
+    ]),
+    `Every one of these is reversible. Reply to this email and say which.`,
+    ``,
+    `The full record, including changes we decided not to make:`,
+    `${SITE}/changelog/`,
+  ].join("\n");
+
+  return {
+    subject: `${heading} this week`,
+    text,
+    html: shell({
+      preheader: `${count} ${count === 1 ? "change" : "changes"}, all reversible.`,
+      heading,
+      body:
+        (since ? muted(`Since ${esc(since)}.`) : "") +
+        [...byTarget]
+          .map(
+            ([target, list]) =>
+              `<p style="margin:20px 0 6px;font-weight:600;font-size:15px">${
+                target === "Across the site"
+                  ? "Across the site"
+                  : `<a href="${SITE}${target}" style="color:${INK}">${esc(target)}</a>`
+              }</p>` + list.map((n) => muted(`• ${esc(n.title)}`)).join(""),
+          )
+          .join("") +
+        p(`Every one of these is reversible. Reply and say which.`),
+      cta: { href: `${SITE}/changelog/`, label: "See the full record" },
+      manageLink,
+    }),
+  };
+}
+
+/**
+ * The one thing Autopilot will not decide. Sent when the evidence points at a
+ * change to prices, promises, legal wording or index controls — the categories
+ * the published taxonomy marks as never ours to touch.
+ */
+export function decisionNeeded({ notice, manageLink }) {
+  const { title, detail, reason } = notice;
+
+  const text = `Something on your site needs your decision — we will not make this one.
+
+${title}
+
+${detail}
+
+Why we are not doing it ourselves: ${reason}
+
+Reply to this email and tell us what you want, and we will make the change.
+${SITE}/what-it-changes/`;
+
+  return {
+    subject: `Your decision needed: ${title}`,
+    text,
+    html: shell({
+      preheader: "We found something, and this one is not ours to change.",
+      heading: "This one is yours to decide.",
+      body:
+        p(`<strong>${esc(title)}</strong>`) +
+        p(esc(detail)) +
+        muted(`<strong>Why we are not doing it ourselves:</strong> ${esc(reason)}`) +
+        p(`Reply to this email and tell us what you want, and we will make the change.`),
+      manageLink,
+    }),
+  };
+}

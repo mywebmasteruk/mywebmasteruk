@@ -30,6 +30,22 @@ async function query(dimensions, rowLimit = 500) {
   return res.rows || [];
 }
 
+/** What Google currently holds, so the loop can tell if it is out of date. */
+async function sitemaps() {
+  try {
+    const res = await gscFetch(`/sites/${site}/sitemaps`, { token: await getAccessToken(SCOPES.searchConsole) });
+    return (res.sitemap ?? []).map((s) => ({
+      path: s.path,
+      lastSubmitted: s.lastSubmitted ?? null,
+      lastDownloaded: s.lastDownloaded ?? null,
+      errors: Number(s.errors ?? 0),
+      warnings: Number(s.warnings ?? 0),
+    }));
+  } catch {
+    return [];
+  }
+}
+
 const [totals, queries, pages, devices, countries] = await Promise.all([
   query([]),
   query(["query"], 1000),
@@ -56,8 +72,11 @@ const opportunities = queries
     position: Number(r.position.toFixed(1)),
   }));
 
+const submittedSitemaps = await sitemaps();
+
 const snapshot = {
   property: PROPERTY,
+  sitemaps: submittedSitemaps,
   window: { startDate, endDate, days },
   collectedAt: new Date().toISOString(),
   totals: {

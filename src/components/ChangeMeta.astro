@@ -3,7 +3,7 @@ interface Props { changeType: string; autonomy: string; outcome: string; holdout
 const { changeType, autonomy, outcome, holdout = false } = Astro.props;
 const autonomyLabel: Record<string, string> = {
   auto: "Done automatically",
-  proposed: "You approved it",
+  notified: "We did it and told you",
   human: "Written by a person",
 };
 const typeLabel: Record<string, string> = {

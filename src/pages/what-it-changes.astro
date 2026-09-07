@@ -8,14 +8,19 @@ const caps = (await getCollection("capabilities")).sort((a, b) =>
   a.data.category.localeCompare(b.data.category),
 );
 const categories = [...new Set(caps.map((c) => c.data.category))];
+// Counts describe what is running today. A capability we have not finished is
+// still listed in the table below, marked as such, rather than quietly counted
+// as though it were working.
+const live = caps.filter((c) => c.data.status !== "planned");
+const planned = caps.filter((c) => c.data.status === "planned");
 const counts = {
-  auto: caps.filter((c) => c.data.autonomy === "auto").length,
-  propose: caps.filter((c) => c.data.autonomy === "propose").length,
-  never: caps.filter((c) => c.data.autonomy === "never").length,
+  auto: live.filter((c) => c.data.autonomy === "auto").length,
+  notify: live.filter((c) => c.data.autonomy === "notify").length,
+  never: live.filter((c) => c.data.autonomy === "never").length,
 };
 const autonomyLabel: Record<string, string> = {
   auto: "We just do it",
-  propose: "We ask you first",
+  notify: "We do it, then tell you the same day",
   never: "Never",
 };
 const reversibleLabel: Record<string, string> = {
@@ -40,7 +45,7 @@ const reversibleLabel: Record<string, string> = {
       </p>
       <div class="summary">
         <div class="sum sum--auto"><span class="n">{counts.auto}</span> we do ourselves</div>
-        <div class="sum sum--propose"><span class="n">{counts.propose}</span> we ask you first</div>
+        <div class="sum sum--notify"><span class="n">{counts.notify}</span> we do, then email you the same day</div>
         <div class="sum sum--never"><span class="n">{counts.never}</span> never happen</div>
       </div>
     </div>
@@ -66,6 +71,7 @@ const reversibleLabel: Record<string, string> = {
                 <tr>
                   <th scope="row">
                     {c.data.change}
+                    {c.data.status === "planned" && <span class="tag tag--planned">Not built yet</span>}
                     <span class="why">{c.data.why}</span>
                   </th>
                   <td><span class={`tag tag--${c.data.autonomy}`}>{autonomyLabel[c.data.autonomy]}</span></td>
@@ -110,7 +116,7 @@ const reversibleLabel: Record<string, string> = {
   .sum { display: flex; align-items: baseline; gap: 0.5rem; }
   .sum .n { font-size: var(--step-2); font-weight: 600; font-variant-numeric: tabular-nums; }
   .sum--auto .n { color: var(--ok-text); }
-  .sum--propose .n { color: var(--warn-text); }
+  .sum--notify .n { color: var(--warn-text); }
   .sum--never .n { color: var(--bad-text); }
 
   .cat { margin-top: var(--section); }
@@ -121,8 +127,9 @@ const reversibleLabel: Record<string, string> = {
   .nowrap { white-space: nowrap; }
   .tag { display: inline-block; font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.25rem 0.55rem; border-radius: 100px; border: 1px solid; white-space: nowrap; }
   .tag--auto { color: var(--ok-text); border-color: var(--ok-text); }
-  .tag--propose { color: var(--warn-text); border-color: var(--warn-text); }
+  .tag--notify { color: var(--warn-text); border-color: var(--warn-text); }
   .tag--never { color: var(--bad-text); border-color: var(--bad-text); }
+  .tag--planned { color: var(--muted); border-color: var(--line-strong); margin-left: 0.5rem; }
   .note h2 { font-size: var(--step-3); margin-bottom: 1.2rem; }
   .note p + p { margin-top: 1rem; }
   .note p { max-width: 68ch; }

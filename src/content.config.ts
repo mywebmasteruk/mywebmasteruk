@@ -60,8 +60,9 @@ const changelog = defineCollection({
       "performance",
       "rollback",
     ]),
-    /** auto = shipped unattended; proposed = a human approved; human = hand-made. */
-    autonomy: z.enum(["auto", "proposed", "human"]),
+    /** auto = shipped unattended; notified = shipped and the customer was
+     *  emailed the same day; human = hand-made. */
+    autonomy: z.enum(["auto", "notified", "human"]),
     outcome: z.enum(["pending", "improved", "neutral", "regressed", "reverted"]).default("pending"),
     /** Filled in once the measurement window closes. */
     result: z.string().max(700).optional(),
@@ -113,8 +114,16 @@ const capabilities = defineCollection({
       "Turning visitors into enquiries",
     ]),
     change: z.string().min(10).max(120),
-    /** auto = ships unattended, propose = opens a PR, never = out of bounds. */
-    autonomy: z.enum(["auto", "propose", "never"]),
+    /** auto = ships, reported in the digest; notify = ships, emailed the same
+     *  day; never = out of bounds, and the system will not do it even if asked. */
+    autonomy: z.enum(["auto", "notify", "never"]),
+    /**
+     * Whether the running system can actually carry this out today.
+     * `planned` is published rather than hidden: a capability table that lists
+     * things the software cannot do is a brochure, not a guarantee. ops/verify.mjs
+     * fails the build if anything marked `live` has no fixer behind it.
+     */
+    status: z.enum(["live", "planned"]).default("live"),
     reversible: z.enum(["instant", "commit", "manual"]),
     signal: z.string().min(10).max(140),
     why: z.string().min(30).max(300),

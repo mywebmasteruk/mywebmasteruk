@@ -1,0 +1,42 @@
+{
+  "_comment": "A copy of the pipeline's fleet record shape, checked in here on purpose. The real files under pipeline/fleet/ are generated output — they appear and disappear as clients are provisioned, so a test reading one breaks for reasons that have nothing to do with this code. Update this when the pipeline changes the contract.",
+  "slug": "harbourside",
+  "business": "Harbourside Electrical",
+  "host": "harboursideelectrical.co.uk",
+  "url": "https://harboursideelectrical.co.uk",
+  "liveSince": "2026-09-07T08:08:32.396Z",
+  "origin": "plan",
+  "sector": "trades",
+  "netlifySiteId": "00000000-0000-0000-0000-000000000000",
+  "netlifySiteName": "harbourside-autopilot",
+  "repo": "mywebmasteruk/client-harbourside",
+  "siteDir": "clients/harbourside/site",
+  "searchConsoleProperty": "sc-domain:harboursideelectrical.co.uk",
+  "ga4Property": null,
+  "baseline": {
+    "takenAt": "2026-09-07T07:26:24.091Z",
+    "source": "none",
+    "pages": 4,
+    "note": "New venture. Nothing existed to measure, so the first full month after launch becomes the baseline."
+  },
+  "holdout": null,
+  "holdoutNote": "Only 2 page(s) — too few to hold any back and still have a site. Lift has to be read as before-and-after, which is weaker, and any report must say so.",
+  "frozen": [
+    {
+      "path": "/emergency/",
+      "editedBy": "Dan Whitfield",
+      "editedAt": "2026-09-07T08:12:54.910Z",
+      "until": "2026-12-06T08:12:54.910Z",
+      "reason": "the customer wrote this themselves"
+    }
+  ],
+  "restore": {
+    "applicable": false,
+    "snapshotAt": null,
+    "document": "clients/harbourside/snapshot/RESTORE.md",
+    "dnsRecorded": false,
+    "limitations": []
+  },
+  "awaitingClient": ["areas-covered", "emergency"],
+  "questionsOutstanding": ["What is your registration number?", "Are you insured, and for how much?"]
+}

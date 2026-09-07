@@ -1,0 +1,221 @@
+{
+  "host": "mywebmaster.co.uk",
+  "capturedAt": "2026-09-07T08:34:07.290Z",
+  "origin": "adopted",
+  "applicable": true,
+  "adoptedFrom": [
+    "../2026_static",
+    "../ai-2026/archive/blog/markdown"
+  ],
+  "pages": [
+    {
+      "path": "/",
+      "file": "../2026_static/index.html",
+      "bytes": 409146
+    },
+    {
+      "path": "/affiliate-partners",
+      "file": "../2026_static/pages/affiliate-partners.html",
+      "bytes": 597025
+    },
+    {
+      "path": "/computer-repair-shop-app",
+      "file": "../2026_static/pages/computer-repair-shop-app.html",
+      "bytes": 465097
+    },
+    {
+      "path": "/contact-mywebmaster",
+      "file": "../2026_static/pages/contact-mywebmaster.html",
+      "bytes": 232271
+    },
+    {
+      "path": "/membership-booking-app",
+      "file": "../2026_static/pages/membership-booking-app.html",
+      "bytes": 465349
+    },
+    {
+      "path": "/mobile-app-design-development-service",
+      "file": "../2026_static/pages/mobile-app-design-development-service.html",
+      "bytes": 818034
+    },
+    {
+      "path": "/mywebmaster-customer-reviews",
+      "file": "../2026_static/pages/mywebmaster-customer-reviews.html",
+      "bytes": 231649
+    },
+    {
+      "path": "/nocode-resources",
+      "file": "../2026_static/pages/nocode-resources.html",
+      "bytes": 520282
+    },
+    {
+      "path": "/nocode-ycode-analysis",
+      "file": "../2026_static/pages/nocode-ycode-analysis.html",
+      "bytes": 204232
+    },
+    {
+      "path": "/platform-charges",
+      "file": "../2026_static/pages/platform-charges.html",
+      "bytes": 182590
+    },
+    {
+      "path": "/portfolio",
+      "file": "../2026_static/pages/portfolio.html",
+      "bytes": 328638
+    },
+    {
+      "path": "/privacy-policy",
+      "file": "../2026_static/pages/privacy-policy.html",
+      "bytes": 219986
+    },
+    {
+      "path": "/support-request",
+      "file": "../2026_static/pages/support-request.html",
+      "bytes": 189997
+    },
+    {
+      "path": "/terms-conditions",
+      "file": "../2026_static/pages/terms-conditions.html",
+      "bytes": 261214
+    },
+    {
+      "path": "/thank-you",
+      "file": "../2026_static/pages/thank-you.html",
+      "bytes": 399230
+    },
+    {
+      "path": "/webmaster-services",
+      "file": "../2026_static/pages/webmaster-services.html",
+      "bytes": 531570
+    },
+    {
+      "path": "/website-design-development-service",
+      "file": "../2026_static/pages/website-design-development-service.html",
+      "bytes": 792251
+    },
+    {
+      "path": "/about",
+      "file": "../ai-2026/archive/blog/markdown/about.md",
+      "bytes": 1090
+    },
+    {
+      "path": "/contact",
+      "file": "../ai-2026/archive/blog/markdown/contact.md",
+      "bytes": 1097
+    },
+    {
+      "path": "/contribute",
+      "file": "../ai-2026/archive/blog/markdown/contribute.md",
+      "bytes": 1328
+    },
+    {
+      "path": "/coronavirus-every-business-needs-a-website",
+      "file": "../ai-2026/archive/blog/markdown/coronavirus-every-business-needs-a-website.md",
+      "bytes": 2841
+    },
+    {
+      "path": "/cost-prespective-a-website-is-similar-to-a-car",
+      "file": "../ai-2026/archive/blog/markdown/cost-prespective-a-website-is-similar-to-a-car.md",
+      "bytes": 4302
+    },
+    {
+      "path": "/do-website-maintenance-myself-or-get-professional-support",
+      "file": "../ai-2026/archive/blog/markdown/do-website-maintenance-myself-or-get-professional-support.md",
+      "bytes": 3466
+    },
+    {
+      "path": "/how-can-i-become-a-successful-blogger",
+      "file": "../ai-2026/archive/blog/markdown/how-can-i-become-a-successful-blogger.md",
+      "bytes": 5352
+    },
+    {
+      "path": "/how-do-domain-name-system-work",
+      "file": "../ai-2026/archive/blog/markdown/how-do-domain-name-system-work.md",
+      "bytes": 2867
+    },
+    {
+      "path": "/how-do-i-get-mixed-ssl-content",
+      "file": "../ai-2026/archive/blog/markdown/how-do-i-get-mixed-ssl-content.md",
+      "bytes": 1766
+    },
+    {
+      "path": "/how-much-does-a-website-cost-website-cost-calculator",
+      "file": "../ai-2026/archive/blog/markdown/how-much-does-a-website-cost-website-cost-calculator.md",
+      "bytes": 975
+    },
+    {
+      "path": "/how-will-a-i-impact-on-our-everyday-lives",
+      "file": "../ai-2026/archive/blog/markdown/how-will-a-i-impact-on-our-everyday-lives.md",
+      "bytes": 4400
+    },
+    {
+      "path": "/",
+      "file": "../ai-2026/archive/blog/markdown/index.md",
+      "bytes": 982
+    },
+    {
+      "path": "/joomla-or-wordpress-tough-choices-for-your-website",
+      "file": "../ai-2026/archive/blog/markdown/joomla-or-wordpress-tough-choices-for-your-website.md",
+      "bytes": 3994
+    },
+    {
+      "path": "/privacy",
+      "file": "../ai-2026/archive/blog/markdown/privacy.md",
+      "bytes": 771
+    },
+    {
+      "path": "/webmaster-left-and-got-locked-out",
+      "file": "../ai-2026/archive/blog/markdown/webmaster-left-and-got-locked-out.md",
+      "bytes": 3579
+    },
+    {
+      "path": "/what-is-my-ip-address",
+      "file": "../ai-2026/archive/blog/markdown/what-is-my-ip-address.md",
+      "bytes": 869
+    },
+    {
+      "path": "/what-is-nocode-lowcode-web-development",
+      "file": "../ai-2026/archive/blog/markdown/what-is-nocode-lowcode-web-development.md",
+      "bytes": 2777
+    },
+    {
+      "path": "/what-is-the-best-reseller-hosting",
+      "file": "../ai-2026/archive/blog/markdown/what-is-the-best-reseller-hosting.md",
+      "bytes": 3350
+    },
+    {
+      "path": "/whats-the-best-application-for-a-website",
+      "file": "../ai-2026/archive/blog/markdown/whats-the-best-application-for-a-website.md",
+      "bytes": 4034
+    },
+    {
+      "path": "/whats-the-difference-between-traditional-vs-managed-wordpress-hosting",
+      "file": "../ai-2026/archive/blog/markdown/whats-the-difference-between-traditional-vs-managed-wordpress-hosting.md",
+      "bytes": 3059
+    },
+    {
+      "path": "/why-good-website-maintenance-service-is-important",
+      "file": "../ai-2026/archive/blog/markdown/why-good-website-maintenance-service-is-important.md",
+      "bytes": 4575
+    },
+    {
+      "path": "/why-should-i-update-my-website-design",
+      "file": "../ai-2026/archive/blog/markdown/why-should-i-update-my-website-design.md",
+      "bytes": 3713
+    }
+  ],
+  "assets": 0,
+  "dns": {},
+  "mail": {},
+  "limitations": [
+    "Assembled from archives after the rebuild, not captured before it. Some of the original site may be missing and there is no way to know what.",
+    "The original DNS was never recorded. Pointing this domain back at its previous host is therefore a research job, not a lookup — the records in this file are empty because they were never taken, not because there were none.",
+    "The original mail records were not captured either. Check them before any DNS work on this domain.",
+    "Pages are HTML and markdown only. Images, stylesheets and scripts were not collected, so serving this folder will render unstyled."
+  ],
+  "restore": {
+    "preferred": "Netlify deploy history for this site. It covers every version we published, which for a site we built ourselves is the real restore path.",
+    "fallback": "The archived pages listed above, ../2026_static and ../ai-2026/archive/blog/markdown.",
+    "document": null
+  }
+}

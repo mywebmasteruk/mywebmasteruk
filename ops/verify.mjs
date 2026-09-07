@@ -118,6 +118,33 @@ for (const ua of ["GPTBot", "ClaudeBot", "PerplexityBot", "Google-Extended"]) {
 }
 if (/^\s*User-agent:\s*\*\s*\n\s*Disallow:\s*\/\s*$/m.test(robots)) fail("robots.txt blocks all crawlers");
 
+// ---- 8. The published taxonomy matches the running system -----------------
+/**
+ * The capability table is the trust artefact: it is published, and it is what the
+ * policy layer enforces. The failure it invites is quiet — a capability listed as
+ * something we do, with no code behind it, which declines every night while the
+ * page keeps promising it. This makes that state fail the build instead.
+ */
+{
+  const [{ implementedCapabilities }, capabilities] = await Promise.all([
+    import("../ops/apply.mjs"),
+    readFile(new URL("../src/data/capabilities.json", import.meta.url), "utf8").then(JSON.parse),
+  ]);
+  const implemented = new Set(implementedCapabilities);
+
+  for (const cap of capabilities) {
+    // `never` capabilities are enforced by refusing, so having no fixer is the
+    // whole point of them.
+    if (cap.autonomy === "never") continue;
+    if (cap.status === "live" && !implemented.has(cap.id)) {
+      fail(`capabilities.json lists "${cap.id}" as live, but no fixer implements it`);
+    }
+    if (cap.status === "planned" && implemented.has(cap.id)) {
+      warn(`"${cap.id}" has a fixer but is still published as planned`);
+    }
+  }
+}
+
 // ---- Report --------------------------------------------------------------
 for (const w of warnings) console.log(`  WARN  ${w}`);
 for (const f of failures) console.log(`  FAIL  ${f}`);

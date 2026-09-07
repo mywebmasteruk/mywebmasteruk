@@ -56,10 +56,12 @@ jobs:
           git config user.name "autopilot"
           git config user.email "autopilot@users.noreply.github.com"
           # The weekly slot is the only one permitted to write; daily runs observe.
+          # The loop acts by default, so observing is the flagged case — the bare
+          # command publishes. Getting these the wrong way round ships every day.
           if [ "${{ github.event.inputs.apply }}" = "true" ] || [ "${{ github.event.schedule }}" = "0 7 * * TUE" ]; then
-            node ops/loop.mjs --write --push
-          else
             node ops/loop.mjs
+          else
+            node ops/loop.mjs --dry-run
           fi
 
       - name: Publish the report to a human

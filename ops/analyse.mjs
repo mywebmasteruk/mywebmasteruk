@@ -59,16 +59,64 @@ for (const path of crawl.orphans) {
 }
 
 // ---- Structured data ---------------------------------------------------
+/**
+ * Two different faults with two different repairs, and the taxonomy names them
+ * separately: a label that fails to parse gets deleted (schema-syntax), a page
+ * with no label at all gets one added (schema-new). Conflating them meant the
+ * repair for "broken" was being applied to "absent", which is why nothing shipped.
+ */
 for (const p of indexablePages) {
-  if (p.schemaTypes.length === 0) {
+  if (p.schemaBroken > 0) {
     add({
       capability: "schema-syntax",
+      severity: 80,
+      target: p.path,
+      title: `${p.path} has ${p.schemaBroken} structured-data block(s) that do not parse`,
+      detail: "Google reports unreadable markup as an error against the site and reads nothing from it.",
+    });
+  } else if (p.schemaTypes.length === 0) {
+    add({
+      capability: "schema-new",
       severity: 55,
       target: p.path,
       title: `${p.path} has no structured data`,
-      detail: "No schema.org markup was found on the page.",
+      detail: "No schema.org markup was found on the page, so search engines have to infer what it is.",
     });
   }
+}
+
+// ---- Image weight ------------------------------------------------------
+/**
+ * Separate from the HTML budget below, because they have different repairs: an
+ * oversized photo is re-encoded mechanically, while an oversized page is a
+ * decision about what to say. Only the first is safe to do unattended.
+ */
+const IMAGE_BUDGET = 150_000;
+for (const asset of crawl.assets ?? []) {
+  if (asset.bytes <= IMAGE_BUDGET) continue;
+  add({
+    capability: "perf-budget",
+    severity: Math.min(85, 45 + Math.round(asset.bytes / 100_000)),
+    target: null,
+    title: `${asset.path} is ${Math.round(asset.bytes / 1024)}KB`,
+    detail: `Over the ${Math.round(IMAGE_BUDGET / 1024)}KB image budget. On a phone connection this is the slowest thing on any page that shows it.`,
+    evidence: { asset: asset.path, bytes: asset.bytes },
+  });
+}
+
+// ---- The page list Google holds ----------------------------------------
+const liveSitemap = `${(gsc?.property ?? "").replace(/^sc-domain:/, "https://")}/sitemap-index.xml`;
+if (gsc?.sitemaps && !gsc.sitemaps.some((s) => s.path === liveSitemap)) {
+  add({
+    capability: "sitemap",
+    severity: 88,
+    target: null,
+    title: "Google has no current sitemap for this site",
+    detail:
+      `Search Console holds ${gsc.sitemaps.length} sitemap(s), none of them the one this site publishes. ` +
+      "Until it has the list, Google finds new pages only by following links to them.",
+    evidence: { sitemap: liveSitemap, holds: gsc.sitemaps.map((s) => s.path) },
+  });
 }
 
 // ---- Metadata budgets --------------------------------------------------
@@ -126,26 +174,104 @@ for (const p of crawl.pages) {
 }
 
 // ---- Search demand the site earns but does not serve --------------------
+/**
+ * Three outcomes, and which one applies depends on how close the site already is:
+ *
+ *   the query names a section that exists   → the passage is weak (answer-blocks)
+ *   a page covers the subject, no section   → add the section    (faq-expand)
+ *   nothing covers it                       → write the page     (new-pages)
+ *
+ * Every one of these must carry the page it applies to. A finding with a null
+ * target reaches a fixer that cannot open a file, declines, and looks like a
+ * capability that does not work — which is exactly what was happening.
+ */
+const STOP_WORDS = new Set(["the", "a", "an", "and", "or", "for", "to", "of", "in", "is", "are", "what", "how", "do", "does", "can", "my", "your", "best", "uk"]);
+const terms = (s) =>
+  new Set(String(s).toLowerCase().split(/[^a-z0-9]+/).filter((w) => w.length > 2 && !STOP_WORDS.has(w)));
+
+/** The indexable page that best covers a query, with how strongly it does. */
+function bestPageFor(query) {
+  const want = terms(query);
+  if (!want.size) return null;
+  let best = null;
+  for (const page of indexablePages) {
+    const haystack = terms(`${page.title ?? ""} ${page.path} ${(page.h2s ?? []).join(" ")}`);
+    const overlap = [...want].filter((w) => haystack.has(w)).length;
+    if (!overlap) continue;
+    const sectionMatch = (page.h2s ?? []).some((h) => {
+      const heading = terms(h);
+      return [...want].filter((w) => heading.has(w)).length >= Math.max(2, want.size - 1);
+    });
+    const score = overlap / want.size;
+    if (!best || score > best.score) best = { page, score, sectionMatch };
+  }
+  return best;
+}
+
 if (gsc?.opportunities?.length) {
-  const served = new Set(
-    indexablePages.flatMap((p) => [p.title, ...p.h2s].filter(Boolean).map((s) => s.toLowerCase())),
-  );
   for (const opp of gsc.opportunities.slice(0, 10)) {
-    const q = opp.query.toLowerCase();
-    const answeredSomewhere = [...served].some((h) => h.includes(q) || q.includes(h.slice(0, 24)));
+    const match = bestPageFor(opp.query);
+    const covered = match && match.score >= 0.5;
+
+    const capability = !covered ? "new-pages" : match.sectionMatch ? "answer-blocks" : "faq-expand";
+    const detail =
+      capability === "new-pages"
+        ? "No page on the site addresses this query."
+        : capability === "answer-blocks"
+          ? `${match.page.path} has a section on this, but no passage answers the query directly.`
+          : `${match.page.path} covers the subject but has no section that answers this question.`;
+
     add({
-      capability: answeredSomewhere ? "answer-blocks" : "new-pages",
+      capability,
       severity: Math.min(95, 40 + Math.round(opp.impressions / 50)),
-      target: null,
+      target: covered ? match.page.path : null,
       title: `"${opp.query}" — ${opp.impressions} impressions, ${opp.clicks} clicks`,
-      detail:
-        `Average position ${opp.position}. ` +
-        (answeredSomewhere
-          ? "A page touches this topic but no passage answers the query directly."
-          : "No page on the site addresses this query."),
+      detail: `Average position ${opp.position}. ${detail}`,
       evidence: opp,
     });
   }
+}
+
+// ---- Demand the rebuild threw away --------------------------------------
+/**
+ * The rest of this file reasons about the site as it is now. This section is the
+ * only one that knows the site used to be something else — and on a rebuild that
+ * is where the largest, quietest losses are. An old URL that 404s or lands on the
+ * homepage is invisible to a crawler: there is nothing left to crawl.
+ *
+ * The fix is almost never a cleverer redirect. If people are still searching for
+ * something and arriving at a page that does not answer it, the honest response is
+ * to answer it — so this raises a `new-pages` finding carrying the legacy URL, and
+ * the fixer repoints that URL once the page exists.
+ */
+const migration = await read("migration.json");
+for (const problem of (migration?.problems ?? []).slice(0, 10)) {
+  const query = problem.topQuery;
+  const path = new URL(problem.page).pathname;
+  const lost = problem.verdict === "gone" ? "returns a 404" : "redirects to the homepage, which Google reads as a 404";
+
+  add({
+    capability: "new-pages",
+    // Impressions already lost are worth more than impressions merely underserved:
+    // this is demand the site used to have and gave away, so it outranks the
+    // opportunity findings above at equivalent volume.
+    severity: Math.min(98, 55 + Math.round(problem.impressions / 100)),
+    target: null,
+    title: `${path} earned ${problem.impressions} impressions and now ${lost}`,
+    detail:
+      `Before the rebuild this page was shown ${problem.impressions} times` +
+      (query ? ` for searches like "${query}"` : "") +
+      ` at average position ${problem.position}. Nothing on the new site answers it.`,
+    evidence: {
+      query: query ?? path.replace(/[/-]+/g, " ").trim(),
+      impressions: problem.impressions,
+      clicks: problem.clicks,
+      position: problem.position,
+      legacyUrl: problem.page,
+      legacyPath: path,
+      verdict: problem.verdict,
+    },
+  });
 }
 
 // ---- Conversion --------------------------------------------------------

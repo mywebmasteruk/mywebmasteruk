@@ -43,6 +43,13 @@ for (const f of files.filter((f) => f.endsWith(".html"))) {
     h1Count: [...html.matchAll(/<h1[^>]*>/g)].length,
     h2s: [...html.matchAll(/<h2[^>]*>([\s\S]*?)<\/h2>/g)].map((m) => m[1].replace(/<[^>]+>/g, "").trim()).slice(0, 20),
     schemaTypes: [...html.matchAll(/"@type":"([^"]+)"/g)].map((m) => m[1]),
+    // A label that does not parse is worse than no label: Google reports it as an
+    // error against the site and reads nothing from it. Distinguishing "broken"
+    // from "absent" matters because they are different repairs.
+    schemaBlocks: [...html.matchAll(/<script[^>]*application\/ld\+json[^>]*>([\s\S]*?)<\/script>/g)].length,
+    schemaBroken: [...html.matchAll(/<script[^>]*application\/ld\+json[^>]*>([\s\S]*?)<\/script>/g)].filter((m) => {
+      try { JSON.parse(m[1]); return false; } catch { return true; }
+    }).length,
     internalLinks: [...new Set([...html.matchAll(/href="(\/[^"#?]*)"/g)].map((m) => m[1]))],
     imagesWithoutDimensions: [...html.matchAll(/<img\b[^>]*>/g)]
       .filter(([tag]) => !/width=/.test(tag) || !/height=/.test(tag)).length,
@@ -76,6 +83,23 @@ if (liveUrl) {
 
 const totalJs = files.filter((f) => extname(f) === ".js").reduce((n, f) => n + 1, 0);
 
+/**
+ * Image weight, which the HTML-only page budget cannot see. On a rebuilt small
+ * business site this is usually the single biggest cause of a slow page: one
+ * photo straight off a phone outweighs every other asset combined.
+ */
+const IMAGE_EXT = new Set([".png", ".jpg", ".jpeg", ".webp", ".gif", ".avif"]);
+const assets = [];
+for (const f of files) {
+  if (!IMAGE_EXT.has(extname(f).toLowerCase())) continue;
+  const path = "/" + relative(DIST, f).replace(/\\/g, "/");
+  // Fingerprinted build output is generated, not authored — shrinking it would be
+  // undone by the next build. Only source assets are worth repairing.
+  if (path.startsWith("/_astro/")) continue;
+  assets.push({ path, bytes: (await stat(f)).size });
+}
+assets.sort((a, b) => b.bytes - a.bytes);
+
 const report = {
   crawledAt: new Date().toISOString(),
   source: liveUrl ?? "dist/",
@@ -83,11 +107,13 @@ const report = {
   brokenLinks,
   orphans: [...inboundCount].filter(([path, n]) => n === 0 && path !== "/").map(([path]) => path),
   jsFileCount: totalJs,
+  assets,
   pages: pages.map((p) => ({ ...p, inboundLinks: inboundCount.get(p.path) ?? 0 })),
   liveChecks,
 };
 
 await writeFile(new URL("./data/crawl.json", import.meta.url), JSON.stringify(report, null, 2));
 console.log(
-  `crawl.json: ${pages.length} pages, ${brokenLinks.length} broken links, ${report.orphans.length} orphans`,
+  `crawl.json: ${pages.length} pages, ${brokenLinks.length} broken links, ` +
+    `${report.orphans.length} orphans, ${assets.length} image asset(s)`,
 );

@@ -12,10 +12,12 @@ const plans = (await getCollection("plans")).sort((a, b) => a.data.order - b.dat
 const money = new Intl.NumberFormat("en-GB");
 
 const caps = await getCollection("capabilities");
+/** Only what the running system can actually carry out today. */
+const liveCaps = caps.filter((c) => c.data.status !== "planned");
 const counts = {
-  auto: caps.filter((c) => c.data.autonomy === "auto").length,
-  propose: caps.filter((c) => c.data.autonomy === "propose").length,
-  never: caps.filter((c) => c.data.autonomy === "never").length,
+  auto: liveCaps.filter((c) => c.data.autonomy === "auto").length,
+  notify: liveCaps.filter((c) => c.data.autonomy === "notify").length,
+  never: liveCaps.filter((c) => c.data.autonomy === "never").length,
 };
 
 const faqs = [
@@ -25,7 +27,7 @@ const faqs = [
   },
   {
     q: "Will it change my site without asking me?",
-    a: `Only the safe, mechanical things — ${counts.auto} of them, all listed publicly before we start, all undoable in seconds. Things like broken links, page speed and pictures that make the page jump about. Anything that changes your actual words, all ${counts.propose} of those, is sent to you to approve first. And ${counts.never} things are never touched at all: your prices, your promises, your legal wording, and the settings that control whether Google shows your site.`,
+    a: `Yes — that is the point of it, and here is exactly how far it goes. ${counts.auto} safe, mechanical things are fixed and appear in your next report: broken links, page speed, pictures that make the page jump about. ${counts.notify} things change your actual words — the headline Google shows, a new answer, a new page — and those are done and emailed to you the same day, with the old version one click away. ${counts.never} things are never touched at all, by anyone automatic: your prices, your promises, your legal wording, and the settings that control whether Google shows your site.`,
   },
   {
     q: "How do I know it actually worked?",
@@ -171,13 +173,13 @@ const schema = [
             search engines read.
           </p>
         </div>
-        <div class="card tier tier--propose">
-          <p class="mono count">{counts.propose}</p>
-          <h3>Waits for approval</h3>
+        <div class="card tier tier--notify">
+          <p class="mono count">{counts.notify}</p>
+          <h3>Done, then you are told</h3>
           <p class="muted">
             Anything that changes what your business says: the headline Google shows, the
-            wording on the page, new questions answered, new pages, layout tests. You see it
-            before it goes live.
+            wording on the page, new questions answered, new pages, layout tests. It ships,
+            and the email showing you the old and new wording arrives the same day.
           </p>
         </div>
         <div class="card tier tier--never">
@@ -302,7 +304,7 @@ const schema = [
 
   .tiers .tier { border-top: 3px solid var(--line-strong); }
   .tier--auto { border-top-color: var(--ok-text); }
-  .tier--propose { border-top-color: var(--warn-text); }
+  .tier--notify { border-top-color: var(--warn-text); }
   .tier--never { border-top-color: var(--bad-text); }
   .tier .count { font-size: var(--step-3); font-weight: 600; letter-spacing: -0.02em; }
   .tier h3 { margin-block: 0.2rem 0.6rem; font-size: var(--step-1); }

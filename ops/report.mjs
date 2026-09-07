@@ -1,13 +1,13 @@
 /**
  * Writes the human-readable run report. This is what a person actually reads:
- * what changed, what was refused and why, and what is waiting for approval.
+ * what changed, what was refused and why, and what is the customer's to decide.
  */
 import { writeFile, mkdir } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 
 const root = (p) => fileURLToPath(new URL(`../${p}`, import.meta.url));
 
-export async function writeReport({ date, halted, breaker, plan, applied, metrics, verification }) {
+export async function writeReport({ date, halted, breaker, signal, plan, applied, metrics, verification, delivery, snapshot, evidence }) {
   const lines = [];
   const L = (s = "") => lines.push(s);
 
@@ -32,6 +32,19 @@ export async function writeReport({ date, halted, breaker, plan, applied, metric
     L();
   }
 
+  if (evidence) {
+    L(`## What this report may claim`);
+    L();
+    L(evidence.controlled
+      ? `Results below are ${evidence.claim}. Both groups saw the same Google updates and the same quiet months, so the difference between them is ours.`
+      : `**Results below are ${evidence.claim}.** Any wording that implies we caused an improvement is overclaiming.`);
+    if (!evidence.controlled && evidence.note) {
+      L();
+      L(`> ${evidence.note}`);
+    }
+    L();
+  }
+
   if (metrics) {
     L(`## Where the site stands`);
     L();
@@ -44,41 +57,60 @@ export async function writeReport({ date, halted, breaker, plan, applied, metric
     L();
   }
 
+  if (snapshot?.limitations?.length) {
+    L(`## What the restore promise cannot do`);
+    L();
+    L(`The snapshot exists — ${snapshot.reason}. These are its limits, repeated every`);
+    L(`run because the moment anyone needs them is the moment nobody has time to read.`);
+    L();
+    for (const limitation of snapshot.limitations) L(`- ${limitation}`);
+    L();
+  }
+
+  if (signal) {
+    L(`## Could harm have been detected?`);
+    L();
+    L(signal.confidence === "none"
+      ? `**No.** ${signal.reason}. Mechanical repairs still ship; anything that changes the words on a page is held until there is enough traffic to notice a regression.`
+      : `Yes — ${signal.reason}. The strongest readable signal is **${signal.confidence}**.`);
+    L();
+  }
+
   if (plan) {
     L(`## What the system decided`);
     L();
-    L(`- **${plan.auto.length}** change(s) cleared to ship unattended`);
-    L(`- **${plan.propose.length}** finding(s) need your approval`);
-    L(`- **${plan.refused.length}** refused or deferred`);
+    L(`- **${plan.auto.length}** fixed quietly, reported in the next digest`);
+    L(`- **${plan.notify.length}** changed and emailed to the customer the same day`);
+    L(`- **${plan.decide.length}** left for the customer to decide — out of bounds for us`);
+    L(`- **${plan.refused.length}** refused or deferred to the next run`);
     L();
+    for (const reason of plan.held ?? []) {
+      L(`> **Wording changes are held:** ${reason}`);
+      L();
+    }
 
     if (applied?.length) {
-      L(`### Shipped`);
+      L(applied.some((r) => r.applied) ? `### Shipped` : `### Attempted, nothing shipped`);
       L();
       for (const r of applied) {
+        const cap = r.finding.capability?.id ?? r.finding.capability;
         L(r.applied
-          ? `- ✅ ${r.summary} — \`${r.finding.capability}\``
+          ? `- ✅ ${r.summary} — \`${cap}\`${r.notifyClass === "notify" ? " (customer emailed)" : ""}`
           : `- ⏭️ Skipped: ${r.finding.title} — ${r.reason}`);
       }
       L();
     }
 
-    if (plan.propose.length) {
-      L(`### Waiting for your approval`);
+    if (plan.decide.length) {
+      L(`### Yours to decide`);
       L();
-      L(`These change what the site says, so they do not ship without a human.`);
+      L(`The evidence points at these, and they are the categories we will never`);
+      L(`change on anyone's behalf. They are sent to the customer as recommendations.`);
       L();
-      for (const f of plan.propose.slice(0, 10)) {
+      for (const f of plan.decide.slice(0, 10)) {
         L(`- **${f.title}**`);
         L(`  ${f.detail}`);
-        if (f.draft?.blocked) {
-          L(`  > Needs you first: ${f.draft.blocked}`);
-        } else if (f.draft) {
-          L(`  > **Proposed:** ${f.draft.proposal}`);
-          L(`  > **Why:** ${f.draft.rationale}`);
-          L(`  > **We expect:** ${f.draft.hypothesis}`);
-        }
-        L(`  <sub>${f.capability.change} · ${f.capability.autonomy}</sub>`);
+        L(`  <sub>${f.capability?.change ?? f.capability} · ${f.reason}</sub>`);
       }
       L();
     }
@@ -91,6 +123,21 @@ export async function writeReport({ date, halted, breaker, plan, applied, metric
       }
       L();
     }
+  }
+
+  if (delivery) {
+    L(`## What the customer was told`);
+    L();
+    if (delivery.dryRun) {
+      L(`Dry run — nothing sent.`);
+    } else {
+      L(`- ${delivery.instant.length} same-day notice(s) delivered`);
+      L(`- ${delivery.digest ? `digest of ${delivery.digest.length} change(s) delivered` : "digest not due"}`);
+      for (const f of delivery.failures ?? []) {
+        L(`- ⚠️ **Undelivered, still queued:** ${f.reason}`);
+      }
+    }
+    L();
   }
 
   if (verification) {

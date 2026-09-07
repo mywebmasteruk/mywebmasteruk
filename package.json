@@ -9,6 +9,9 @@
     "preview": "astro preview --port 4000",
     "check": "astro check",
     "verify": "node ops/verify.mjs",
+    "loop": "node ops/loop.mjs",
+    "loop:dry": "node ops/loop.mjs --dry-run",
+    "migration": "node ops/check-migration.mjs",
     "prebuild": "node ops/make-og.mjs",
     "speed": "node ops/collect-speed.mjs",
     "mail:test": "node ops/mail-test.mjs",
@@ -18,8 +21,10 @@
     "@anthropic-ai/sdk": "^0.124.0",
     "@astrojs/mdx": "^4.2.6",
     "@astrojs/sitemap": "^3.3.1",
+    "@netlify/blobs": "^10.7.13",
     "astro": "^5.7.13",
     "nodemailer": "^10.0.0",
+    "sharp": "^0.34.5",
     "stripe": "^22.6.1"
   },
   "devDependencies": {
