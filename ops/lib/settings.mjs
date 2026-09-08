@@ -12,15 +12,14 @@
  *   2. the defaults set in the console  settings:_default
  *   3. the environment                  AI_MODEL, NOTIFY_CADENCE, …
  *
- * The environment stays the floor rather than being retired, because the loop's
- * scheduled run happens on a GitHub runner with no route to Blobs. Until that run
- * has credentials or a service token, CI reads env vars and the console governs
- * runs that can reach the store. `source` on every field says which applied, so a
- * report can state where a value came from instead of implying the console is in
- * charge when it is not.
+ * The environment stays the floor rather than being retired — it is what a laptop
+ * run and a first-boot CI run have — but it is no longer the ceiling. Postgres is
+ * reachable from the GitHub runner, which Blobs never was, so what the console
+ * saves now actually governs the scheduled run. `source` on every field says
+ * which layer applied, so a report can state where a value came from rather than
+ * implying the console is in charge when it is not.
  */
-const STORE = "autopilot";
-const KEY = (slug) => `settings:${slug}`;
+import { db } from "./db.mjs";
 
 /** Matches admin/src/lib/settings.ts. Both ends drifting apart is the risk here. */
 export const DEFAULTS = {
@@ -46,18 +45,25 @@ function fromEnv() {
   return out;
 }
 
-async function fromBlobs(slug) {
-  try {
-    const { getStore } = await import("@netlify/blobs");
-    const store = getStore(STORE);
-    const [client, defaults] = await Promise.all([
-      slug ? store.get(KEY(slug), { type: "json" }) : null,
-      store.get(KEY("_default"), { type: "json" }),
-    ]);
-    return { client: client ?? null, defaults: defaults ?? null, reachable: true };
-  } catch (err) {
-    return { client: null, defaults: null, reachable: false, error: String(err?.message ?? err).slice(0, 120) };
-  }
+async function fromDb(slug) {
+  const rows = await db(`/client_settings?or=(slug.eq.${encodeURIComponent(slug ?? "")},slug.is.null)&select=*`);
+  if (!rows.ok) return { client: null, defaults: null, reachable: false, error: rows.error };
+  const list = Array.isArray(rows.data) ? rows.data : [];
+  const shape = (r) =>
+    r && {
+      provider: r.provider,
+      model: r.model,
+      effort: r.effort,
+      maxTokens: r.max_tokens,
+      drafting: r.drafting,
+      brandVoice: r.brand_voice,
+      notifyCadence: r.notify_cadence,
+    };
+  return {
+    client: shape(list.find((r) => r.slug === slug)) ?? null,
+    defaults: shape(list.find((r) => r.slug === null)) ?? null,
+    reachable: true,
+  };
 }
 
 /**
@@ -70,13 +76,13 @@ async function fromBlobs(slug) {
  */
 export async function loadSettings({ slug = process.env.CLIENT_SLUG } = {}) {
   const env = fromEnv();
-  const blobs = await fromBlobs(slug);
+  const store = await fromDb(slug);
 
   const layers = [
     ["default", DEFAULTS],
     ["environment", env],
-    ["console default", blobs.defaults ?? {}],
-    [`${slug ?? "client"} record`, blobs.client ?? {}],
+    ["console default", store.defaults ?? {}],
+    [`${slug ?? "client"} record`, store.client ?? {}],
   ];
 
   const settings = {};
@@ -92,11 +98,11 @@ export async function loadSettings({ slug = process.env.CLIENT_SLUG } = {}) {
   return {
     settings,
     source,
-    storeReachable: blobs.reachable,
-    storeError: blobs.error ?? null,
+    storeReachable: store.reachable,
+    storeError: store.error ?? null,
     /** Plain sentence for the run report, so nobody has to infer it. */
-    summary: blobs.reachable
+    summary: store.reachable
       ? `settings from ${[...new Set(Object.values(source))].join(", ")}`
-      : `settings from the environment — the console's store was unreachable (${blobs.error})`,
+      : `settings from the environment — the database was unreachable (${store.error})`,
   };
 }

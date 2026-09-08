@@ -8,6 +8,7 @@
 import { readFile, writeFile, access } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { frozenPaths, restoreReady } from "./fleet.mjs";
+import { db } from "./db.mjs";
 
 const root = (p) => fileURLToPath(new URL(`../../${p}`, import.meta.url));
 
@@ -91,7 +92,7 @@ async function haltOverHttp() {
  * A day of no changes costs nothing. A day of changes after somebody pressed stop
  * costs the customer, and it is the single worst bug this product could have.
  */
-export async function isHalted({ willWrite = true } = {}) {
+export async function isHalted({ willWrite = true, slug = process.env.CLIENT_SLUG || "mywebmaster" } = {}) {
   if (process.env.AUTOPILOT_HALT === "1") return "AUTOPILOT_HALT=1 is set";
   try {
     await access(root("ops/HALT"));
@@ -100,23 +101,50 @@ export async function isHalted({ willWrite = true } = {}) {
     /* no operator halt file; carry on to the customer's own switch */
   }
 
+  /**
+   * Three sources, read in parallel, and **any** of them saying stop wins.
+   *
+   * Supabase is the destination; Blobs and the published endpoint are where the
+   * switch used to live. During changeover a customer could press stop against
+   * either, and honouring only the new one would silently ignore a real refusal
+   * — the single worst bug available to this system. Reading all three costs one
+   * round trip and removes the ordering hazard entirely.
+   */
   const failures = [];
+  const readers = [
+    async () => {
+      // db() returns a result rather than throwing, so a failed query and an
+      // empty table both arrive as "no row". Those mean opposite things here —
+      // one is "nobody pressed stop", the other is "I could not ask" — and
+      // conflating them is how a run proceeds against a customer who stopped it.
+      const res = await db(`/halt_state?slug=eq.${encodeURIComponent(slug)}&select=halted,changed_at,changed_by`);
+      if (!res.ok) throw new Error(res.error ?? `status ${res.status}`);
+      const row = Array.isArray(res.data) ? res.data[0] : null;
+      if (!row) return { readable: true, reason: null }; // asked, and nobody has pressed it
+      return { readable: true, reason: haltReason({ halted: row.halted, at: row.changed_at, by: row.changed_by }) };
+    },
+    async () => {
+      const { getStore } = await import("@netlify/blobs");
+      return { readable: true, reason: haltReason(await getStore(HALT_STORE).get(HALT_KEY, { type: "json" })) };
+    },
+    async () => ({ readable: true, reason: await haltOverHttp() }),
+  ];
 
-  // Direct read first: faster, and it does not depend on the site being up.
-  try {
-    const { getStore } = await import("@netlify/blobs");
-    return haltReason(await getStore(HALT_STORE).get(HALT_KEY, { type: "json" }));
-  } catch (err) {
-    failures.push(`blobs: ${String(err?.message ?? err).slice(0, 90)}`);
-  }
+  const results = await Promise.all(
+    readers.map(async (read, i) => {
+      try {
+        return await read();
+      } catch (err) {
+        failures.push(`${["supabase", "blobs", "halt.json"][i]}: ${String(err?.message ?? err).slice(0, 70)}`);
+        return { readable: false, reason: null };
+      }
+    }),
+  );
 
-  // Then the published state, which needs no credentials.
-  try {
-    return await haltOverHttp();
-  } catch (err) {
-    failures.push(`${HALT_URL()}: ${String(err?.message ?? err).slice(0, 90)}`);
-  }
+  const stop = results.find((r) => r.reason);
+  if (stop) return stop.reason;
 
+  if (results.some((r) => r.readable)) return null;
   if (!willWrite) return null; // nothing is about to change; report and move on
   return `cannot read the customer's stop switch (${failures.join("; ")}) — refusing to change anything without it`;
 }

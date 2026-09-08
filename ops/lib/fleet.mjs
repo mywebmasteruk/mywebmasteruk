@@ -17,6 +17,7 @@
  *   restore   where the snapshot lives, and whether one was even applicable.
  */
 import { readFile, readdir } from "node:fs/promises";
+import { one } from "./db.mjs";
 import { fileURLToPath } from "node:url";
 
 const DEFAULT_DIR = fileURLToPath(new URL("../../../pipeline/fleet/", import.meta.url));
@@ -30,15 +31,57 @@ const DEFAULT_DIR = fileURLToPath(new URL("../../../pipeline/fleet/", import.met
  * `fleetRequired()` says whether it should have been there.
  */
 export async function loadFleet({ slug = process.env.CLIENT_SLUG, file = process.env.FLEET_FILE } = {}) {
+  // The database first: it is the destination, and it is the only source the
+  // scheduled run can reach. The file stays readable during changeover, and as
+  // the offline answer for a pipeline run that has not reached the DB yet.
+  if (!file) {
+    const row = await one(
+      `/clients?slug=eq.${encodeURIComponent(slug ?? "mywebmaster")}&select=*`,
+    );
+    if (row) return { found: true, source: "database", client: fromRow(row) };
+  }
+
   const path = file ?? (slug ? `${process.env.FLEET_DIR ?? DEFAULT_DIR}${slug}.json` : null);
-  if (!path) return { found: false, reason: "no CLIENT_SLUG or FLEET_FILE set" };
+  if (!path) return { found: false, reason: "no client row, and no CLIENT_SLUG or FLEET_FILE set" };
   try {
-    return { found: true, path, client: JSON.parse(await readFile(path, "utf8")) };
+    return { found: true, path, source: "file", client: JSON.parse(await readFile(path, "utf8")) };
   } catch (err) {
     // Distinguished from "not configured": a slug was named and the file is not
     // readable, which is a broken deployment rather than a local run.
     return { found: false, path, error: String(err?.message ?? err).slice(0, 160), broken: true };
   }
+}
+
+/**
+ * Maps a `clients` row to the shape the rest of this loop already reads.
+ *
+ * The two semantics that must survive the trip: `holdout` stays null rather than
+ * becoming an empty array, and `baseline` keeps its clicks key absent rather than
+ * gaining a null. Postgres round-trips both correctly; a careless mapper here
+ * would undo them.
+ */
+function fromRow(row) {
+  return {
+    slug: row.slug,
+    business: row.business,
+    host: row.host,
+    url: row.url,
+    origin: row.origin,
+    sector: row.sector,
+    liveSince: row.live_since,
+    netlifySiteId: row.netlify_site_id,
+    repo: row.repo,
+    searchConsoleProperty: row.search_console_property,
+    ga4Property: row.ga4_property,
+    contact: row.contact ?? {},
+    baseline: row.baseline ?? {},
+    holdout: row.holdout ?? null,
+    holdoutNote: row.holdout_note ?? null,
+    restore: row.restore ?? {},
+    frozen: [],
+    awaitingClient: row.awaiting_client ?? [],
+    questionsOutstanding: row.questions_outstanding ?? [],
+  };
 }
 
 /** Every client the pipeline has recorded. */
