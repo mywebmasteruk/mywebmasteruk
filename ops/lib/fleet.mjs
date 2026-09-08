@@ -78,7 +78,7 @@ function fromRow(row) {
     holdout: row.holdout ?? null,
     holdoutNote: row.holdout_note ?? null,
     restore: row.restore ?? {},
-    frozen: [],
+    frozen: row.frozen ?? [],
     awaitingClient: row.awaiting_client ?? [],
     questionsOutstanding: row.questions_outstanding ?? [],
   };
