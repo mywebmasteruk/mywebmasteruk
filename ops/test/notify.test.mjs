@@ -35,11 +35,10 @@ suite("notify — what goes out when");
 check("a wording change is sent the same day", isInstant({ class: "notify" }));
 check("a mechanical repair is batched", !isInstant({ class: "auto" }));
 
-const queue = (pending, lastDigestAt = null) => ({ pending, sent: [], lastDigestAt });
-check("nothing batched means no digest", digestDue(queue([{ class: "notify" }])) === false);
-check("a first batch is due immediately", digestDue(queue([{ class: "auto" }])) === true);
+check("nothing batched means no digest", digestDue({ batchedCount: 0, lastDigestAt: null }) === false);
+check("a first batch is due immediately", digestDue({ batchedCount: 2, lastDigestAt: null }) === true);
 check("a batch is not due again the same day",
-  digestDue(queue([{ class: "auto" }], new Date().toISOString())) === false);
+  digestDue({ batchedCount: 2, lastDigestAt: new Date().toISOString() }) === false);
 check("and is due once the cadence has elapsed",
-  digestDue(queue([{ class: "auto" }], new Date(Date.now() - 8 * 864e5).toISOString())) === true);
+  digestDue({ batchedCount: 2, lastDigestAt: new Date(Date.now() - 8 * 864e5).toISOString() }) === true);
 check("the default cadence is weekly", notifyConfig.cadence === "weekly");

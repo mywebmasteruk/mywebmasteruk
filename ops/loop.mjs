@@ -268,6 +268,9 @@ if (delivery.dryRun) {
   for (const f of delivery.failures) {
     console.log(`  ⚠️  not delivered, still queued: ${f.reason}`);
   }
+  for (const s of delivery.stuck ?? []) {
+    console.log(`  ⛔ giving up after repeated failures, still owed: "${s.title}" — ${s.last_error}`);
+  }
 }
 
 // ---- Report -------------------------------------------------------------
