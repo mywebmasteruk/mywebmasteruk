@@ -1,8 +1,8 @@
 /**
  * The public record of what the loop did.
  *
- * What these guard is rule 7: the changelog is published, and an entry must not
- * say a change was measured against a control group on a site that has none.
+ * The changelog is published, so an entry must not describe a method we do not
+ * run. The untouched-pages comparison was dropped by the owner on 11 September 2026.
  */
 import { suite, check } from "./harness.mjs";
 import { changelogEntry } from "../lib/changelog.mjs";
@@ -10,20 +10,18 @@ import { changelogEntry } from "../lib/changelog.mjs";
 const change = { summary: "Rewrote the Google headline on /answers/x/", target: "/answers/x/", changeType: "metadata", notifyClass: "notify" };
 const date = "2026-09-11";
 
-suite("changelog — never claiming a control that does not exist");
+suite("changelog — no comparison is claimed");
 
-let e = changelogEntry(change, { date, controlled: false });
-check("with no holdout, the fallback does not say 'left alone'", !/left alone/i.test(e.hypothesis));
-check("nor 'untouched'", !/untouched/i.test(e.hypothesis));
-check("and it says plainly how it will be read", /before-and-after/i.test(e.hypothesis));
-
-e = changelogEntry(change, { date });
-check("a caller that forgets to say defaults to no claim", !/left alone|untouched/i.test(e.hypothesis));
+let e = changelogEntry(change, { date });
+check("the fallback does not say 'left alone'", !/left alone/i.test(e.hypothesis));
+check("nor 'untouched', 'control group' or 'holdout'", !/untouched|control group|holdout/i.test(e.hypothesis));
+check("it says only that it was recorded first", /recorded before the result was known/i.test(e.hypothesis));
+check("the frontmatter carries no holdout field", !/holdout/i.test(e.body));
 
 e = changelogEntry(change, { date, controlled: true });
-check("with a holdout, the fallback may say so", /left alone/i.test(e.hypothesis));
+check("a stale caller still passing controlled gets no claim", !/left alone|untouched|control group/i.test(e.hypothesis));
 
-e = changelogEntry({ ...change, hypothesis: "Shorter titles should lift clicks because the ending stops being cut." }, { date, controlled: false });
+e = changelogEntry({ ...change, hypothesis: "Shorter titles should lift clicks because the ending stops being cut." }, { date });
 check("a real hypothesis is used as written", e.hypothesis.startsWith("Shorter titles should lift clicks"));
 
 suite("changelog — the entry itself");

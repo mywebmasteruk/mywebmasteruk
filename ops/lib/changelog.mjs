@@ -33,28 +33,22 @@ const clamp = (s, min, max, pad) => {
  * Builds one entry without touching the disk, so the text that goes on a public
  * page can be tested.
  *
- * `controlled` says whether this site has a holdout to measure against. It
- * defaults to false on purpose: a caller that forgets to pass it gets an entry
- * that understates the evidence, never one that claims a control group the site
- * does not have. The old fallback text said "measured against pages left
- * untouched" unconditionally, which on a client with no holdout was a claim we
- * had not earned, published on the page headed as the record of what we did.
+ * The fallback hypothesis says only what is true of every change: it was written
+ * down before the result was known. It says nothing about how the result will be
+ * judged — the owner dropped the untouched-pages comparison on 11 September 2026,
+ * and the public changelog is the last place to describe a method we do not run.
  *
  * @param {object} change   one entry from applyFindings(), already verified
  * @param {object} options
  * @param {string} options.date
  * @param {string[]} [options.existing]  filenames already in the changelog folder
- * @param {boolean} [options.controlled] whether a holdout exists to compare against
  */
-export function changelogEntry(change, { date, existing = [], controlled = false } = {}) {
+export function changelogEntry(change, { date, existing = [] } = {}) {
   const title = clamp(change.summary, 10, 90, "— an automatic change");
-  const measuredHow = controlled
-    ? "measured against pages deliberately left alone"
-    : "read as before-and-after, because this site has no control group";
   const hypothesis = clamp(
     change.hypothesis ||
       change.rationale ||
-      `${change.summary}. Recorded before the result was known, and ${measuredHow}.`,
+      `${change.summary}. Recorded before the result was known.`,
     40,
     400,
     "Recorded before the result was known.",
@@ -75,7 +69,6 @@ export function changelogEntry(change, { date, existing = [], controlled = false
     `changeType: ${JSON.stringify(change.changeType ?? "content")}`,
     `autonomy: ${JSON.stringify(change.notifyClass === "notify" ? "notified" : "auto")}`,
     `outcome: "pending"`,
-    "holdout: false",
     "---",
     "",
     change.rationale ? `${change.rationale}\n` : "",
@@ -106,9 +99,9 @@ export function changelogEntry(change, { date, existing = [], controlled = false
 }
 
 /** Builds the entry and writes it into the changelog folder. */
-export async function writeChangelogEntry(change, { date = new Date().toISOString().slice(0, 10), controlled = false } = {}) {
+export async function writeChangelogEntry(change, { date = new Date().toISOString().slice(0, 10) } = {}) {
   const existing = await readdir(DIR).catch(() => []);
-  const { slug, body } = changelogEntry(change, { date, existing, controlled });
+  const { slug, body } = changelogEntry(change, { date, existing });
   await writeFile(`${DIR}${slug}.mdx`, body);
   return { file: `src/content/changelog/${slug}.mdx`, slug };
 }

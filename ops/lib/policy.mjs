@@ -169,30 +169,10 @@ export function haltReason(state) {
 }
 
 /**
- * The control group: pages held back so lift can be proved against them.
- *
- * Different from a freeze in kind, not just duration. A freeze is a measurement
- * window on a page we changed; a holdout page must receive **no change at all**,
- * because the moment we touch it the comparison stops meaning anything and the
- * claim on /proof/ becomes false again. It outranks every other consideration:
- * a holdout page is skipped even for a mechanical repair we would otherwise make
- * without thinking.
- *
- * Paths are normalised on the way in. The file is written without trailing
- * slashes and the crawler emits them, so comparing raw strings would match
- * nothing and leak the entire control group in silence.
+ * One spelling for a URL path. Files are written without trailing slashes and
+ * the crawler emits them, so comparing raw strings would silently match nothing.
  */
 export const normalisePath = (p) => `/${String(p ?? "").replace(/^\/+|\/+$/g, "")}/`.replace("//", "/");
-
-export async function loadHoldout() {
-  try {
-    const file = JSON.parse(await readFile(process.env.HOLDOUT_PATH || root("ops/data/holdout.json"), "utf8"));
-    const paths = (file.holdout ?? []).map(normalisePath);
-    return { ...file, paths, active: paths.length > 0 };
-  } catch {
-    return { paths: [], active: false };
-  }
-}
 
 /** Source files behind a URL path, so a site-wide fixer can skip them too. */
 export function sourcesForPath(path) {
@@ -358,7 +338,6 @@ export function classify(capabilities, finding) {
 export async function planRun(findings, { confidence = "unknown", hasSnapshot = null, client = null } = {}) {
   const capabilities = await loadCapabilities();
   const declined = await loadDeclined();
-  const holdout = await loadHoldout();
   /**
    * Two sources of frozen pages, merged. Ours are measurement windows that expire;
    * the client record's are pages the customer wrote themselves. Both block a
@@ -402,14 +381,6 @@ export async function planRun(findings, { confidence = "unknown", hasSnapshot = 
       else refused.push({ ...f, reason: verdict.reason });
       continue;
     }
-    // Checked before anything else that could let a change through.
-    if (f.target && holdout.paths.includes(normalisePath(f.target))) {
-      refused.push({
-        ...f,
-        reason: `${f.target} is in the holdout — it is deliberately never changed, so the comparison stays honest`,
-      });
-      continue;
-    }
     const past = isDeclined(declined, f);
     if (past) {
       refused.push({ ...f, reason: `decided against on ${past.at}: ${past.reason}` });
@@ -449,7 +420,6 @@ export async function planRun(findings, { confidence = "unknown", hasSnapshot = 
     /** Empty when nothing is holding wording changes back. */
     held,
     confidence,
-    holdout: holdout.paths,
   };
 }
 

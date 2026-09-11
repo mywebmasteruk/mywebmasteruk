@@ -19,8 +19,6 @@
     "pages": 4,
     "note": "New venture. Nothing existed to measure, so the first full month after launch becomes the baseline."
   },
-  "holdout": null,
-  "holdoutNote": "Only 2 page(s) — too few to hold any back and still have a site. Lift has to be read as before-and-after, which is weaker, and any report must say so.",
   "frozen": [
     {
       "path": "/emergency/",

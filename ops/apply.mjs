@@ -18,7 +18,7 @@
 import { readFile, writeFile, readdir, access } from "node:fs/promises";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { freezePage, decline, loadHoldout, sourcesForPath } from "./lib/policy.mjs";
+import { freezePage, decline } from "./lib/policy.mjs";
 import { draftEdit, draftAnswerPage, draftSection, FIELD_BUDGETS, aiConfig } from "./lib/ai.mjs";
 import { dimensions, shrink, imagesMissingSize, withSize } from "./lib/images.mjs";
 import { getAccessToken } from "./lib/google.mjs";
@@ -31,17 +31,16 @@ const SITE_URL = process.env.SITE_URL || `https://${DOMAIN}`;
 /**
  * What the business does, so a new page cannot be written about something else.
  *
- * This is handed to the model as fact, so it must not say more than is true: a
- * description that says the service "proves" its results invites a drafted page
- * to repeat the claim before any measurement window has closed. It describes the
- * practice — pages held back so changes can be measured — and stops there.
+ * This is handed to the model as fact, so it must not say more than is true. It
+ * describes what the service does — the checks, the changes, the telling — and
+ * makes no claim about proving results, which a drafted page would otherwise
+ * repeat in public.
  */
 const BUSINESS =
   process.env.BUSINESS_DESCRIPTION ||
-  "MyWebMaster runs Autopilot: it checks a small business's website every day, makes " +
-    "small improvements based on what the numbers show, and holds some pages back untouched " +
-    "so each change can be measured against them rather than guessed at. UK, remote, content " +
-    "and brochure sites only.";
+  "MyWebMaster runs Autopilot: it checks a small business's website every day, fixes what " +
+    "is holding it back based on what the numbers show, and tells the owner about every change " +
+    "it makes. UK, remote, content and brochure sites only.";
 
 const TOPICS = ["autopilot", "safety", "measurement", "ai-search", "seo", "pricing"];
 
@@ -456,12 +455,7 @@ const fixers = {
    * a fortnight. Dimensions are read from the file itself, never guessed.
    */
   "img-attrs": async () => {
-    // This fixer is the one that ignores `target` and sweeps the whole tree, so
-    // the policy layer's per-finding holdout refusal cannot protect the control
-    // group from it. The guard has to live here, at the point of writing.
-    const holdout = await loadHoldout();
-    const offLimits = new Set(holdout.paths.flatMap((path) => sourcesForPath(path).map((f) => root(f))));
-    const sources = (await sourceFiles()).filter((f) => !offLimits.has(f));
+    const sources = await sourceFiles();
     const changed = [];
     let fixed = 0;
 
@@ -493,8 +487,7 @@ const fixers = {
       files: changed,
       changeType: "performance",
       summary:
-        `Declared the size of ${fixed} image${fixed === 1 ? "" : "s"} so the page stops jumping as it loads` +
-        (holdout.active ? ` (${holdout.paths.length} held-back pages skipped)` : ""),
+        `Declared the size of ${fixed} image${fixed === 1 ? "" : "s"} so the page stops jumping as it loads`,
       hypothesis:
         "Images without width and height are the commonest cause of layout shift, which Google measures directly and visitors experience as the page moving under their thumb.",
     };

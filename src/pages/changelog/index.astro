@@ -48,7 +48,6 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { day: "numeric", month: 
               changeType={e.data.changeType}
               autonomy={e.data.autonomy}
               outcome={e.data.outcome}
-              holdout={e.data.holdout}
             />
             <p class="hyp"><span class="mono muted">Hypothesis · </span>{e.data.hypothesis}</p>
             {e.data.result && <p class="result">{e.data.result}</p>}

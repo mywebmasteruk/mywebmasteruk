@@ -28,7 +28,7 @@ import { queueNotice, flushNotices, notifyConfig, applySettings as applyNotifySe
 import { loadSettings } from "./lib/settings.mjs";
 import { mailNotice } from "./lib/notify-mail.mjs";
 import { writeChangelogEntry } from "./lib/changelog.mjs";
-import { loadFleet, evidenceStrength, baselineFor } from "./lib/fleet.mjs";
+import { loadFleet, baselineFor } from "./lib/fleet.mjs";
 
 const exec = promisify(execFile);
 const CWD = fileURLToPath(new URL("../", import.meta.url));
@@ -76,10 +76,8 @@ console.log("  Clear.");
 const fleet = await loadFleet();
 const client = fleet.client ?? null;
 if (client) {
-  const evidence = evidenceStrength(client);
   const baseline = baselineFor(client);
   console.log(`  Client: ${client.business} (${client.host})`);
-  console.log(`  Evidence: ${evidence.claim}`);
   if (!baseline.measurable) console.log(`  Baseline: not measurable — ${baseline.note}`);
 } else if (fleet.broken) {
   console.log(`  CLIENT RECORD UNREADABLE: ${fleet.path} — ${fleet.error}`);
@@ -205,12 +203,7 @@ if (changed.length) {
   // is never listed as though it did.
   step(10, "Recording what changed");
   for (const change of changed) {
-    // Whether the entry may say it was measured against a control group. False
-    // unless the client record says a holdout exists — never assumed.
-    const entry = await writeChangelogEntry(change, {
-      date: today,
-      controlled: client ? evidenceStrength(client).controlled : false,
-    });
+    const entry = await writeChangelogEntry(change, { date: today });
     change.files = [...(change.files ?? []), entry.file];
     console.log(`  ${entry.file}`);
   }
@@ -288,7 +281,6 @@ await writeReport({
   delivery,
   signal: breaker,
   snapshot,
-  evidence: client ? evidenceStrength(client) : null,
   metrics: latest
     ? { ...latest.totals, window: `${latest.window.startDate} → ${latest.window.endDate}` }
     : null,

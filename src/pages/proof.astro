@@ -3,7 +3,6 @@ import Base from "~/layouts/Base.astro";
 import Readout from "~/components/Readout.astro";
 import CtaBand from "~/components/CtaBand.astro";
 import experiment from "~/data/experiment.json";
-import { evidence } from "~/lib/evidence";
 import performance from "~/data/performance.json";
 import { getCollection } from "astro:content";
 import { site } from "~/data/site";
@@ -14,52 +13,27 @@ const entries = (await getCollection("changelog")).sort(
 const fmt = new Intl.NumberFormat("en-GB");
 const opps = experiment.topOpportunities;
 
-/**
- * What kind of claim this page is allowed to make.
- *
- * The method below used to be hard-coded prose describing a randomised control —
- * on a site that has never run one. That is the worst place on the site to be
- * describing something we do not do, so the steps are rendered from the data that
- * says what we actually do. A missing `design` reads as "none", never as proof.
- */
-const design = experiment.design ?? { kind: "none", holdout: null, note: "" };
-const controlled = evidence.controlled;
-
 const steps = [
   {
     n: "01",
     h: "Post the starting numbers first",
     p: "Written down before a single change is made. That removes the oldest trick in the trade: quietly choosing a flattering start date once you already know how it turned out.",
   },
-  controlled
-    ? {
-        n: "02",
-        h: "Leave some pages alone",
-        p: `${evidence.holdout.length} pages are held back and deliberately never improved, chosen before any change was made. Autopilot refuses to touch them, even for a mechanical repair. That genuinely costs something — and it is what buys you a number you can trust.`,
-      }
-    : {
-        n: "02",
-        h: "Say what the number cannot tell you",
-        p: design.note || "No pages are being held back as a comparison on this site, so a result here cannot be separated from whatever the market did that month.",
-      },
+  {
+    n: "02",
+    h: "Write the prediction down before the change",
+    p: "Every change goes out with a sentence saying what it should do and why, recorded before anyone knows the result. A prediction written afterwards is not a prediction.",
+  },
   {
     n: "03",
     h: "Agree the timescale up front",
-    p: "28 days, decided in advance, with the page left untouched throughout. Anything shorter is measuring noise. Anything decided afterwards is measuring wishful thinking.",
+    p: "28 days, decided in advance, with the page not changed again throughout. Anything shorter is measuring noise. Anything decided afterwards is measuring wishful thinking.",
   },
-  controlled
-    ? {
-        n: "04",
-        h: evidence.hasResult ? "Report the difference, losses and all" : "Report the difference once the window closes",
-        p: evidence.hasResult
-          ? "How the improved pages moved, minus how the untouched ones moved. Anything that lost gets put back, and published just as visibly as anything that won."
-          : "How the improved pages moved, minus how the untouched ones moved. The first window has not closed yet, so there is no difference to report — and until there is, this page will not pretend otherwise.",
-      }
-    : {
-        n: "04",
-        h: "Report the movement, losses and all",
-        p: "How the changed pages moved, before against after, with no claim that we caused it. Anything that lost gets put back, and published just as visibly as anything that won.",
-      },
+  {
+    n: "04",
+    h: "Publish what happened, losses and all",
+    p: "Every change is listed publicly with how it turned out. Anything that made things worse gets put back, and published just as visibly as anything that helped.",
+  },
 ];
 ---
 <Base
@@ -223,7 +197,7 @@ const steps = [
   <section class="section method invert">
     <div class="wrap">
       <p class="label">Method</p>
-      <h2>How we decide something actually worked</h2>
+      <h2>How we keep ourselves honest</h2>
       <div class="grid grid--2 steps">
         {steps.map((step) => (
           <div class="card">
@@ -241,7 +215,7 @@ const steps = [
       <h2>What we cannot honestly claim yet</h2>
       <p>
         This started on {experiment.baseline.capturedAt}. Search results move slowly — a change
-        takes weeks to settle, and a fair comparison needs a full month before it means anything.
+        takes weeks to settle, and a month is the shortest period worth reporting on.
         Anyone showing you dramatic results a few days after starting is showing you random
         movement and calling it progress.
       </p>
@@ -256,7 +230,7 @@ const steps = [
 
   <CtaBand
     heading="Want the same thing run on your site?"
-    body="It starts the same way every time: your starting numbers written down, a group of pages left alone to compare against, and an agreed timescale."
+    body="It starts the same way every time: your starting numbers written down, a written prediction for every change, and an agreed timescale."
   />
 </Base>
 

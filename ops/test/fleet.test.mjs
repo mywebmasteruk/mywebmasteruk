@@ -1,22 +1,24 @@
 /**
- * The client record, and two shapes that look like untidiness and are not.
+ * The client record, and the shapes that look like untidiness and are not.
  *
- * Both exist to stop a report claiming more than the evidence supports, and both
+ * They exist to stop a report claiming more than the evidence supports, and both
  * have been broken once by a well-meant tidy-up.
  */
 import { suite, check } from "./harness.mjs";
-import { evidenceStrength, baselineFor, frozenPaths, restoreReady } from "../lib/fleet.mjs";
+import { readFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
+import { loadFleet, baselineFor, frozenPaths, restoreReady } from "../lib/fleet.mjs";
 
-suite("fleet — what a report may claim");
+suite("fleet — a record without a holdout is the normal shape");
 
-const uncontrolled = evidenceStrength({ holdout: null, holdoutNote: "Only 2 pages — too few to hold any back." });
-check("a null holdout is not reported as controlled", uncontrolled.controlled === false);
-check("and never becomes an empty array that reads as 'we held nothing back'", Array.isArray(uncontrolled.holdout) && uncontrolled.holdout.length === 0);
-check("the pipeline's note is carried verbatim", uncontrolled.note.includes("too few to hold any back"));
-check("the claim admits what it cannot separate", uncontrolled.claim.includes("cannot separate our work from the season"));
-
-const controlled = evidenceStrength({ holdout: ["/a/", "/b/", "/c/"] });
-check("a real holdout is reported as controlled", controlled.controlled && controlled.claim.includes("3 page(s)"));
+const fixture = fileURLToPath(new URL("../fixtures/fleet-client.json", import.meta.url));
+const record = JSON.parse(await readFile(fixture, "utf8"));
+check("the fixture carries no holdout, matching the pipeline's contract", !("holdout" in record) && !("holdoutNote" in record));
+const loaded = await loadFleet({ file: fixture });
+check("it loads as a found record", loaded.found === true && loaded.client?.slug === "harbourside");
+check("its customer-written pages still read through", frozenPaths(loaded.client)["/emergency/"] !== undefined);
+check("its baseline still reads as unmeasurable, not zero", baselineFor(loaded.client).measurable === false);
+check("its restore promise still reads", restoreReady(loaded.client).ready === true);
 
 suite("fleet — absence is not zero");
 

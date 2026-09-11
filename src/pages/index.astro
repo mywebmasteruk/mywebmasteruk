@@ -5,11 +5,8 @@ import Faq from "~/components/Faq.astro";
 import CtaBand from "~/components/CtaBand.astro";
 import { getCollection } from "astro:content";
 import experiment from "~/data/experiment.json";
-import { evidence } from "~/lib/evidence";
 import { site } from "~/data/site";
 import { faqNode, serviceNode } from "~/lib/schema";
-import experiment from "~/data/experiment.json";
-import { evidence } from "~/lib/evidence";
 
 const plans = (await getCollection("plans")).sort((a, b) => a.data.order - b.data.order);
 const money = new Intl.NumberFormat("en-GB");
@@ -23,24 +20,22 @@ const counts = {
   never: liveCaps.filter((c) => c.data.autonomy === "never").length,
 };
 
-/** The same field /proof/ reads. No surface describes the method independently. */
-const design = experiment.design ?? { kind: "none", holdout: null, note: "" };
-const controlled = evidence.controlled;
+/** What Google shows under the link. */
+const metaDescription =
+  "A supervised AI system that checks your website daily, fixes what is holding it back every week, and publishes every change it makes. Live on this domain.";
 
 const faqs = [
   {
     q: "What does Autopilot actually do?",
-    a: "It looks at how your website is really performing — what people search for, what they click, how fast your pages load, what is broken — and then it improves things, a few at a time. It checks every day, makes changes once a week, and holds a few pages back untouched so each change can be measured against them rather than guessed at.",
+    a: "It looks at how your website is really performing — what people search for, what they click, how fast your pages load, what is broken — and then it improves things, a few at a time. It checks every day and makes changes once a week, and every change is written down, dated and undoable on its own.",
   },
   {
     q: "Will it change my site without asking me?",
     a: `Yes — that is the point of it, and here is exactly how far it goes. ${counts.auto} safe, mechanical things are fixed and appear in your next report: broken links, page speed, pictures that make the page jump about. ${counts.notify} things change your actual words — the headline Google shows, a new answer, a new page — and those are done and emailed to you the same day, with the old version one click away. ${counts.never} things are never touched at all, by anyone automatic: your prices, your promises, your legal wording, and the settings that control whether Google shows your site.`,
   },
   {
-    q: "How do I know it actually worked?",
-    a: controlled
-      ? `Because we leave ${evidence.holdout.length} pages alone on purpose — chosen before any change was made, and never touched since. Both groups go through the same Google updates, the same quiet months and the same competition, so whatever difference opens up between them is the bit we caused.${evidence.hasResult ? " We report it monthly, including the months where our changes lost." : " The first comparison window has not closed yet, so there is no number to show you."}`
-      : `Honestly: not with certainty yet. ${design.note} We publish every change and what happened after it, including the ones that lost, but a good month for your whole trade would look like our work — and we would rather say that than hand you a confident number we cannot stand behind.`,
+    q: "How will I know what it has changed?",
+    a: "You are told. Changes to your wording are emailed to you the day they are made, and the mechanical repairs arrive together in a regular summary. Each one is written up with the reason it was made, recorded before it went live, and any single change can be put back in seconds. Your starting numbers are written down before we touch anything, so where the site gets to is always measured from where it began.",
   },
   {
     q: "Why only change things once a week if you check every day?",
@@ -48,7 +43,7 @@ const faqs = [
   },
   {
     q: "What if a change makes things worse?",
-    a: "We put it back, and we say so publicly. Every change is made separately and dated, so undoing any single one takes seconds and does not disturb anything else. On the Compound plan, if the pages we left alone beat the pages we worked on two months running, that month is refunded.",
+    a: "We put it back, and we say so publicly. Every change is made separately and dated, so undoing any single one takes seconds and does not disturb anything else.",
   },
   {
     q: "Could this get me in trouble with Google?",
@@ -73,7 +68,7 @@ const schema = [
 ---
 <Base
   title="Autopilot — the website that optimises itself | MyWebMaster"
-  description="A supervised AI system that measures your website daily, ships small evidence-led improvements, and proves the lift against a control group. Live on this domain."
+  description={metaDescription}
   schema={schema}
 >
   <section class="hero invert">
@@ -81,10 +76,9 @@ const schema = [
       <p class="label">Autopilot · running live on this domain</p>
       <h1>Most websites are finished on the day they launch. This one isn't.</h1>
       <p class="lede">
-        Autopilot looks at how your website is really doing every single day, makes a few small
-        improvements every week, and proves they worked by comparing against pages it was told to
-        leave alone. It is running on mywebmaster.co.uk right now, and every change it makes is
-        published for anyone to read.
+        Autopilot looks at how your website is really doing every single day, fixes what is
+        holding it back every week, and tells you exactly what it changed. It is running on
+        mywebmaster.co.uk right now, and every change it makes is published for anyone to read.
       </p>
       <div class="actions">
         <a class="btn btn--primary" href="/how-it-works/">See how the loop works</a>
@@ -119,7 +113,7 @@ const schema = [
   <section class="section loop-section">
     <div class="wrap">
       <p class="label">The loop</p>
-      <h2>Measure. Decide. Ship. Prove. Repeat.</h2>
+      <h2>Measure. Decide. Ship. Check. Repeat.</h2>
       <ol class="grid grid--4 steps">
         <li class="card">
           <p class="mono step-n">01</p>
@@ -149,10 +143,10 @@ const schema = [
         </li>
         <li class="card">
           <p class="mono step-n">04</p>
-          <h3>Prove</h3>
+          <h3>Check</h3>
           <p class="muted">
-            We then leave that page completely alone for 28 days and compare it with the pages
-            we never touched. What worked stays, what did not is put back, and we publish both.
+            Each changed page is then given 28 days to settle before it is changed again. What
+            helped stays, what made things worse is put back, and we publish both.
           </p>
         </li>
       </ol>

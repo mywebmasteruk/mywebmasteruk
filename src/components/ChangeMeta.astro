@@ -1,6 +1,6 @@
 ---
-interface Props { changeType: string; autonomy: string; outcome: string; holdout?: boolean }
-const { changeType, autonomy, outcome, holdout = false } = Astro.props;
+interface Props { changeType: string; autonomy: string; outcome: string }
+const { changeType, autonomy, outcome } = Astro.props;
 const autonomyLabel: Record<string, string> = {
   auto: "Done automatically",
   notified: "We did it and told you",
@@ -20,7 +20,6 @@ const typeLabel: Record<string, string> = {
   <li class={`pill pill--${outcome}`}>{outcome}</li>
   <li class="pill">{typeLabel[changeType] ?? changeType}</li>
   <li class="pill">{autonomyLabel[autonomy] ?? autonomy}</li>
-  {holdout && <li class="pill">compared against untouched pages</li>}
 </ul>
 
 <style>

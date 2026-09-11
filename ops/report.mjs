@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 
 const root = (p) => fileURLToPath(new URL(`../${p}`, import.meta.url));
 
-export async function writeReport({ date, halted, breaker, signal, plan, applied, metrics, verification, delivery, snapshot, evidence }) {
+export async function writeReport({ date, halted, breaker, signal, plan, applied, metrics, verification, delivery, snapshot }) {
   const lines = [];
   const L = (s = "") => lines.push(s);
 
@@ -29,19 +29,6 @@ export async function writeReport({ date, halted, breaker, signal, plan, applied
     L();
     L(`Autonomous releases are suspended until a human reviews this. If the drop followed a`);
     L(`recent change, revert it with the command at the bottom of this report.`);
-    L();
-  }
-
-  if (evidence) {
-    L(`## What this report may claim`);
-    L();
-    L(evidence.controlled
-      ? `Results below are ${evidence.claim}. Both groups saw the same Google updates and the same quiet months, so the difference between them is ours.`
-      : `**Results below are ${evidence.claim}.** Any wording that implies we caused an improvement is overclaiming.`);
-    if (!evidence.controlled && evidence.note) {
-      L();
-      L(`> ${evidence.note}`);
-    }
     L();
   }
 

@@ -68,7 +68,6 @@ const changelog = defineCollection({
     result: z.string().max(700).optional(),
     /** Commit SHA — every entry traces to a diff and can be reverted. */
     commit: z.string().optional(),
-    holdout: z.boolean().default(false),
   }),
 });
 

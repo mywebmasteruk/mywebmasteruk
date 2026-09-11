@@ -1,8 +1,7 @@
 /**
  * What may ship, and what may not.
  *
- * The holdout and the customer's own pages are the two things the loop must
- * never touch. Everything else here is about the circuit breaker being readable
+ * The customer's own pages are the one thing the loop must never touch. Everything else here is about the circuit breaker being readable
  * on a site too small for clicks to mean anything — which is most customers for
  * their first months, and where removing the human removed the only safety net.
  */
@@ -51,8 +50,11 @@ check("held for the snapshot reason", plan.held[0].includes("snapshot"));
 
 plan = await planRun(findings, { confidence: "impressions", hasSnapshot: true });
 check("with both preconditions met, wording ships", plan.notify.length === 1 && plan.held.length === 0);
+check("the plan carries no holdout — its absence is the normal shape", !("holdout" in plan));
+check("no refusal mentions a holdout or pages held back",
+  !plan.refused.some((f) => /holdout|held back|control group/i.test(f.reason ?? "")));
 
-suite("policy — the control group is never touched");
+suite("policy — URL paths map to their source files");
 
 check("a path without a trailing slash matches one with",
   normalisePath("/what-it-changes") === normalisePath("/what-it-changes/"));
