@@ -30,21 +30,30 @@ const clamp = (s, min, max, pad) => {
 };
 
 /**
- * @param {object} change  one entry from applyFindings(), already verified
- * @param {string} [commit]  SHA, filled in after the commit exists
+ * Builds one entry without touching the disk, so the text that goes on a public
+ * page can be tested.
+ *
+ * The fallback hypothesis says only what is true of every change: it was written
+ * down before the result was known. It says nothing about how the result will be
+ * judged — the owner dropped the untouched-pages comparison on 11 September 2026,
+ * and the public changelog is the last place to describe a method we do not run.
+ *
+ * @param {object} change   one entry from applyFindings(), already verified
+ * @param {object} options
+ * @param {string} options.date
+ * @param {string[]} [options.existing]  filenames already in the changelog folder
  */
-export async function writeChangelogEntry(change, { date = new Date().toISOString().slice(0, 10) } = {}) {
+export function changelogEntry(change, { date, existing = [] } = {}) {
   const title = clamp(change.summary, 10, 90, "— an automatic change");
   const hypothesis = clamp(
     change.hypothesis ||
       change.rationale ||
-      `${change.summary}. Recorded before the result was known, and measured against pages left untouched.`,
+      `${change.summary}. Recorded before the result was known.`,
     40,
     400,
-    "Measured against pages deliberately left alone.",
+    "Recorded before the result was known.",
   );
 
-  const existing = await readdir(DIR).catch(() => []);
   let slug = `${date}-${slugify(change.summary)}`;
   let n = 2;
   while (existing.includes(`${slug}.mdx`)) slug = `${date}-${slugify(change.summary)}-${n++}`;
@@ -60,7 +69,6 @@ export async function writeChangelogEntry(change, { date = new Date().toISOStrin
     `changeType: ${JSON.stringify(change.changeType ?? "content")}`,
     `autonomy: ${JSON.stringify(change.notifyClass === "notify" ? "notified" : "auto")}`,
     `outcome: "pending"`,
-    "holdout: false",
     "---",
     "",
     change.rationale ? `${change.rationale}\n` : "",
@@ -87,6 +95,13 @@ export async function writeChangelogEntry(change, { date = new Date().toISOStrin
     .filter((s) => s !== "")
     .join("\n");
 
+  return { slug, body, title, hypothesis };
+}
+
+/** Builds the entry and writes it into the changelog folder. */
+export async function writeChangelogEntry(change, { date = new Date().toISOString().slice(0, 10) } = {}) {
+  const existing = await readdir(DIR).catch(() => []);
+  const { slug, body } = changelogEntry(change, { date, existing });
   await writeFile(`${DIR}${slug}.mdx`, body);
   return { file: `src/content/changelog/${slug}.mdx`, slug };
 }

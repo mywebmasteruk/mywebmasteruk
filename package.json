@@ -9,6 +9,7 @@
     "preview": "astro preview --port 4000",
     "check": "astro check",
     "verify": "node ops/verify.mjs",
+    "test": "node ops/test/run.mjs",
     "loop": "node ops/loop.mjs",
     "loop:dry": "node ops/loop.mjs --dry-run",
     "migration": "node ops/check-migration.mjs",

@@ -8,7 +8,7 @@ import { site } from "~/data/site";
 const faqs = [
   {
     q: "Why change things weekly if you check every day?",
-    a: "Because a page has to sit still long enough to be measured. Google takes weeks to settle after a change, and the figures arrive a few days late anyway. Something editing pages every day would be chasing random wobbles and could never tell you which change caused what. So we watch daily, change weekly, and then leave that page completely alone while we measure it.",
+    a: "Because a page has to sit still long enough to be measured. Google takes weeks to settle after a change, and the figures arrive a few days late anyway. Something editing pages every day would be chasing random wobbles and could never tell you which change caused what. So we watch daily, change weekly, and then give each changed page time to settle before it is touched again.",
   },
   {
     q: "What information do you look at?",
@@ -25,8 +25,8 @@ const faqs = [
 ];
 ---
 <Base
-  title="How Autopilot works — measure, decide, ship, prove"
-  description="Autopilot observes daily, releases weekly, and freezes each changed page for a fixed measurement window so results can be attributed. Here is the full cycle."
+  title="How Autopilot works — measure, decide, ship, check"
+  description="Autopilot observes daily, releases weekly, and gives every changed page a fixed window to settle before it is changed again. Here is the full cycle."
   breadcrumbs={[{ name: "How it works", href: "/how-it-works/" }]}
   schema={[faqNode(faqs)]}
 >
@@ -111,16 +111,15 @@ const faqs = [
 
       <li>
         <p class="phase-n mono">Phase 04 · 28 days</p>
-        <h2>Prove</h2>
-        <p class="lede">Compare against the pages we left alone.</p>
+        <h2>Check</h2>
+        <p class="lede">Give each change time to settle, then keep it or put it back.</p>
         <p>
-          Once a page is changed, we leave it completely alone for 28 days. Then we compare how
-          it moved with the pages we deliberately never touched — which went through the same
-          Google updates and the same quiet weeks as everything else.
+          Once a page is changed, it is not changed again for 28 days. Google takes that long to
+          settle after a change, and a page that keeps moving can never be read properly.
         </p>
         <p>
-          Anything that beat the untouched pages stays, and we do more of it. Anything that lost
-          gets put back, and we publish that just as prominently as the wins.
+          Anything that helped stays, and we do more of it. Anything that made things worse gets
+          put back, and we publish that just as prominently as the wins.
         </p>
       </li>
     </ol>

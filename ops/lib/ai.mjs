@@ -26,6 +26,25 @@ export const aiConfig = {
   brandVoice: process.env.AI_BRAND_VOICE || "",
 };
 
+/**
+ * Applies settings loaded from the admin console over the environment defaults.
+ *
+ * Mutates `aiConfig` in place rather than threading a config object through every
+ * caller: the loop calls this once at startup, and everything downstream keeps
+ * reading the same object it always read.
+ */
+export function applySettings(settings = {}) {
+  if (settings.provider) aiConfig.provider = settings.provider;
+  if (settings.model) aiConfig.model = settings.model;
+  if (settings.effort) aiConfig.effort = settings.effort;
+  if (settings.maxTokens) aiConfig.maxTokens = Number(settings.maxTokens);
+  if (typeof settings.drafting === "boolean") aiConfig.draftingEnabled = settings.drafting;
+  if (typeof settings.brandVoice === "string") aiConfig.brandVoice = settings.brandVoice;
+  // A model change invalidates nothing about the client, but a provider change does.
+  if (settings.provider) client = undefined;
+  return aiConfig;
+}
+
 let client;
 function getClient() {
   if (aiConfig.provider !== "anthropic") {

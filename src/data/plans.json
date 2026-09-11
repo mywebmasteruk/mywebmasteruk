@@ -20,8 +20,7 @@
       "Every item comes with the exact change needed, so your developer can just do it"
     ],
     "excludes": [
-      "Nothing on your site is changed",
-      "No comparison testing"
+      "Nothing on your site is changed"
     ],
     "featured": false,
     "cta": "Start watching",
@@ -51,7 +50,7 @@
       "Leaving? Keep our improvements, or ask for your original site back exactly as it was. Your choice"
     ],
     "excludes": [
-      "No content or layout testing against a comparison group"
+      "No layout or form testing to turn more visitors into enquiries"
     ],
     "featured": true,
     "cta": "Put it on Apply",
@@ -61,26 +60,22 @@
     "id": "compound",
     "name": "Autopilot Compound",
     "order": 3,
-    "tagline": "We improve the words and the layout, and prove it worked by comparing against pages we left alone.",
+    "tagline": "We improve the words and the layout, so more of the people who find you actually get in touch.",
     "priceMonthly": 1200,
     "currency": "GBP",
-    "priceNote": "per site, per month. Three months minimum, because proving it works takes that long.",
+    "priceNote": "per site, per month. Three months minimum.",
     "autonomy": "full-auto",
     "cadence": "Checked daily, changes weekly, results monthly",
-    "bestFor": "Businesses where being found and getting enquiries is a real part of the income, and small gains add up.",
+    "bestFor": "Businesses where being found and getting enquiries is a real part of the income — where many small improvements, week after week, add up to a big change.",
     "includes": [
       "Everything in Apply",
       "Before we touch anything we take a full copy of your site as it is today, kept for as long as you are a client",
-      "We deliberately leave a group of similar pages untouched, to compare against",
       "Better wording and clearer answers, aimed at getting quoted by AI assistants",
       "Testing on buttons, layout and forms to turn more visitors into enquiries",
-      "A monthly result showing the difference against the untouched pages \u2014 including the losses",
-      "Pages built for questions people already ask you but your site does not answer",
-      "If the untouched pages beat ours two months running, that month is free"
+      "A monthly report of every change and where your figures stand \u2014 including anything we put back",
+      "Pages built for questions people already ask you but your site does not answer"
     ],
-    "excludes": [
-      "Not sold to sites under about 30 similar pages \u2014 a fair comparison needs enough of them"
-    ],
+    "excludes": [],
     "featured": false,
     "cta": "Talk to us"
   }

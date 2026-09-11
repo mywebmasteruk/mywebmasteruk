@@ -33,6 +33,34 @@ async function store() {
   }
 }
 
+/**
+ * Records the decision in Postgres, which is where the loop reads it.
+ *
+ * Written alongside the blob rather than instead of it, for as long as anything
+ * still reads the old location. A stop that reaches only one of two places the
+ * loop might consult is worse than either arrangement on its own.
+ */
+async function recordInDatabase(halted, slug = "mywebmaster") {
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) return { ok: false, error: "database not configured" };
+  try {
+    const res = await fetch(`${url}/rest/v1/halt_state?on_conflict=slug`, {
+      method: "POST",
+      headers: {
+        apikey: key,
+        authorization: `Bearer ${key}`,
+        "content-type": "application/json",
+        prefer: "resolution=merge-duplicates",
+      },
+      body: JSON.stringify({ slug, halted, changed_by: "customer link", changed_at: new Date().toISOString() }),
+    });
+    return { ok: res.ok, error: res.ok ? null : `${res.status} ${(await res.text()).slice(0, 120)}` };
+  } catch (err) {
+    return { ok: false, error: String(err?.message ?? err).slice(0, 120) };
+  }
+}
+
 const page = (title, body, tone = "ok") => new Response(
   `<!doctype html><html lang="en-GB"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -73,8 +101,11 @@ export default async (req) => {
 
   const site = payload.sub ?? "mywebmaster.co.uk";
   const blobs = await store();
+  const dbReady = Boolean(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY);
 
-  if (!blobs) {
+  // Only refuse when NEITHER destination is available. Telling a customer we
+  // could not stop, when we could, is its own failure.
+  if (!blobs && !dbReady) {
     return page(
       "We could not record that",
       `<p>Something is wrong on our side, and we would rather tell you than show you
@@ -100,7 +131,19 @@ export default async (req) => {
 
   const now = new Date().toISOString();
   if (payload.action === "pause") {
-    await blobs.setJSON(HALT_KEY, { halted: true, site, at: now, by: "customer link" });
+    const wrote = await Promise.all([
+      blobs ? blobs.setJSON(HALT_KEY, { halted: true, site, at: now, by: "customer link" }).then(() => true).catch(() => false) : false,
+      recordInDatabase(true).then((r) => r.ok),
+    ]);
+    if (!wrote.some(Boolean)) {
+      return page(
+        "We could not record that",
+        `<p>Something is wrong on our side, and we would rather tell you than show you
+         a tick that means nothing.</p>
+         <p><strong>Reply to this email and we will stop it by hand, today.</strong></p>`,
+        "bad",
+      );
+    }
     return page(
       "Stopped",
       `<p>Autopilot will not change anything on <strong>${site}</strong> from now on.
@@ -112,7 +155,10 @@ export default async (req) => {
     );
   }
 
-  await blobs.setJSON(HALT_KEY, { halted: false, site, at: now, by: "customer link" });
+  await Promise.all([
+    blobs ? blobs.setJSON(HALT_KEY, { halted: false, site, at: now, by: "customer link" }).catch(() => null) : null,
+    recordInDatabase(false),
+  ]);
   return page(
     "Running again",
     `<p>Autopilot is measuring <strong>${site}</strong> daily again, and will email you

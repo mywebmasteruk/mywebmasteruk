@@ -6,17 +6,16 @@
  * daily work. Data rather than a function call, so neither side reaches into the
  * other and either can be run alone.
  *
- * Four fields carry rules this loop must not get wrong:
+ * Three fields carry rules this loop must not get wrong:
  *
  *   frozen    pages the customer wrote themselves. Never touched, no exceptions.
- *   holdout   may be null. Null is not "no pages held back" — it is "a controlled
- *             result is not available here", which changes what a report may claim.
  *   baseline  may have source "none", with the counts omitted entirely rather than
  *             written as null. Absent is not zero: a new venture has no starting
  *             score, and printing "0 clicks" invents one it can only improve on.
  *   restore   where the snapshot lives, and whether one was even applicable.
  */
 import { readFile, readdir } from "node:fs/promises";
+import { one } from "./db.mjs";
 import { fileURLToPath } from "node:url";
 
 const DEFAULT_DIR = fileURLToPath(new URL("../../../pipeline/fleet/", import.meta.url));
@@ -30,15 +29,57 @@ const DEFAULT_DIR = fileURLToPath(new URL("../../../pipeline/fleet/", import.met
  * `fleetRequired()` says whether it should have been there.
  */
 export async function loadFleet({ slug = process.env.CLIENT_SLUG, file = process.env.FLEET_FILE } = {}) {
+  // The database first: it is the destination, and it is the only source the
+  // scheduled run can reach. The file stays readable during changeover, and as
+  // the offline answer for a pipeline run that has not reached the DB yet.
+  if (!file) {
+    const row = await one(
+      `/clients?slug=eq.${encodeURIComponent(slug ?? "mywebmaster")}&select=*`,
+    );
+    if (row) return { found: true, source: "database", client: fromRow(row) };
+  }
+
   const path = file ?? (slug ? `${process.env.FLEET_DIR ?? DEFAULT_DIR}${slug}.json` : null);
-  if (!path) return { found: false, reason: "no CLIENT_SLUG or FLEET_FILE set" };
+  if (!path) return { found: false, reason: "no client row, and no CLIENT_SLUG or FLEET_FILE set" };
   try {
-    return { found: true, path, client: JSON.parse(await readFile(path, "utf8")) };
+    return { found: true, path, source: "file", client: JSON.parse(await readFile(path, "utf8")) };
   } catch (err) {
     // Distinguished from "not configured": a slug was named and the file is not
     // readable, which is a broken deployment rather than a local run.
     return { found: false, path, error: String(err?.message ?? err).slice(0, 160), broken: true };
   }
+}
+
+/**
+ * Maps a `clients` row to the shape the rest of this loop already reads.
+ *
+ * The semantic that must survive the trip: `baseline` keeps its clicks key absent
+ * rather than gaining a null. Postgres round-trips it correctly; a careless mapper
+ * here would undo it.
+ *
+ * No holdout is read. The owner dropped the untouched-pages comparison on
+ * 11 September 2026, so a record without one is the normal shape, not a gap.
+ */
+function fromRow(row) {
+  return {
+    slug: row.slug,
+    business: row.business,
+    host: row.host,
+    url: row.url,
+    origin: row.origin,
+    sector: row.sector,
+    liveSince: row.live_since,
+    netlifySiteId: row.netlify_site_id,
+    repo: row.repo,
+    searchConsoleProperty: row.search_console_property,
+    ga4Property: row.ga4_property,
+    contact: row.contact ?? {},
+    baseline: row.baseline ?? {},
+    restore: row.restore ?? {},
+    frozen: row.frozen ?? [],
+    awaitingClient: row.awaiting_client ?? [],
+    questionsOutstanding: row.questions_outstanding ?? [],
+  };
 }
 
 /** Every client the pipeline has recorded. */
@@ -86,32 +127,6 @@ export function restoreReady(client) {
     reason: `snapshot taken ${String(restore.snapshotAt).slice(0, 10)}`,
     limitations: restore.limitations ?? [],
     dnsRecorded: Boolean(restore.dnsRecorded),
-  };
-}
-
-/**
- * What a report is allowed to claim about cause.
- *
- * With a holdout, improvement can be attributed: both groups saw the same Google
- * updates and the same quiet months, so the gap between them is ours. Without
- * one, all that exists is before-and-after, which cannot separate our work from
- * the season — and a report that does not say so is claiming credit it has not
- * earned.
- */
-export function evidenceStrength(client) {
-  const holdout = client?.holdout;
-  if (Array.isArray(holdout) && holdout.length) {
-    return {
-      controlled: true,
-      holdout,
-      claim: `measured against ${holdout.length} page(s) deliberately left alone`,
-    };
-  }
-  return {
-    controlled: false,
-    holdout: [],
-    claim: "before-and-after only, which cannot separate our work from the season",
-    note: client?.holdoutNote ?? "no control group is available for this site",
   };
 }
 

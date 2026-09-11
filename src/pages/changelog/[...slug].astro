@@ -42,7 +42,7 @@ const schema = [
         {d.date.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}
       </time>
       <h1>{d.title}</h1>
-      <ChangeMeta changeType={d.changeType} autonomy={d.autonomy} outcome={d.outcome} holdout={d.holdout} />
+      <ChangeMeta changeType={d.changeType} autonomy={d.autonomy} outcome={d.outcome} />
 
       <div class="hyp">
         <p class="label">Hypothesis, recorded before shipping</p>

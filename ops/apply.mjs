@@ -18,7 +18,8 @@
 import { readFile, writeFile, readdir, access } from "node:fs/promises";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { freezePage, decline } from "./lib/policy.mjs";
+import { freezePage, decline, sourcesForPath } from "./lib/policy.mjs";
+import { frozenPaths } from "./lib/fleet.mjs";
 import { draftEdit, draftAnswerPage, draftSection, FIELD_BUDGETS, aiConfig } from "./lib/ai.mjs";
 import { dimensions, shrink, imagesMissingSize, withSize } from "./lib/images.mjs";
 import { getAccessToken } from "./lib/google.mjs";
@@ -28,12 +29,19 @@ const ANSWERS = root("src/content/answers");
 const DOMAIN = process.env.SITE_DOMAIN || "mywebmaster.co.uk";
 const SITE_URL = process.env.SITE_URL || `https://${DOMAIN}`;
 
-/** What the business does, so a new page cannot be written about something else. */
+/**
+ * What the business does, so a new page cannot be written about something else.
+ *
+ * This is handed to the model as fact, so it must not say more than is true. It
+ * describes what the service does — the checks, the changes, the telling — and
+ * makes no claim about proving results, which a drafted page would otherwise
+ * repeat in public.
+ */
 const BUSINESS =
   process.env.BUSINESS_DESCRIPTION ||
-  "MyWebMaster runs Autopilot: it checks a small business's website every day, makes " +
-    "small improvements based on what the numbers show, and proves they worked by comparing " +
-    "against pages left deliberately untouched. UK, remote, content and brochure sites only.";
+  "MyWebMaster runs Autopilot: it checks a small business's website every day, fixes what " +
+    "is holding it back based on what the numbers show, and tells the owner about every change " +
+    "it makes. UK, remote, content and brochure sites only.";
 
 const TOPICS = ["autopilot", "safety", "measurement", "ai-search", "seo", "pricing"];
 
@@ -74,11 +82,11 @@ async function sourceFiles(dir = root("src")) {
  * Maps a src attribute to the file behind it. Only resolves inside the project —
  * a path that escapes it is a bug or an attack, and either way is not ours to open.
  */
-async function resolveAsset(src) {
+async function resolveAsset(src, base = root("")) {
   const clean = src.split(/[?#]/)[0];
   if (clean.includes("..")) return null;
-  for (const candidate of [root(`public${clean}`), root(`src${clean}`), root(clean.replace(/^\//, ""))]) {
-    if (!candidate.startsWith(root(""))) continue;
+  for (const candidate of [join(base, `public${clean}`), join(base, `src${clean}`), join(base, clean.replace(/^\//, ""))]) {
+    if (!candidate.startsWith(base)) continue;
     try {
       await access(candidate);
       return candidate;
@@ -87,6 +95,18 @@ async function resolveAsset(src) {
     }
   }
   return null;
+}
+
+/**
+ * Source files no fixer may open: the pages the customer wrote themselves.
+ *
+ * planRun refuses findings that target those pages, but a fixer that ignores
+ * `target` and sweeps the whole tree never passes through that check, so the
+ * guard has to exist at the point of writing too. Listed means skipped, whatever
+ * the `until` date says and however harmless the edit — rule 8 has no exceptions.
+ */
+export function customerFiles(client, base = root("")) {
+  return new Set(Object.keys(frozenPaths(client)).flatMap((path) => sourcesForPath(path).map((f) => join(base, f))));
 }
 
 /** The schema is the enforcement; this is the check that stops a bad build. */
@@ -175,6 +195,21 @@ async function editFields(finding, keys, { changeType, describe }) {
 export async function repointRedirect(legacy, destination) {
   const file = root("public/_redirects");
   const source = await readFile(file, "utf8");
+  const { text, from, appended } = rewriteRedirects(source, legacy, destination, { domain: DOMAIN });
+  await writeFile(file, text);
+  return { file: "public/_redirects", from, to: destination, appended };
+}
+
+/**
+ * The rewrite itself, with no disk access, so the rule that matters — change one
+ * line, touch nothing else, keep the order — can be tested directly.
+ *
+ * @param {string} source       the current `_redirects` text
+ * @param {URL} legacy          the old address that still earns searches
+ * @param {string} destination  the page that now answers it
+ * @param {{domain: string}} options  the site's own apex domain
+ */
+export function rewriteRedirects(source, legacy, destination, { domain }) {
   const lines = source.split("\n");
 
   // Netlify serves www and the apex from the same site, so a www URL's rules are
@@ -182,7 +217,7 @@ export async function repointRedirect(legacy, destination) {
   // subdomain) needs an absolute URL. Getting this wrong appends a duplicate rule
   // that never fires, because the path rule above it already matched.
   const bare = (h) => h.replace(/^www\./, "");
-  const sameSite = bare(legacy.host) === bare(new URL(`https://${DOMAIN}`).host);
+  const sameSite = bare(legacy.host) === bare(new URL(`https://${domain}`).host);
   const key = sameSite ? legacy.pathname : legacy.href;
 
   const candidates = new Set([key, key.replace(/\/$/, ""), `${key.replace(/\/$/, "")}/`]);
@@ -201,14 +236,13 @@ export async function repointRedirect(legacy, destination) {
     lines[index] = `${from}   ${destination}   ${code}`;
   }
 
-  await writeFile(file, lines.join("\n"));
-  return { file: "public/_redirects", from: key, to: destination, appended: index === -1 };
+  return { text: lines.join("\n"), from: key, appended: index === -1 };
 }
 
 // ---- Fixers --------------------------------------------------------------
 
 /** Keyed by capability id from the published taxonomy. */
-const fixers = {
+export const fixers = {
   /**
    * Links an orphaned answer page from the most topically similar sibling by adding
    * it to that sibling's `related` array. Bounded: one link added per run per page.
@@ -433,8 +467,11 @@ const fixers = {
    * fixing them one page per day would leave a customer's site shifting about for
    * a fortnight. Dimensions are read from the file itself, never guessed.
    */
-  "img-attrs": async () => {
-    const sources = await sourceFiles();
+  "img-attrs": async (finding, { client = null, base = root("") } = {}) => {
+    const offLimits = customerFiles(client, base);
+    const all = await sourceFiles(join(base, "src"));
+    const sources = all.filter((f) => !offLimits.has(f));
+    const skipped = all.length - sources.length;
     const changed = [];
     let fixed = 0;
 
@@ -445,7 +482,7 @@ const fixers = {
 
       let updated = source;
       for (const hit of hits) {
-        const asset = await resolveAsset(hit.src);
+        const asset = await resolveAsset(hit.src, base);
         if (!asset) continue;
         const size = await dimensions(asset);
         if (!size) continue;
@@ -456,7 +493,7 @@ const fixers = {
       }
       if (updated !== source) {
         await writeFile(file, updated);
-        changed.push(file.replace(root(""), ""));
+        changed.push(file.replace(base, ""));
       }
     }
 
@@ -465,7 +502,9 @@ const fixers = {
       applied: true,
       files: changed,
       changeType: "performance",
-      summary: `Declared the size of ${fixed} image${fixed === 1 ? "" : "s"} so the page stops jumping as it loads`,
+      summary:
+        `Declared the size of ${fixed} image${fixed === 1 ? "" : "s"} so the page stops jumping as it loads` +
+        (skipped ? ` (${skipped} customer-written page${skipped === 1 ? "" : "s"} skipped)` : ""),
       hypothesis:
         "Images without width and height are the commonest cause of layout shift, which Google measures directly and visitors experience as the page moving under their thumb.",
     };
@@ -638,7 +677,7 @@ const fixers = {
   },
 };
 
-export async function applyFindings(findings, { dryRun = true } = {}) {
+export async function applyFindings(findings, { dryRun = true, client = null } = {}) {
   const results = [];
   for (const finding of findings) {
     const fixer = fixers[finding.capability?.id ?? finding.capability];
@@ -657,7 +696,7 @@ export async function applyFindings(findings, { dryRun = true } = {}) {
     }
     let outcome;
     try {
-      outcome = await fixer(finding);
+      outcome = await fixer(finding, { client });
     } catch (err) {
       // One fixer throwing must not abandon a run part-way through: the pages it
       // already changed still need verifying, committing and reporting.

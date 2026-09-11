@@ -23,11 +23,12 @@ import { fileURLToPath } from "node:url";
 import { planRun, isHalted, circuitBreaker, hasSnapshot, readSnapshot } from "./lib/policy.mjs";
 import { applyFindings } from "./apply.mjs";
 import { writeReport } from "./report.mjs";
-import { aiConfig } from "./lib/ai.mjs";
-import { queueNotice, flushNotices, notifyConfig } from "./lib/notify.mjs";
+import { aiConfig, applySettings as applyAiSettings } from "./lib/ai.mjs";
+import { queueNotice, flushNotices, notifyConfig, applySettings as applyNotifySettings } from "./lib/notify.mjs";
+import { loadSettings } from "./lib/settings.mjs";
 import { mailNotice } from "./lib/notify-mail.mjs";
 import { writeChangelogEntry } from "./lib/changelog.mjs";
-import { loadFleet, evidenceStrength, baselineFor } from "./lib/fleet.mjs";
+import { loadFleet, baselineFor } from "./lib/fleet.mjs";
 
 const exec = promisify(execFile);
 const CWD = fileURLToPath(new URL("../", import.meta.url));
@@ -75,16 +76,22 @@ console.log("  Clear.");
 const fleet = await loadFleet();
 const client = fleet.client ?? null;
 if (client) {
-  const evidence = evidenceStrength(client);
   const baseline = baselineFor(client);
   console.log(`  Client: ${client.business} (${client.host})`);
-  console.log(`  Evidence: ${evidence.claim}`);
   if (!baseline.measurable) console.log(`  Baseline: not measurable — ${baseline.note}`);
 } else if (fleet.broken) {
   console.log(`  CLIENT RECORD UNREADABLE: ${fleet.path} — ${fleet.error}`);
 } else {
   console.log("  No client record — running against our own site.");
 }
+
+// ---- Settings ----------------------------------------------------------
+// What the admin console says, over the environment, over the built-in defaults.
+const configured = await loadSettings({ slug: client?.slug });
+applyAiSettings(configured.settings);
+applyNotifySettings(configured.settings);
+console.log(`  ${configured.summary}`);
+console.log(`  Model: ${aiConfig.model} (${configured.source.model}) · drafting ${aiConfig.draftingEnabled ? "on" : "off"} · digest ${notifyConfig.cadence}`);
 
 // ---- Collect ------------------------------------------------------------
 step(2, "Collecting Search Console");
@@ -167,8 +174,8 @@ for (const reason of plan.held ?? []) console.log(`  HELD: ${reason}`);
 // ---- Apply --------------------------------------------------------------
 step(8, dryRun ? "Dry run — not applying" : `Fixing (${aiConfig.model})`);
 const applied = [
-  ...(await applyFindings(plan.auto, { dryRun })).map((r) => ({ ...r, notifyClass: "auto" })),
-  ...(await applyFindings(plan.notify, { dryRun })).map((r) => ({ ...r, notifyClass: "notify" })),
+  ...(await applyFindings(plan.auto, { dryRun, client })).map((r) => ({ ...r, notifyClass: "auto" })),
+  ...(await applyFindings(plan.notify, { dryRun, client })).map((r) => ({ ...r, notifyClass: "notify" })),
 ];
 for (const r of applied) {
   console.log(`  ${r.applied ? `✅ ${r.summary}` : `⏭️  ${r.finding.title.slice(0, 60)} — ${r.reason}`}`);
@@ -245,7 +252,7 @@ for (const item of plan.decide) {
   });
 }
 
-const delivery = await flushNotices({ send: mailNotice, dryRun });
+const delivery = await flushNotices({ send: mailNotice, dryRun, client });
 if (delivery.dryRun) {
   console.log(
     `  Would send ${delivery.instant.length} same-day notice(s)` +
@@ -259,6 +266,9 @@ if (delivery.dryRun) {
   for (const f of delivery.failures) {
     console.log(`  ⚠️  not delivered, still queued: ${f.reason}`);
   }
+  for (const s of delivery.stuck ?? []) {
+    console.log(`  ⛔ giving up after repeated failures, still owed: "${s.title}" — ${s.last_error}`);
+  }
 }
 
 // ---- Report -------------------------------------------------------------
@@ -271,7 +281,6 @@ await writeReport({
   delivery,
   signal: breaker,
   snapshot,
-  evidence: client ? evidenceStrength(client) : null,
   metrics: latest
     ? { ...latest.totals, window: `${latest.window.startDate} → ${latest.window.endDate}` }
     : null,

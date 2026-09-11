@@ -16,8 +16,8 @@ ops/data/migration.json
 # Kept in git deliberately:
 #   ops/data/baseline.json  — the published starting line
 #   ops/data/freeze.json    — measurement windows must survive between CI runs
-#   ops/data/notices.json   — an undelivered notice must survive to be retried
 #   ops/data/snapshot.json  — the record that the restore promise is real
 #   ops/reports/*.md        — the human-readable record
 
 .netlify/
+ops/data/measurement.json

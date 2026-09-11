@@ -36,6 +36,9 @@ jobs:
 
       - run: npm ci
 
+      - name: Tests
+        run: npm test
+
       - name: Restore Google credentials
         env:
           GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}

@@ -14,7 +14,7 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" v
   <text x="80" y="368" font-family="Helvetica,Arial,sans-serif" font-size="42" font-weight="400" fill="#838D9C" letter-spacing="-1">The website that optimises itself —</text>
   <text x="80" y="422" font-family="Helvetica,Arial,sans-serif" font-size="42" font-weight="400" fill="#838D9C" letter-spacing="-1">and publishes every change it makes.</text>
   <rect x="80" y="500" width="1040" height="1" fill="#2A323F"/>
-  <text x="80" y="556" font-family="Menlo,monospace" font-size="24" fill="#C8F04A">MEASURE · DECIDE · SHIP · PROVE</text>
+  <text x="80" y="556" font-family="Menlo,monospace" font-size="24" fill="#C8F04A">MEASURE · DECIDE · SHIP · CHECK</text>
   <text x="1120" y="556" text-anchor="end" font-family="Menlo,monospace" font-size="24" fill="#5A6472">mywebmaster.co.uk</text>
 </svg>`;
 
