@@ -18,7 +18,8 @@
 import { readFile, writeFile, readdir, access } from "node:fs/promises";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { freezePage, decline } from "./lib/policy.mjs";
+import { freezePage, decline, sourcesForPath } from "./lib/policy.mjs";
+import { frozenPaths } from "./lib/fleet.mjs";
 import { draftEdit, draftAnswerPage, draftSection, FIELD_BUDGETS, aiConfig } from "./lib/ai.mjs";
 import { dimensions, shrink, imagesMissingSize, withSize } from "./lib/images.mjs";
 import { getAccessToken } from "./lib/google.mjs";
@@ -81,11 +82,11 @@ async function sourceFiles(dir = root("src")) {
  * Maps a src attribute to the file behind it. Only resolves inside the project —
  * a path that escapes it is a bug or an attack, and either way is not ours to open.
  */
-async function resolveAsset(src) {
+async function resolveAsset(src, base = root("")) {
   const clean = src.split(/[?#]/)[0];
   if (clean.includes("..")) return null;
-  for (const candidate of [root(`public${clean}`), root(`src${clean}`), root(clean.replace(/^\//, ""))]) {
-    if (!candidate.startsWith(root(""))) continue;
+  for (const candidate of [join(base, `public${clean}`), join(base, `src${clean}`), join(base, clean.replace(/^\//, ""))]) {
+    if (!candidate.startsWith(base)) continue;
     try {
       await access(candidate);
       return candidate;
@@ -94,6 +95,18 @@ async function resolveAsset(src) {
     }
   }
   return null;
+}
+
+/**
+ * Source files no fixer may open: the pages the customer wrote themselves.
+ *
+ * planRun refuses findings that target those pages, but a fixer that ignores
+ * `target` and sweeps the whole tree never passes through that check, so the
+ * guard has to exist at the point of writing too. Listed means skipped, whatever
+ * the `until` date says and however harmless the edit — rule 8 has no exceptions.
+ */
+export function customerFiles(client, base = root("")) {
+  return new Set(Object.keys(frozenPaths(client)).flatMap((path) => sourcesForPath(path).map((f) => join(base, f))));
 }
 
 /** The schema is the enforcement; this is the check that stops a bad build. */
@@ -229,7 +242,7 @@ export function rewriteRedirects(source, legacy, destination, { domain }) {
 // ---- Fixers --------------------------------------------------------------
 
 /** Keyed by capability id from the published taxonomy. */
-const fixers = {
+export const fixers = {
   /**
    * Links an orphaned answer page from the most topically similar sibling by adding
    * it to that sibling's `related` array. Bounded: one link added per run per page.
@@ -454,8 +467,11 @@ const fixers = {
    * fixing them one page per day would leave a customer's site shifting about for
    * a fortnight. Dimensions are read from the file itself, never guessed.
    */
-  "img-attrs": async () => {
-    const sources = await sourceFiles();
+  "img-attrs": async (finding, { client = null, base = root("") } = {}) => {
+    const offLimits = customerFiles(client, base);
+    const all = await sourceFiles(join(base, "src"));
+    const sources = all.filter((f) => !offLimits.has(f));
+    const skipped = all.length - sources.length;
     const changed = [];
     let fixed = 0;
 
@@ -466,7 +482,7 @@ const fixers = {
 
       let updated = source;
       for (const hit of hits) {
-        const asset = await resolveAsset(hit.src);
+        const asset = await resolveAsset(hit.src, base);
         if (!asset) continue;
         const size = await dimensions(asset);
         if (!size) continue;
@@ -477,7 +493,7 @@ const fixers = {
       }
       if (updated !== source) {
         await writeFile(file, updated);
-        changed.push(file.replace(root(""), ""));
+        changed.push(file.replace(base, ""));
       }
     }
 
@@ -487,7 +503,8 @@ const fixers = {
       files: changed,
       changeType: "performance",
       summary:
-        `Declared the size of ${fixed} image${fixed === 1 ? "" : "s"} so the page stops jumping as it loads`,
+        `Declared the size of ${fixed} image${fixed === 1 ? "" : "s"} so the page stops jumping as it loads` +
+        (skipped ? ` (${skipped} customer-written page${skipped === 1 ? "" : "s"} skipped)` : ""),
       hypothesis:
         "Images without width and height are the commonest cause of layout shift, which Google measures directly and visitors experience as the page moving under their thumb.",
     };
@@ -660,7 +677,7 @@ const fixers = {
   },
 };
 
-export async function applyFindings(findings, { dryRun = true } = {}) {
+export async function applyFindings(findings, { dryRun = true, client = null } = {}) {
   const results = [];
   for (const finding of findings) {
     const fixer = fixers[finding.capability?.id ?? finding.capability];
@@ -679,7 +696,7 @@ export async function applyFindings(findings, { dryRun = true } = {}) {
     }
     let outcome;
     try {
-      outcome = await fixer(finding);
+      outcome = await fixer(finding, { client });
     } catch (err) {
       // One fixer throwing must not abandon a run part-way through: the pages it
       // already changed still need verifying, committing and reporting.

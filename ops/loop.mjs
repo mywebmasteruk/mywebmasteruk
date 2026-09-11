@@ -174,8 +174,8 @@ for (const reason of plan.held ?? []) console.log(`  HELD: ${reason}`);
 // ---- Apply --------------------------------------------------------------
 step(8, dryRun ? "Dry run — not applying" : `Fixing (${aiConfig.model})`);
 const applied = [
-  ...(await applyFindings(plan.auto, { dryRun })).map((r) => ({ ...r, notifyClass: "auto" })),
-  ...(await applyFindings(plan.notify, { dryRun })).map((r) => ({ ...r, notifyClass: "notify" })),
+  ...(await applyFindings(plan.auto, { dryRun, client })).map((r) => ({ ...r, notifyClass: "auto" })),
+  ...(await applyFindings(plan.notify, { dryRun, client })).map((r) => ({ ...r, notifyClass: "notify" })),
 ];
 for (const r of applied) {
   console.log(`  ${r.applied ? `✅ ${r.summary}` : `⏭️  ${r.finding.title.slice(0, 60)} — ${r.reason}`}`);
