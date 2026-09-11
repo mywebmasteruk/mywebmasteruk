@@ -30,21 +30,36 @@ const clamp = (s, min, max, pad) => {
 };
 
 /**
- * @param {object} change  one entry from applyFindings(), already verified
- * @param {string} [commit]  SHA, filled in after the commit exists
+ * Builds one entry without touching the disk, so the text that goes on a public
+ * page can be tested.
+ *
+ * `controlled` says whether this site has a holdout to measure against. It
+ * defaults to false on purpose: a caller that forgets to pass it gets an entry
+ * that understates the evidence, never one that claims a control group the site
+ * does not have. The old fallback text said "measured against pages left
+ * untouched" unconditionally, which on a client with no holdout was a claim we
+ * had not earned, published on the page headed as the record of what we did.
+ *
+ * @param {object} change   one entry from applyFindings(), already verified
+ * @param {object} options
+ * @param {string} options.date
+ * @param {string[]} [options.existing]  filenames already in the changelog folder
+ * @param {boolean} [options.controlled] whether a holdout exists to compare against
  */
-export async function writeChangelogEntry(change, { date = new Date().toISOString().slice(0, 10) } = {}) {
+export function changelogEntry(change, { date, existing = [], controlled = false } = {}) {
   const title = clamp(change.summary, 10, 90, "— an automatic change");
+  const measuredHow = controlled
+    ? "measured against pages deliberately left alone"
+    : "read as before-and-after, because this site has no control group";
   const hypothesis = clamp(
     change.hypothesis ||
       change.rationale ||
-      `${change.summary}. Recorded before the result was known, and measured against pages left untouched.`,
+      `${change.summary}. Recorded before the result was known, and ${measuredHow}.`,
     40,
     400,
-    "Measured against pages deliberately left alone.",
+    "Recorded before the result was known.",
   );
 
-  const existing = await readdir(DIR).catch(() => []);
   let slug = `${date}-${slugify(change.summary)}`;
   let n = 2;
   while (existing.includes(`${slug}.mdx`)) slug = `${date}-${slugify(change.summary)}-${n++}`;
@@ -87,6 +102,13 @@ export async function writeChangelogEntry(change, { date = new Date().toISOStrin
     .filter((s) => s !== "")
     .join("\n");
 
+  return { slug, body, title, hypothesis };
+}
+
+/** Builds the entry and writes it into the changelog folder. */
+export async function writeChangelogEntry(change, { date = new Date().toISOString().slice(0, 10), controlled = false } = {}) {
+  const existing = await readdir(DIR).catch(() => []);
+  const { slug, body } = changelogEntry(change, { date, existing, controlled });
   await writeFile(`${DIR}${slug}.mdx`, body);
   return { file: `src/content/changelog/${slug}.mdx`, slug };
 }

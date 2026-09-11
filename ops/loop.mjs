@@ -205,7 +205,12 @@ if (changed.length) {
   // is never listed as though it did.
   step(10, "Recording what changed");
   for (const change of changed) {
-    const entry = await writeChangelogEntry(change, { date: today });
+    // Whether the entry may say it was measured against a control group. False
+    // unless the client record says a holdout exists — never assumed.
+    const entry = await writeChangelogEntry(change, {
+      date: today,
+      controlled: client ? evidenceStrength(client).controlled : false,
+    });
     change.files = [...(change.files ?? []), entry.file];
     console.log(`  ${entry.file}`);
   }

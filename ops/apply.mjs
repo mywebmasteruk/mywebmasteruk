@@ -175,6 +175,21 @@ async function editFields(finding, keys, { changeType, describe }) {
 export async function repointRedirect(legacy, destination) {
   const file = root("public/_redirects");
   const source = await readFile(file, "utf8");
+  const { text, from, appended } = rewriteRedirects(source, legacy, destination, { domain: DOMAIN });
+  await writeFile(file, text);
+  return { file: "public/_redirects", from, to: destination, appended };
+}
+
+/**
+ * The rewrite itself, with no disk access, so the rule that matters — change one
+ * line, touch nothing else, keep the order — can be tested directly.
+ *
+ * @param {string} source       the current `_redirects` text
+ * @param {URL} legacy          the old address that still earns searches
+ * @param {string} destination  the page that now answers it
+ * @param {{domain: string}} options  the site's own apex domain
+ */
+export function rewriteRedirects(source, legacy, destination, { domain }) {
   const lines = source.split("\n");
 
   // Netlify serves www and the apex from the same site, so a www URL's rules are
@@ -182,7 +197,7 @@ export async function repointRedirect(legacy, destination) {
   // subdomain) needs an absolute URL. Getting this wrong appends a duplicate rule
   // that never fires, because the path rule above it already matched.
   const bare = (h) => h.replace(/^www\./, "");
-  const sameSite = bare(legacy.host) === bare(new URL(`https://${DOMAIN}`).host);
+  const sameSite = bare(legacy.host) === bare(new URL(`https://${domain}`).host);
   const key = sameSite ? legacy.pathname : legacy.href;
 
   const candidates = new Set([key, key.replace(/\/$/, ""), `${key.replace(/\/$/, "")}/`]);
@@ -201,8 +216,7 @@ export async function repointRedirect(legacy, destination) {
     lines[index] = `${from}   ${destination}   ${code}`;
   }
 
-  await writeFile(file, lines.join("\n"));
-  return { file: "public/_redirects", from: key, to: destination, appended: index === -1 };
+  return { text: lines.join("\n"), from: key, appended: index === -1 };
 }
 
 // ---- Fixers --------------------------------------------------------------
