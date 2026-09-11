@@ -33,7 +33,7 @@ export const DEFAULTS = {
 };
 
 /** What the environment says, with unset left undefined rather than defaulted. */
-function fromEnv() {
+export function settingsFromEnv() {
   const out = {};
   if (process.env.AI_PROVIDER) out.provider = process.env.AI_PROVIDER;
   if (process.env.AI_MODEL) out.model = process.env.AI_MODEL;
@@ -75,25 +75,13 @@ async function fromDb(slug) {
  * worse than one that uses last week's model.
  */
 export async function loadSettings({ slug = process.env.CLIENT_SLUG } = {}) {
-  const env = fromEnv();
   const store = await fromDb(slug);
-
-  const layers = [
-    ["default", DEFAULTS],
-    ["environment", env],
-    ["console default", store.defaults ?? {}],
-    [`${slug ?? "client"} record`, store.client ?? {}],
-  ];
-
-  const settings = {};
-  const source = {};
-  for (const [name, layer] of layers) {
-    for (const [key, value] of Object.entries(layer)) {
-      if (value === undefined || !(key in DEFAULTS)) continue;
-      settings[key] = value;
-      source[key] = name;
-    }
-  }
+  const { settings, source } = layerSettings({
+    env: settingsFromEnv(),
+    consoleDefault: store.defaults,
+    clientRecord: store.client,
+    slug,
+  });
 
   return {
     settings,
@@ -105,4 +93,33 @@ export async function loadSettings({ slug = process.env.CLIENT_SLUG } = {}) {
       ? `settings from ${[...new Set(Object.values(source))].join(", ")}`
       : `settings from the environment — the database was unreachable (${store.error})`,
   };
+}
+
+/**
+ * The precedence rule on its own, with no database, so it can be tested.
+ *
+ * Most specific wins: the client's own record, then the console's default, then
+ * the environment, then the built-in defaults. An undefined value never
+ * overrides — otherwise a half-filled console row would silently wipe a setting
+ * the environment had set. Keys the loop does not know are ignored rather than
+ * passed through, so a stray column cannot start steering a run.
+ */
+export function layerSettings({ env = {}, consoleDefault = null, clientRecord = null, slug = null } = {}) {
+  const layers = [
+    ["default", DEFAULTS],
+    ["environment", env],
+    ["console default", consoleDefault ?? {}],
+    [`${slug ?? "client"} record`, clientRecord ?? {}],
+  ];
+
+  const settings = {};
+  const source = {};
+  for (const [name, layer] of layers) {
+    for (const [key, value] of Object.entries(layer)) {
+      if (value === undefined || !(key in DEFAULTS)) continue;
+      settings[key] = value;
+      source[key] = name;
+    }
+  }
+  return { settings, source };
 }

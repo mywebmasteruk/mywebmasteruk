@@ -28,12 +28,20 @@ const ANSWERS = root("src/content/answers");
 const DOMAIN = process.env.SITE_DOMAIN || "mywebmaster.co.uk";
 const SITE_URL = process.env.SITE_URL || `https://${DOMAIN}`;
 
-/** What the business does, so a new page cannot be written about something else. */
+/**
+ * What the business does, so a new page cannot be written about something else.
+ *
+ * This is handed to the model as fact, so it must not say more than is true: a
+ * description that says the service "proves" its results invites a drafted page
+ * to repeat the claim before any measurement window has closed. It describes the
+ * practice — pages held back so changes can be measured — and stops there.
+ */
 const BUSINESS =
   process.env.BUSINESS_DESCRIPTION ||
   "MyWebMaster runs Autopilot: it checks a small business's website every day, makes " +
-    "small improvements based on what the numbers show, and proves they worked by comparing " +
-    "against pages left deliberately untouched. UK, remote, content and brochure sites only.";
+    "small improvements based on what the numbers show, and holds some pages back untouched " +
+    "so each change can be measured against them rather than guessed at. UK, remote, content " +
+    "and brochure sites only.";
 
 const TOPICS = ["autopilot", "safety", "measurement", "ai-search", "seo", "pricing"];
 
