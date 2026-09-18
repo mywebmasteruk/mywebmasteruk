@@ -20,7 +20,7 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { freezePage, decline, sourcesForPath } from "./lib/policy.mjs";
 import { frozenPaths } from "./lib/fleet.mjs";
-import { draftEdit, draftAnswerPage, draftSection, FIELD_BUDGETS, aiConfig } from "./lib/ai.mjs";
+import { draftEdit, draftAnswerPage, draftSection, FIELD_BUDGETS, draftingUnavailableReason } from "./lib/ai.mjs";
 import { dimensions, shrink, imagesMissingSize, withSize } from "./lib/images.mjs";
 import { getAccessToken } from "./lib/google.mjs";
 
@@ -127,9 +127,8 @@ function offBudget(fields) {
  * Shared by every fixer whose job is "change some words on a page that exists".
  */
 async function editFields(finding, keys, { changeType, describe }) {
-  if (!aiConfig.draftingEnabled) {
-    return { applied: false, reason: "drafting is disabled (AI_DRAFTING=off)" };
-  }
+  const unavailable = draftingUnavailableReason();
+  if (unavailable) return { applied: false, reason: unavailable };
   const file = contentFileFor(finding.target);
   if (!file) return { applied: false, reason: "only answer pages can be edited automatically" };
 
@@ -307,9 +306,8 @@ export const fixers = {
    * in the prompt, and a refusal to write it is a normal outcome.
    */
   "new-pages": async (finding) => {
-    if (!aiConfig.draftingEnabled) {
-      return { applied: false, reason: "drafting is disabled (AI_DRAFTING=off)" };
-    }
+    const unavailable = draftingUnavailableReason();
+    if (unavailable) return { applied: false, reason: unavailable };
     const query = finding.evidence?.query;
     if (!query) return { applied: false, reason: "no search query attached to the finding" };
 
@@ -624,9 +622,8 @@ export const fixers = {
    * add the missing answer, not to rewrite what is working.
    */
   "faq-expand": async (finding) => {
-    if (!aiConfig.draftingEnabled) {
-      return { applied: false, reason: "drafting is disabled (AI_DRAFTING=off)" };
-    }
+    const unavailable = draftingUnavailableReason();
+    if (unavailable) return { applied: false, reason: unavailable };
     const file = contentFileFor(finding.target);
     if (!file) return { applied: false, reason: "only answer pages can be extended automatically" };
     const query = finding.evidence?.query;

@@ -60,13 +60,27 @@ jobs:
           # run read its notice queue as "no service-role key" and carried on.
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          # Every finding this site raises is a wording change (new-pages,
+          # faq-expand), and those need a model. Without this the apply run
+          # entered "Fixing" correctly and then every fixer threw "no AI
+          # credentials", so the weekly slot healed nothing. Same defect the
+          # Supabase secrets had: present on the repo, never handed to the step.
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          AI_MODEL: ${{ vars.AI_MODEL }}
+          AI_DRAFTING: ${{ vars.AI_DRAFTING }}
+          # Passed so the mode decision is made in tested code, not a bash string
+          # compare against the cron — see ops/run-mode.mjs.
+          AUTOPILOT_SCHEDULE: ${{ github.event.schedule }}
+          AUTOPILOT_APPLY_INPUT: ${{ github.event.inputs.apply }}
         run: |
           git config user.name "autopilot"
           git config user.email "autopilot@users.noreply.github.com"
-          # The weekly slot is the only one permitted to write; daily runs observe.
-          # The loop acts by default, so observing is the flagged case — the bare
-          # command publishes. Getting these the wrong way round ships every day.
-          if [ "${{ github.event.inputs.apply }}" = "true" ] || [ "${{ github.event.schedule }}" = "0 7 * * TUE" ]; then
+          # The weekly slot and an explicit dispatch apply; everything else
+          # observes. The decision lives in ops/run-mode.mjs so it is unit-tested
+          # rather than trusted to a shell comparison nobody could assert against.
+          mode="$(node ops/run-mode.mjs)"
+          echo "Run mode: $mode (schedule='${{ github.event.schedule }}', apply='${{ github.event.inputs.apply }}')"
+          if [ "$mode" = "apply" ]; then
             node ops/loop.mjs
           else
             node ops/loop.mjs --dry-run
