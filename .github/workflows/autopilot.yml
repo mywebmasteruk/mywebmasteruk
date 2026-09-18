@@ -55,6 +55,11 @@ jobs:
         env:
           GSC_PROPERTY: ${{ vars.GSC_PROPERTY || 'sc-domain:mywebmaster.co.uk' }}
           GA4_PROPERTY_ID: ${{ vars.GA4_PROPERTY_ID }}
+          # The loop's state lives in Postgres. Both secrets have existed on this
+          # repo since 8 September, but nothing handed them to this step, so every
+          # run read its notice queue as "no service-role key" and carried on.
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
           git config user.name "autopilot"
           git config user.email "autopilot@users.noreply.github.com"
