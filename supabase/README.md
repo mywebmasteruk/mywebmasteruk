@@ -19,13 +19,12 @@ In the database — state more than one process must agree on:
 | `client_settings` | Blobs `settings:<slug>` + `AI_*` env vars |
 | `halt_state` | Blobs `autopilot:halt` + `/halt.json` |
 | `notices` | `ops/data/notices.json` |
-| `measurements` | `ops/data/measurement.json`, which was overwritten each run |
+| `measurements` | nothing yet — kept empty; the lift calculation that was meant to fill it was retired with the holdout on 11 September 2026 |
 | `runs` | `ops/reports/*.md` (the reports stay; this makes them queryable) |
 
 Staying in git, because their value **is** being version-controlled and a
 customer can audit the diff:
 
-- `ops/data/holdout.json` — the control group. Tamper-evidence is the point.
 - `ops/data/snapshot.json` — the record that the restore promise is real.
 - `ops/data/freeze.json`, `declined.json` — measurement windows and refusals.
 - `src/content/changelog/` — the published record of every change.
@@ -35,21 +34,24 @@ customer can audit the diff:
   words while the sync lags, and that is the one mistake the system must not
   make.
 
-## Two shapes that must not be "tidied"
-
-`clients.holdout` is **NULL** when no control group is possible — not an empty
-array. Null means "we cannot claim a controlled result"; an empty array would
-read as "we held nothing back and can still claim one".
+## A shape that must not be "tidied"
 
 `clients.baseline` has **no** `clicks` key when nothing was measurable, rather
 than `clicks: null`. A new venture has no starting score, and a zero turns its
 first ordinary month into a fabricated improvement.
 
+## The holdout, removed
+
+The owner dropped the untouched-pages comparison and the refund on 11 September 2026.
+`0004_drop_clients_holdout.sql` removes `clients.holdout` and `clients.holdout_note`; the
+values they held were exported to `old/2026-09-11-ai-2026-holdout-removed-owner-decision/`
+at the monorepo root before the drop.
+
 ## Applying
 
 ```bash
 # against whichever project ref is current
-supabase db push          # or paste 0001_autopilot_core.sql into the SQL editor
+supabase db push          # or paste each file in migrations/ into the SQL editor, in number order
 ```
 
 Access is service-role only: RLS is on for every table with no policies defined,
