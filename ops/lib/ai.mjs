@@ -45,6 +45,30 @@ export function applySettings(settings = {}) {
   return aiConfig;
 }
 
+/** Whether a key the SDK can use is actually present in the environment. */
+export function hasAiCredentials() {
+  return Boolean(process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_AUTH_TOKEN);
+}
+
+/**
+ * Why drafting cannot run right now, in one line an operator can act on, or null
+ * when it can.
+ *
+ * The distinction matters. "off" is a deliberate choice and a normal outcome; a
+ * key that is simply missing is a misconfiguration, and the two must not read the
+ * same in a report. Before this existed the loop entered its fixers, constructed
+ * the client, and threw deep inside the SDK — so the weekly run's report said
+ * "fixer threw: no AI credentials" against its highest-value findings and shipped
+ * nothing, which looks like a broken fixer rather than an unset secret.
+ */
+export function draftingUnavailableReason() {
+  if (!aiConfig.draftingEnabled) return "drafting is disabled (AI_DRAFTING=off)";
+  if (!hasAiCredentials()) {
+    return "AI drafting is on but no API key is present — set ANTHROPIC_API_KEY, or set AI_DRAFTING=off";
+  }
+  return null;
+}
+
 let client;
 function getClient() {
   if (aiConfig.provider !== "anthropic") {
@@ -53,7 +77,9 @@ function getClient() {
   // Resolves ANTHROPIC_API_KEY, ANTHROPIC_AUTH_TOKEN, or an `ant auth login` profile.
   // Checked here rather than left to the SDK: "Could not resolve authentication
   // method" in a run report tells an operator nothing about which knob to turn.
-  if (!process.env.ANTHROPIC_API_KEY && !process.env.ANTHROPIC_AUTH_TOKEN) {
+  // The fixers screen this out with draftingUnavailableReason() first, so this is
+  // a backstop rather than the message a run report ever ends up carrying.
+  if (!hasAiCredentials()) {
     throw new Error(
       "no AI credentials — set ANTHROPIC_API_KEY, or set AI_DRAFTING=off to run the loop deterministically",
     );

@@ -10,7 +10,22 @@
  * console, the pause function. Row level security is on with no policies, so
  * this key is the only way in and it must never reach a browser.
  */
-const URL_BASE = () => process.env.SUPABASE_URL || "https://txqjruevxeacqutuvkej.supabase.co";
+const DEFAULT_URL = "https://txqjruevxeacqutuvkej.supabase.co";
+
+/**
+ * The REST base, normalised.
+ *
+ * A secret pasted from a dashboard picks up a trailing newline or space, and a
+ * URL that already carries `/rest/v1` produces a doubled path. Both are silent:
+ * the first turned into "Failed to parse URL", the second into a 404 that read
+ * like an empty table. Trimming and stripping here means the one misconfiguration
+ * left to diagnose is the one that actually needs the owner — a URL pointing at a
+ * project that does not answer.
+ */
+export function restBase() {
+  const raw = (process.env.SUPABASE_URL || DEFAULT_URL).trim();
+  return raw.replace(/\/+$/, "").replace(/\/rest\/v1$/, "");
+}
 
 /**
  * Read from a file when there is no env var, so a laptop run works without
@@ -46,7 +61,7 @@ export async function db(path, { method = "GET", body, prefer } = {}) {
   if (!k) return { ok: false, status: 0, data: null, error: "no service-role key (set SUPABASE_SERVICE_ROLE_KEY)" };
 
   try {
-    const res = await fetch(`${URL_BASE()}/rest/v1${path}`, {
+    const res = await fetch(`${restBase()}/rest/v1${path}`, {
       method,
       headers: {
         apikey: k,
@@ -72,7 +87,18 @@ export async function db(path, { method = "GET", body, prefer } = {}) {
       error: res.ok ? null : (data?.message ?? data?.hint ?? String(data).slice(0, 200)),
     };
   } catch (err) {
-    return { ok: false, status: 0, data: null, error: String(err?.message ?? err).slice(0, 200) };
+    // A network-level failure ("fetch failed") names nothing an operator can act
+    // on. The host and the underlying cause do: an ENOTFOUND says the URL is
+    // wrong or the project is gone, a refused connection says something else.
+    let host = restBase();
+    try {
+      host = new URL(restBase()).host;
+    } catch {
+      /* keep the raw value if it will not even parse as a URL */
+    }
+    const cause = err?.cause?.code || err?.cause?.message;
+    const detail = cause ? `${err.message} (${cause})` : String(err?.message ?? err);
+    return { ok: false, status: 0, data: null, error: `could not reach ${host}: ${detail}`.slice(0, 200) };
   }
 }
 

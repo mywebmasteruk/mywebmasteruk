@@ -23,7 +23,7 @@ import { fileURLToPath } from "node:url";
 import { planRun, isHalted, circuitBreaker, hasSnapshot, readSnapshot } from "./lib/policy.mjs";
 import { applyFindings } from "./apply.mjs";
 import { writeReport } from "./report.mjs";
-import { aiConfig, applySettings as applyAiSettings } from "./lib/ai.mjs";
+import { aiConfig, applySettings as applyAiSettings, draftingUnavailableReason } from "./lib/ai.mjs";
 import { queueNotice, flushNotices, notifyConfig, applySettings as applyNotifySettings } from "./lib/notify.mjs";
 import { loadSettings } from "./lib/settings.mjs";
 import { mailNotice } from "./lib/notify-mail.mjs";
@@ -168,7 +168,8 @@ console.log(
   `  ${plan.auto.length} to fix quietly, ${plan.notify.length} to fix and email the same day, ` +
     `${plan.decide.length} for the customer to decide, ${plan.refused.length} deferred or refused`,
 );
-if (!aiConfig.draftingEnabled) console.log("  Drafting is off — content fixers will decline.");
+const draftingBlocked = draftingUnavailableReason();
+if (draftingBlocked) console.log(`  ⚠️  ${draftingBlocked} — content fixers will decline.`);
 for (const reason of plan.held ?? []) console.log(`  HELD: ${reason}`);
 
 // ---- Apply --------------------------------------------------------------
